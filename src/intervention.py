@@ -70,33 +70,52 @@ def run_inhibition_intervention(
     inhibited_features: Dict[int, List[int]],
     target_tokens: List[str] | None = None
 ) -> Dict[str, Any]:
-    """Zero-out specific feature activations and measure changes in model output."""
+    """Zero-out specific feature activations and measure changes in model output.
+
+    Uses an *error-preserving* edit: rather than replacing the MLP output with the
+    (lossy) SAE reconstruction, we subtract only the decoder contribution of the
+    ablated features from the model's true activation. Because the SAE decoder has
+    no bias, the reconstruction error and the decoder bias cancel exactly, so:
+      - ablating zero features reproduces the clean run bit-for-bit, and
+      - ablating a feature subtracts precisely that feature's decoder direction.
+    This isolates the causal effect of the feature instead of burying it under the
+    reconstruction error of every hooked layer.
+    """
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     hooks = []
-    
-    # Reconstruction and inhibition hooks
+    # Record the pre-ablation activation of each targeted feature for diagnostics.
+    captured_feature_acts: Dict[int, Dict[int, float]] = {}
+
     def make_inhibition_hook(layer_idx, sae_model, scaling_factor, f_list):
         def hook_fn(module, input_t, output_t):
             last_token_act = output_t[:, -1, :]
             last_token_norm = last_token_act / scaling_factor
-            
+
             x_centered = last_token_norm - sae_model.decoder_bias
             z = torch.relu(sae_model.encoder(x_centered))
-            
-            # Perform inhibition on specified feature indices
+
+            if not f_list:
+                return output_t  # No edit at this layer: leave the true activation untouched.
+
+            # Record activations of the targeted features, then build the ablated code.
+            layer_acts = {}
+            z_ablated = z.clone()
             for f_idx in f_list:
-                if f_idx < z.shape[1]:
-                    z[:, f_idx] = 0.0
-                    
-            x_hat_norm = sae_model.decoder(z) + sae_model.decoder_bias
-            x_hat = x_hat_norm * scaling_factor
-            
+                if 0 <= f_idx < z.shape[1]:
+                    layer_acts[int(f_idx)] = float(z[:, f_idx].max().item())
+                    z_ablated[:, f_idx] = 0.0
+            captured_feature_acts[layer_idx] = layer_acts
+
+            # Error-preserving edit: add only the *change* in reconstruction (decoder is bias-free).
+            delta_norm = sae_model.decoder(z_ablated - z)
+            new_last = last_token_act + delta_norm * scaling_factor
+
             new_output = output_t.clone()
-            new_output[:, -1, :] = x_hat
+            new_output[:, -1, :] = new_last
             return new_output
         return hook_fn
 
-    # Register hooks for all layers, only adding inhibition where specified
+    # Register hooks only where features are actually being inhibited.
     for layer in layers:
         sae_model, scaling_factor = saes[layer]
         f_list = inhibited_features.get(layer, [])
@@ -109,17 +128,17 @@ def run_inhibition_intervention(
     with torch.no_grad():
         outputs = model(**inputs)
     logits = outputs.logits[0, -1, :]
-    
+
     # Remove hooks
     for h in hooks:
         h.remove()
-        
+
     probs = torch.softmax(logits, dim=-1)
-    
+
     # Get top predicted token under intervention
     intervened_top_id = torch.argmax(logits).item()
     intervened_top_tok = tokenizer.decode([intervened_top_id])
-    
+
     # Resolve target tokens if provided
     targets_info = {}
     if target_tokens:
@@ -134,12 +153,13 @@ def run_inhibition_intervention(
                     "logit": float(logits[t_id].item()),
                     "prob": float(probs[t_id].item())
                 }
-            
+
     return {
         "top_token": intervened_top_tok,
         "top_logit": float(logits[intervened_top_id].item()),
         "top_prob": float(probs[intervened_top_id].item()),
-        "targets": targets_info
+        "targets": targets_info,
+        "feature_activations": captured_feature_acts,
     }
 
 
@@ -185,39 +205,47 @@ def run_swap_in_intervention(
         
     # 2. Run target prompt while swapping in source activations
     swap_hooks = []
-    
+
     def make_swap_hook(layer_idx, sae_model, scaling_factor, src_z, f_list):
         def hook_fn(module, input_t, output_t):
             last_token_act = output_t[:, -1, :]
             last_token_norm = last_token_act / scaling_factor
-            
+
             x_centered = last_token_norm - sae_model.decoder_bias
             z = torch.relu(sae_model.encoder(x_centered))
-            
+
             # Align src_z device/dtype
             device_src_z = src_z.to(device=z.device, dtype=z.dtype)
-            
+
+            z_swapped = z.clone()
             if f_list is None:
-                # Swap entire latent layer
-                z = device_src_z.clone()
+                # Swap the entire latent code from the source run.
+                z_swapped = device_src_z.clone()
+            elif len(f_list) == 0:
+                return output_t  # Layer not targeted: leave the true activation untouched.
             else:
-                # Swap only specific feature indices
+                # Swap only the specified feature indices.
                 for f_idx in f_list:
-                    if f_idx < z.shape[1]:
-                        z[:, f_idx] = device_src_z[:, f_idx]
-                        
-            x_hat_norm = sae_model.decoder(z) + sae_model.decoder_bias
-            x_hat = x_hat_norm * scaling_factor
-            
+                    if 0 <= f_idx < z.shape[1]:
+                        z_swapped[:, f_idx] = device_src_z[:, f_idx]
+
+            # Error-preserving edit: apply only the change in reconstruction to the
+            # target's true activation. With f_list=None this equals the full source
+            # reconstruction plus the target's own reconstruction error.
+            delta_norm = sae_model.decoder(z_swapped - z)
+            new_last = last_token_act + delta_norm * scaling_factor
+
             new_output = output_t.clone()
-            new_output[:, -1, :] = x_hat
+            new_output[:, -1, :] = new_last
             return new_output
         return hook_fn
         
     for layer in layers:
         sae_model, scaling_factor = saes[layer]
         src_z = source_z[layer]
-        f_list = swap_features.get(layer) if swap_features else None
+        # swap_features is None => swap entire latent code at every layer.
+        # swap_features is a dict => only touch layers it names; others are a no-op ([]).
+        f_list = None if swap_features is None else swap_features.get(layer, [])
         h = model.model.layers[layer].mlp.register_forward_hook(
             make_swap_hook(layer, sae_model, scaling_factor, src_z, f_list)
         )
@@ -288,6 +316,7 @@ def main() -> None:
     features_dict = {}
     if args.features:
         try:
+            raw_features = json.loads(args.features)
             features_dict = {int(k): (list(v) if v is not None else None) for k, v in raw_features.items()}
         except Exception as e:
             raise ValueError(f"Could not parse features JSON '{args.features}': {e}")
@@ -388,7 +417,22 @@ def main() -> None:
         for t, info in inter_res.get("targets", {}).items():
             t_rep = t.replace("\n", "\\n").replace("\r", "\\r")
             print(f"  - Target '{t_rep}': prob: {info['prob']:.4f}, logit: {info['logit']:.2f}")
-            
+
+        # Diagnostic: warn about targeted features that were inactive (ablating them is a no-op).
+        print("\n[diagnostic] Pre-ablation activation of targeted features (0.0 => ablation has NO effect):")
+        feat_acts = inter_res.get("feature_activations", {})
+        any_dead = False
+        for layer in args.layers:
+            for f_idx in features_dict.get(layer, []) or []:
+                act = feat_acts.get(layer, {}).get(int(f_idx), 0.0)
+                flag = "" if act > 0 else "  <-- INACTIVE (no-op)"
+                if act <= 0:
+                    any_dead = True
+                print(f"  - L{layer} F{f_idx}: activation={act:.4f}{flag}")
+        if any_dead:
+            print("  NOTE: inactive features cannot change the output. Pick features that are"
+                  " actually active for this prompt (see the attribution graph nodes).")
+
     elif args.mode == "swap":
         if not args.source_prompt:
             raise ValueError("source-prompt is required in swap mode")

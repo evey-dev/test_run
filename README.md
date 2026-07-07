@@ -128,12 +128,31 @@ Outputs:
 - A structured JSON representation of the pruned graph.
 - An interactive Vis.js HTML file enabling graphical node/edge rendering (zoom, pan, drag) in the browser.
 - A Markdown file with Mermaid code representing the flowchart.
+- A printed, ready-to-paste `--features '{...}'` string built from the graph's own top
+  feature nodes. **Copy this into the intervention command below** so you inhibit features
+  that are actually active for this prompt instead of guessing indices.
 
 ## 4. Run intervention experiments (Phase 6)
 Perform causal interventions (inhibition or activation swap-in) on SAE features to validate attribution paths.
 
+**Choose features from the attribution graph.** The `--features` indices must be features
+that are *active for the prompt*. The easiest way is to run `attribution_graph.py` first
+(step 3) and copy the `--features '{...}'` string it prints. Inhibiting a feature that is
+inactive (activation `0`) has no effect on the output — the intervention script now prints a
+per-feature activation diagnostic and warns when a targeted feature is inactive.
+
+### How the intervention edit works
+Both modes use an **error-preserving (splicing) edit**: instead of overwriting the MLP
+output with the (lossy) SAE reconstruction, the script adds only the *change* in
+reconstruction caused by editing the feature(s) onto the model's true activation. Because the
+SAE decoder is bias-free, the reconstruction error cancels exactly, so editing zero features
+reproduces the clean run bit-for-bit and editing one feature applies precisely that feature's
+causal effect. (The previous version replaced the activation with the reconstruction at every
+hooked layer, which injected the stacked reconstruction error of all layers and swamped the
+signal — the reason ablations appeared to do nothing.)
+
 ### Inhibition (Ablation)
-Zero out specified features during forward pass and observe changes:
+Zero out specified features during the forward pass and observe changes:
 ```bash
 python src/intervention.py --mode inhibit --prompt "Fact: the capital of the state containing Dallas is" --features '{"16": [238]}' --target-token "Austin"
 ```
@@ -145,8 +164,8 @@ python src/intervention.py --mode swap --source-prompt "Fact: the capital of the
 ```
 
 Optional flags:
-- `--features`: JSON string specifying which features to intervene on, e.g. `'{"layer": [idx1, idx2]}'` (if omitted in swap mode, the entire layer is swapped).
-- `--target-token`: target next token to track probability and logit shifts.
+- `--features`: JSON string specifying which features to intervene on, e.g. `'{"layer": [idx1, idx2]}'`. In swap mode, layers you name have those features swapped; layers you omit are left untouched. If `--features` is omitted entirely in swap mode, the entire latent code is swapped at every layer.
+- `--target-token`: target next token to track probability and logit shifts (comma-separated for several, e.g. `"Austin, Sacramento"`).
 
 ## Notes on data usage
 - The baseline script expects the prompt CSV files in the data directory.

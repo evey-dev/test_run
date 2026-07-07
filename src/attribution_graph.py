@@ -651,6 +651,20 @@ def main() -> None:
         fh.write(html_content)
     print(f"Saved interactive HTML visualization to {html_path}")
 
+    # 4. Emit a ready-to-paste --features string for intervention.py, built from the
+    # graph's own top feature nodes. This closes the loop between the graph and the
+    # intervention step so you inhibit features that are actually active for this prompt
+    # (rather than guessing indices).
+    features_for_intervention: Dict[int, List[int]] = {}
+    for n in pruned_nodes_list:
+        if n["layer"].startswith("layer_"):
+            layer_num = int(n["layer"].split("_")[1])
+            feat_idx = int(n["id"].split("_")[3])
+            features_for_intervention.setdefault(layer_num, []).append(feat_idx)
+    features_json = json.dumps({str(k): v for k, v in sorted(features_for_intervention.items())})
+    print("\nSuggested intervention on the graph's top features (features that are active for this prompt):")
+    print(f"  --features '{features_json}'")
+
 
 if __name__ == "__main__":
     main()
