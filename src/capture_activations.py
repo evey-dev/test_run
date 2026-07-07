@@ -16,7 +16,7 @@ from src.data_utils import get_repo_root, resolve_path
 from src.model_loader import load_model_and_tokenizer, set_seed
 from src.prompts.prompt_utils import load_prompts, format_prompt
 
-DEFAULT_LAYERS = (8, 16, 24, 32)
+DEFAULT_LAYERS = (4, 8, 12, 16, 20, 24, 28, 32)
 DEFAULT_BEHAVIOURS = ("capitals", "addition", "units")
 
 def copy_model_checkpoint(source_dir: Path, target_dir: Path) -> None:

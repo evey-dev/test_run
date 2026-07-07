@@ -59,12 +59,16 @@ def generate_html_vis(nodes: List[Dict[str, Any]], edges: List[Dict[str, Any]], 
     vis_nodes = []
     vis_edges = []
     
-    # Define colors for layers
+    # Define colors for layers (gradient from light to dark for deeper layers)
     layer_colors = {
         "input": "#d9e2ec",
+        "layer_4": "#c8dae8",
         "layer_8": "#bcccdc",
+        "layer_12": "#adc0d4",
         "layer_16": "#9fb3c8",
+        "layer_20": "#90a6bc",
         "layer_24": "#829ab1",
+        "layer_28": "#728ea5",
         "layer_32": "#627d98",
         "logits": "#486581"
     }
@@ -182,16 +186,32 @@ def generate_html_vis(nodes: List[Dict[str, Any]], edges: List[Dict[str, Any]], 
                 <span>Input Tokens</span>
             </div>
             <div class="legend-item">
+                <div class="legend-color" style="background-color: {layer_colors['layer_4']};"></div>
+                <span>Layer 4 SAE</span>
+            </div>
+            <div class="legend-item">
                 <div class="legend-color" style="background-color: {layer_colors['layer_8']};"></div>
                 <span>Layer 8 SAE</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: {layer_colors['layer_12']};"></div>
+                <span>Layer 12 SAE</span>
             </div>
             <div class="legend-item">
                 <div class="legend-color" style="background-color: {layer_colors['layer_16']};"></div>
                 <span>Layer 16 SAE</span>
             </div>
             <div class="legend-item">
+                <div class="legend-color" style="background-color: {layer_colors['layer_20']};"></div>
+                <span>Layer 20 SAE</span>
+            </div>
+            <div class="legend-item">
                 <div class="legend-color" style="background-color: {layer_colors['layer_24']};"></div>
                 <span>Layer 24 SAE</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: {layer_colors['layer_28']};"></div>
+                <span>Layer 28 SAE</span>
             </div>
             <div class="legend-item">
                 <div class="legend-color" style="background-color: {layer_colors['layer_32']};"></div>
@@ -286,9 +306,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Construct an attribution graph from inputs to output logits")
     parser.add_argument("--prompt", required=True, help="Input prompt to run mechanistic attribution analysis on")
     parser.add_argument("--target", default=None, help="Target next token to attribute (defaults to model's top prediction)")
-    parser.add_argument("--layers", nargs="+", type=int, default=[8, 16, 24, 32], help="SAE layers to construct dependency graph through")
-    parser.add_argument("--top-k-nodes", type=int, default=10, help="Number of nodes to keep per layer in the pruned graph")
-    parser.add_argument("--top-k-edges", type=int, default=15, help="Number of edges to keep per layer in the pruned graph")
+    parser.add_argument("--layers", nargs="+", type=int, default=[4, 8, 12, 16, 20, 24, 28, 32], help="SAE layers to construct dependency graph through")
+    parser.add_argument("--top-k-nodes", type=int, default=20, help="Number of nodes to keep per layer in the pruned graph")
+    parser.add_argument("--top-k-edges", type=int, default=30, help="Number of edges to keep per layer in the pruned graph")
     parser.add_argument("--model-config", default="configs/model_config.yaml", help="Path to the model config file")
     parser.add_argument("--sae-config", default="configs/sae_config.yaml", help="Path to the SAE config file")
     parser.add_argument("--output-json", default="outputs/attribution_graph.json", help="Path to save the JSON output graph")
@@ -507,31 +527,31 @@ def main() -> None:
                         "weight": val_item
                     })
                     
-    # Input to Layer 8 Edges
-    # Compute gradients of z_l8 with respect to input embeddings
-    z_l8 = captured_z[8]
-    active_l8 = [j for j in range(latent_dim) if z_dict[8][0, j].item() > 0 and abs(g_dict[8][0, j].item()) > 1e-5]
-    print(f"Tracing edges from Input ({seq_len} tokens) to Layer 8 ({len(active_l8)} active)...")
-    
-    for j in active_l8:
+    # Input to First SAE Layer Edges
+    first_layer = args.layers[0]
+    z_first = captured_z[first_layer]
+    active_first = [j for j in range(latent_dim) if z_dict[first_layer][0, j].item() > 0 and abs(g_dict[first_layer][0, j].item()) > 1e-5]
+    print(f"Tracing edges from Input ({seq_len} tokens) to Layer {first_layer} ({len(active_first)} active)...")
+
+    for j in active_first:
         grad_embed = torch.autograd.grad(
-            outputs=z_l8[0, j],
+            outputs=z_first[0, j],
             inputs=captured_embeddings[0],
             retain_graph=True,
             only_inputs=True
         )[0][0] # shape [seq_len, hidden_size]
-        
+
         grad_embed_cpu = grad_embed.detach().cpu()
         del grad_embed
-        
+
         for p in range(seq_len):
             # dot product of embedding and gradient wrt embedding, scaled by downstream feature gradient
             dot = (embedding_val[0, p, :] * grad_embed_cpu[p, :]).sum().item()
-            val_item = float(dot * g_dict[8][0, j].item())
+            val_item = float(dot * g_dict[first_layer][0, j].item())
             if abs(val_item) > 1e-6:
                 edges.append({
                     "source": f"input_{p}",
-                    "target": f"layer_8_feature_{j}",
+                    "target": f"layer_{first_layer}_feature_{j}",
                     "weight": val_item
                 })
 
@@ -540,13 +560,14 @@ def main() -> None:
     node_labels["target_logit"] = f"Logit: '{target_token}'"
     node_top_outputs["target_logit"] = []
     
-    # Layer 32 to Logit Edges (direct attribution is the node attribution score)
-    active_l32 = [i for i in range(latent_dim) if z_dict[32][0, i].item() > 0]
-    for i in active_l32:
-        val_item = float(z_dict[32][0, i].item() * g_dict[32][0, i].item())
+    # Last SAE Layer to Logit Edges (direct attribution is the node attribution score)
+    last_layer = args.layers[-1]
+    active_last = [i for i in range(latent_dim) if z_dict[last_layer][0, i].item() > 0]
+    for i in active_last:
+        val_item = float(z_dict[last_layer][0, i].item() * g_dict[last_layer][0, i].item())
         if abs(val_item) > 1e-6:
             edges.append({
-                "source": f"layer_32_feature_{i}",
+                "source": f"layer_{last_layer}_feature_{i}",
                 "target": "target_logit",
                 "weight": val_item
             })
@@ -617,8 +638,8 @@ def main() -> None:
             })
             
     # Sort nodes by layer and attribution magnitude for structured viewing
-    layer_order = {"input": 0, "layer_8": 1, "layer_16": 2, "layer_24": 3, "layer_32": 4, "logits": 5}
-    pruned_nodes_list.sort(key=lambda x: (layer_order.get(x["layer"], 9), -abs(x["attribution"])))
+    layer_order = {"input": 0, "layer_4": 1, "layer_8": 2, "layer_12": 3, "layer_16": 4, "layer_20": 5, "layer_24": 6, "layer_28": 7, "layer_32": 8, "logits": 9}
+    pruned_nodes_list.sort(key=lambda x: (layer_order.get(x["layer"], 99), -abs(x["attribution"])))
 
     # Save outputs
     output_dir = ensure_output_dir(resolve_path(args.output_json, repo_root).parent)
