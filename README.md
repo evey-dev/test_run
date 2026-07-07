@@ -47,7 +47,7 @@ python src/capture_activations.py --output-dir mechanistic_data --seed 787
 ```
 
 Optional flags:
-- `--layers`: override which layers to capture (default: 8, 16, 24, 32)
+- `--layers`: override which layers to capture (default: 4, 8, 12, 16, 20, 24, 28, 32)
 - `--behaviours`: override which behaviours/prompts to capture (default: capitals, addition, units)
 - `--copy-model`: save a checkpoint copy of the local model into the output directory
 - `--model-config`: path to the model config file (default: configs/model_config.yaml)
@@ -96,15 +96,9 @@ Optional smaller smoke test:
 python src/train.py --config configs/sae_config.yaml --layers 8 --epochs 1 --batch-size 8 --latent-dim 64
 ```
 
-Outputs:
-- mechanistic_data/sae_checkpoints/sae_layer8.pt
-- mechanistic_data/sae_checkpoints/sae_layer16.pt
-- mechanistic_data/sae_checkpoints/sae_layer24.pt
-- mechanistic_data/sae_checkpoints/sae_layer32.pt
-- mechanistic_data/sae_checkpoints/latents_layer8.npy
-- mechanistic_data/sae_checkpoints/latents_layer16.npy
-- mechanistic_data/sae_checkpoints/latents_layer24.npy
-- mechanistic_data/sae_checkpoints/latents_layer32.npy
+Outputs (one per layer: 4, 8, 12, 16, 20, 24, 28, 32):
+- mechanistic_data/sae_checkpoints/sae_layer*.pt
+- mechanistic_data/sae_checkpoints/latents_layer*.npy
 - mechanistic_data/sae_checkpoints/sae_layer*_metadata.json
 
 These files contain the trained SAE weights, projected latent activations, and basic training metadata for each layer.
@@ -128,25 +122,80 @@ Outputs:
 - A structured JSON representation of the pruned graph.
 - An interactive Vis.js HTML file enabling graphical node/edge rendering (zoom, pan, drag) in the browser.
 - A Markdown file with Mermaid code representing the flowchart.
+- A printed, ready-to-paste `--features '{...}'` string built from the graph's own top
+  feature nodes. **Copy this into the intervention command below** so you inhibit features
+  that are actually active for this prompt instead of guessing indices.
 
 ## 4. Run intervention experiments (Phase 6)
 Perform causal interventions (inhibition or activation swap-in) on SAE features to validate attribution paths.
 
+**Choose features from the attribution graph.** The `--features` indices must be features
+that are *active for the prompt*. The easiest way is to run `attribution_graph.py` first
+(step 3) and copy the `--features '{...}'` string it prints. Inhibiting a feature that is
+inactive (activation `0`) has no effect on the output — the intervention script now prints a
+per-feature activation diagnostic and warns when a targeted feature is inactive.
+
+### How the intervention edit works
+Both modes use an **error-preserving (splicing) edit**: instead of overwriting the MLP
+output with the (lossy) SAE reconstruction, the script adds only the *change* in
+reconstruction caused by editing the feature(s) onto the model's true activation. Because the
+SAE decoder is bias-free, the reconstruction error cancels exactly, so editing zero features
+reproduces the clean run bit-for-bit and editing one feature applies precisely that feature's
+causal effect. (The previous version replaced the activation with the reconstruction at every
+hooked layer, which injected the stacked reconstruction error of all layers and swamped the
+signal — the reason ablations appeared to do nothing.)
+
 ### Inhibition (Ablation)
-Zero out specified features during forward pass and observe changes:
+Zero out specified features during the forward pass and observe changes.
+The easiest workflow is to pass `--graph-json` so all graph features are ablated at once:
 ```bash
-python src/intervention.py --mode inhibit --prompt "Fact: the capital of the state containing Dallas is" --features '{"16": [238]}' --target-token "Austin"
+python src/intervention.py --mode inhibit --prompt "Fact: The capital of the state containing Dallas is named" --target-token "Austin" --graph-json outputs/dallas_graph.json
+```
+Or specify features manually:
+```bash
+python src/intervention.py --mode inhibit --prompt "Fact: The capital of the state containing Dallas is named" --features '{"16": [238]}' --target-token "Austin"
 ```
 
 ### Activation Swap-In
-Capture feature activations from a source prompt (e.g. Oakland -> Sacramento) and inject/swap them into a target run (e.g. Dallas -> Austin) to measure logit shifts or output flips:
+Capture feature activations from a source prompt (e.g. Oakland -> Sacramento) and inject/swap them into a target run (e.g. Dallas -> Austin) to measure logit shifts or output flips.
+Using all features from the attribution graph:
 ```bash
-python src/intervention.py --mode swap --source-prompt "Fact: the capital of the state containing Oakland is" --prompt "Fact: the capital of the state containing Dallas is" --features '{"16": [492]}' --target-token "Sacramento"
+python src/intervention.py --mode swap --source-prompt "Fact: The capital of the state containing Oakland is named" --prompt "Fact: The capital of the state containing Dallas is named" --graph-json outputs/dallas_graph.json --target-token "Sacramento, Austin"
+```
+Or swap the entire latent code (no `--features` or `--graph-json`):
+```bash
+python src/intervention.py --mode swap --source-prompt "Fact: The capital of the state containing Oakland is named" --prompt "Fact: The capital of the state containing Dallas is named" --target-token "Sacramento, Austin"
 ```
 
 Optional flags:
-- `--features`: JSON string specifying which features to intervene on, e.g. `'{"layer": [idx1, idx2]}'` (if omitted in swap mode, the entire layer is swapped).
-- `--target-token`: target next token to track probability and logit shifts.
+- `--features`: JSON string specifying which features to intervene on, e.g. `'{"layer": [idx1, idx2]}'`. In swap mode, layers you name have those features swapped; layers you omit are left untouched. If `--features` is omitted entirely in swap mode, the entire latent code is swapped at every layer.
+- `--graph-json`: path to an attribution graph JSON file (produced by step 3). Automatically extracts all feature nodes from the graph and uses them as the ablation targets. Overrides `--features` if both are provided.
+- `--target-token`: target next token to track probability and logit shifts (comma-separated for several, e.g. `"Austin, Sacramento"`).
+- `--scan`: (inhibit mode only, requires `--graph-json`) run progressive ablation: ablate the top-10, 25, 50, 100, and ALL features from the graph by attribution magnitude and report the logit delta at each level.
+- `--full-knockout`: (inhibit mode only) zero out the entire MLP output at the last token for all hooked layers. This is a diagnostic upper bound: if this doesn't change the prediction, the chosen layers are not involved.
+
+### Diagnostic: Full MLP Knockout
+Verify that the hooked layers matter at all for the prediction:
+```bash
+python src/intervention.py --mode inhibit --prompt "Fact: The capital of the state containing Dallas is named" --target-token "Austin" --full-knockout
+```
+
+### Diagnostic: Progressive Ablation Scan
+Determine how many features need to be ablated before the logit shifts:
+```bash
+python src/intervention.py --mode inhibit --prompt "Fact: The capital of the state containing Dallas is named" --target-token "Austin" --graph-json outputs/dallas_graph.json --scan
+```
+
+## Quick Start: Google Colab GPU
+
+The fastest way to run the full pipeline is via the **`run_gpu.ipynb`** notebook on Google Colab with a GPU runtime:
+
+1. Zip this repository and upload to Google Drive
+2. Open `run_gpu.ipynb` in Colab
+3. Select GPU runtime (any tier works; T4 is sufficient)
+4. Run all cells sequentially
+
+The notebook handles: dataset generation, activation capture (8 layers), SAE training, attribution graphs, and all intervention experiments (knockout, scan, inhibit, swap).
 
 ## Notes on data usage
 - The baseline script expects the prompt CSV files in the data directory.

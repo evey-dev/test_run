@@ -1,8 +1,12 @@
 output_dir: "mechanistic_data/sae_checkpoints"
 layers:
+  - 4
   - 8
+  - 12
   - 16
+  - 20
   - 24
+  - 28
   - 32
 hidden_size: 2560
 latent_dim: 8192
