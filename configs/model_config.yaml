@@ -1,0 +1,9 @@
+model_id: "./models/Qwen3-4B-Instruct"
+revision: "main"
+torch_dtype: "bfloat16"
+device_map: "auto"
+max_new_tokens: 50
+do_sample: false
+temperature: 1.0
+seed: 787
+thinking_mode: false

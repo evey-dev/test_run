@@ -1,0 +1,14 @@
+output_dir: "mechanistic_data/sae_checkpoints"
+layers:
+  - 8
+  - 16
+  - 24
+  - 32
+hidden_size: 2560
+latent_dim: 8192
+batch_size: 64
+epochs: 50
+lr: 0.001
+l1_lambda: 0.001
+seed: 787
+device: "auto"

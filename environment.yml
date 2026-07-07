@@ -1,0 +1,17 @@
+name: mphil-project
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pytorch
+  - torchvision
+  - transformers
+  - accelerate
+  - pandas
+  - scikit-learn
+  - pyyaml
+  - tqdm
+  - pytest
+  - matplotlib
+prefix: /home/evey/miniconda3/envs/mphil-project

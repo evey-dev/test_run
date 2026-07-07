@@ -1,0 +1,129 @@
+The data analysis project should be focused on investigating the reproducibility of a key scientific data analysis inthe literature. The choice to focus on reproducibility is to reinforce the great importance of validation of others’work as part of the scientific process, which is the key driver of the open science movement. The projects shouldbe chosen to be open-ended so students can improve or extend the published work. It is expected that the verybest projects would reach the standard for publication themselves.A key point is that the project is on investigating the reproducibility not just getting the same result as the originalpaper. We expect students to develop their own code repository for the project (unless stated otherwise), even ifthere are existing published codes, so that their investigations are independent. Students should also understandthat demonstrating a failure to reproduce the results can be a positive outcome for the project and can achievehigh marks, it is the quality of the investigation that counts.The project component has been designed to allow students to demonstrate their independence and researchaptitude. The project is an opportunity for students to demonstrate several core research skills:
+
+• Review and comprehend published scientific literature.
+
+• Understand and manipulate scientific data sets.
+
+• Reproduce publication level data analyses.
+
+• Critique, improve, or extend on published work.
+
+
+
+28 Mechanistic Interpretability of Open Source LLMs: smallscale reproduction of On the Biology of a Large Language
+
+Model
+
+Key Publication: Lindsey, J., Gurnee, W., et al. (2025): On the Biology of a Large Language Model. Anthropic Transformer Circuits Thread
+
+
+
+Project Description
+
+This reproducibility project asks the student to select two behaviours or circuits described in the key publication, and investigate whether equivalent mechanisms can be found in an open model, Qwen3-4B-Instruct. The focus is on independent implementation and documentation, with a standalone repository, in line with DIS guidance that projects investigate reproducibility rather than merely match numbers.
+
+
+
+The workflow: run Qwen3-4B-Instruct on a small prompt set for each chosen behaviour, capture activations for a small subset of layers, train sparse autoencoders (SAEs) to obtain interpretable features, build a pruned dependency graph from inputs through SAE features to decisive logits, and validate with inhibition or swap-in style interventions. Negative or partial reproductions are acceptable if analysed rigorously.
+
+Project goals
+
+Main goals of the project:
+
+1. Setup and baselines. Run Qwen3-4B-Instruct, prepare prompts for one to two chosen behaviours, and record baseline outputs with fixed seeds.
+
+2. Train sparse autoencoders. Collect MLP activations on a small prompt set for a few selected layers, then train lightweight SAEs per layer (clear train/validation split, bottleneck size reported). Map discovered features to tokens or behaviours.
+
+3. Attribution-style graph. Construct a pruned dependency graph from input features through SAE features to decisive logits, mirroring the key publication’s diagrams at small scale.
+
+4. Validation by intervention. Perform inhibition or swap-in interventions on upstream feature groups and quantify effects on downstream groups and model outputs. Report successes
+
+and failures carefully.
+
+5. Reproducibility pack. Release a public repository with scripts, environment, seeds, graphs, and a short comparison to the key publication’s narrative and figures. These should be the key steps that students reproduce in their project.
+
+
+
+Extension directions:
+
+• Science-related circuits. Search for and analyse behaviours tied to scientific reasoning or numeracy, where practical. (MY IDEA: physics units conversion, not necessarily direct. so km -> miles, Newtons -> grams (and can look at how g plays into effect), etc.)
+
+
+
+Prerequisites
+
+• Required: Python, PyTorch, NumPy, plotting, and background in data analysis.
+
+• Desirable: Basic familiarity with transformer internals, activation patching, and autoencoders.
+
+
+
+Reading List
+
+• On the Biology of a Large Language Model (follow citations within the post for context).
+
+
+
+Data Access
+
+Instructions on how to access the data with necessary links, if any.
+
+• Model: Qwen/Qwen3-4B-Instruct-2507 (open weights; feasible on a modern laptop or departmental GPU).
+
+• Prompts: Small synthetic sets adapted from the key publication’s examples, plus minor variants for robustness.
+
+• Code: Student maintains an independent repository implementing activation capture, SAE training, attribution-graph construction, and interventions.
+
+
+
+The data analysis project assessment will be summative assessment of:
+
+• Project Report (maximum of 7,000 words) on a subject from the list approved by the Degree Committee
+
+• An Executive Summary (maximum of 1,000 words) of the project. This is separate to the main report.
+
+• The Data Analysis Pipeline used for the analysis presented in the reports.
+
+• An Oral Presentation of the work.
+
+
+
+The relative weighting will be 40% Project Report and 10% executive summary, 25% Data Analysis Pipeline and
+
+25% Oral Presentation. The assessor will mark all elements collectively, using their academic judgement of each
+
+element to inform their judgement of the others. Candidates will only be supplied with a single mark for the
+
+project covering all aspects.
+
+
+
+Executive Summary
+
+The executive summary is a short overview of the report and should stand as a separate document. It is designed to mimic the type of document you would need to produce for research grant applications, or for senior managers, to describe your work at a high level. It should:
+
+• Condenses your research, focusing on the main points without delving into all the details contained in the
+
+full report.
+
+• Has a slightly broader target audience than your project report. It could be someone competent in maths
+
+and physics but not specialized in your field.
+
+• Address high level questions like: “Why is this project important?”, “What are the key achievements?”,
+
+“What are the next steps?” and “What is the likely impact of this project on the field?”
+
+
+
+https://transformer-circuits.pub/2025/attribution-graphs/biology.html
+
+
+
+Workspace:
+
+WSL Ubuntu 24.04.3 LTS
+
+Keep the code repo clean as it will be uploaded to github
+
+Also I have GPUS but will need to use google colab or something. For testing code can be run locally without gpu.

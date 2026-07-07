@@ -1,0 +1,190 @@
+Answer,Location,Type,OtherCity
+Montgomery,Alabama,state,Birmingham
+Juneau,Alaska,state,Anchorage
+Phoenix,Arizona,state,Mesa
+Sacramento,California,state,Los Angeles
+Denver,Colorado,state,Colorado Springs
+Hartford,Connecticut,state,Bridgeport
+Dover,Delaware,state,Wilmington
+Tallahassee,Florida,state,Jacksonville
+Atlanta,Georgia,state,Augusta
+Honolulu,Hawaii,state,Kailua
+Boise,Idaho,state,Nampa
+Springfield,Illinois,state,Chicago
+Indianapolis,Indiana,state,Fort Wayne
+Topeka,Kansas,state,Overland Park
+Frankfort,Kentucky,state,Louisville
+Augusta,Maine,state,Portland
+Annapolis,Maryland,state,Baltimore
+Boston,Massachusetts,state,Worcester
+Lansing,Michigan,state,Detroit
+Jackson,Mississippi,state,Gulfport
+Helena,Montana,state,Billings
+Lincoln,Nebraska,state,Omaha
+Carson City,Nevada,state,Las Vegas
+Concord,New Hampshire,state,Manchester
+Trenton,New Jersey,state,Newark
+Albany,New York,state,New York City
+Raleigh,North Carolina,state,Charlotte
+Bismarck,North Dakota,state,Fargo
+Columbus,Ohio,state,Cleveland
+Salem,Oregon,state,Portland
+Harrisburg,Pennsylvania,state,Philadelphia
+Providence,Rhode Island,state,Warwick
+Columbia,South Carolina,state,Charleston
+Pierre,South Dakota,state,Sioux Falls
+Nashville,Tennessee,state,Memphis
+Austin,Texas,state,Houston
+Montpelier,Vermont,state,Burlington
+Richmond,Virginia,state,Virginia Beach
+Olympia,Washington,state,Seattle
+Charleston,West Virginia,state,Huntington
+Madison,Wisconsin,state,Milwaukee
+Cheyenne,Wyoming,state,Casper
+Kabul,Afghanistan,country,Kandahar
+Tirana,Albania,country,Durrës
+Algiers,Algeria,country,Oran
+Luanda,Angola,country,Huambo
+Yerevan,Armenia,country,Gyumri
+Canberra,Australia,country,Sydney
+Vienna,Austria,country,Graz
+Baku,Azerbaijan,country,Ganja
+Nassau,Bahamas,country,Freeport
+Manama,Bahrain,country,Muharraq
+Dhaka,Bangladesh,country,Chittagong
+Bridgetown,Barbados,country,Speightstown
+Minsk,Belarus,country,Brest
+Brussels,Belgium,country,Antwerp
+Belmopan,Belize,country,Belize City
+Hamilton,Bermuda,country,St. George's
+Thimphu,Bhutan,country,Paro
+Sucre,Bolivia,country,La Paz
+Sarajevo,Bosnia and Herzegovina,country,Banja Luka
+Gaborone,Botswana,country,Francistown
+Sofia,Bulgaria,country,Plovdiv
+Ouagadougou,Burkina Faso,country,Bobo-Dioulasso
+Bujumbura,Burundi,country,Gitega
+Ottawa,Canada,country,Toronto
+Praia,Cape Verde,country,Mindelo
+Santiago,Chile,country,Valparaiso
+Beijing,China,country,Shanghai
+Moroni,Comoros,country,Mutsamudu
+Zagreb,Croatia,country,Split
+Havana,Cuba,country,Santiago
+Nicosia,Cyprus,country,Larnaca
+Prague,Czech Republic,country,Brno
+Copenhagen,Denmark,country,Aarhus
+Djibouti,Djibouti,country,Arta
+Roseau,Dominica,country,Portsmouth
+Quito,Ecuador,country,Guayaquil
+Cairo,Egypt,country,Alexandria
+Malabo,Equatorial Guinea,country,Bata
+Asmara,Eritrea,country,Keren
+Tallinn,Estonia,country,Tartu
+Addis Ababa,Ethiopia,country,Dire Dawa
+Suva,Fiji,country,Nadi
+Helsinki,Finland,country,Tampere
+Paris,France,country,Marseille
+Libreville,Gabon,country,Port-Gentil
+Banjul,Gambia,country,Serrekunda
+Tbilisi,Georgia,country,Kutaisi
+Berlin,Germany,country,Munich
+Accra,Ghana,country,Kumasi
+Gibraltar,Gibraltar,country,San Roque
+Athens,Greece,country,Thessaloniki
+Conakry,Guinea,country,Kindia
+Georgetown,Guyana,country,Linden
+Tegucigalpa,Honduras,country,San Pedro Sula
+Budapest,Hungary,country,Debrecen
+Jakarta,Indonesia,country,Surabaya
+Tehran,Iran,country,Mashhad
+Baghdad,Iraq,country,Basra
+Dublin,Ireland,country,Cork
+Jerusalem,Israel,country,Tel Aviv
+Rome,Italy,country,Milan
+Kingston,Jamaica,country,Montego Bay
+Tokyo,Japan,country,Osaka
+Amman,Jordan,country,Zarqa
+Astana,Kazakhstan,country,Almaty
+Nairobi,Kenya,country,Mombasa
+Tarawa,Kiribati,country,Betio
+Bishkek,Kyrgyzstan,country,Osh
+Vientiane,Laos,country,Savannakhet
+Riga,Latvia,country,Daugavpils
+Beirut,Lebanon,country,Tripoli
+Maseru,Lesotho,country,Teyateyaneng
+Monrovia,Liberia,country,Kakata
+Tripoli,Libya,country,Benghazi
+Vaduz,Liechtenstein,country,Schaan
+Vilnius,Lithuania,country,Kaunas
+Luxembourg,Luxembourg,country,Esch-sur-Alzette
+Skopje,Macedonia,country,Bitola
+Antananarivo,Madagascar,country,Toliara
+Lilongwe,Malawi,country,Blantyre
+Bamako,Mali,country,Timbuktu
+Valletta,Malta,country,Birkirkara
+Nouakchott,Mauritania,country,Nouadhibou
+Chisinau,Moldova,country,Balti
+Monaco,Monaco,country,La Rousse
+Ulaanbaatar,Mongolia,country,Darkhan
+Podgorica,Montenegro,country,Kotor
+Rabat,Morocco,country,Casablanca
+Maputo,Mozambique,country,Beira
+Naypyidaw,Myanmar,country,Yangon
+Windhoek,Namibia,country,Walvis Bay
+Yaren,Nauru,country,Meneng
+Kathmandu,Nepal,country,Pokhara
+Amsterdam,Netherlands,country,Rotterdam
+Managua,Nicaragua,country,León
+Niamey,Niger,country,Zinder
+Abuja,Nigeria,country,Lagos
+Pyongyang,North Korea,country,Hamhung
+Oslo,Norway,country,Bergen
+Muscat,Oman,country,Sur
+Islamabad,Pakistan,country,Karachi
+Asunción,Paraguay,country,Ciudad del Este
+Lima,Peru,country,Arequipa
+Manila,Philippines,country,Cebu City
+Warsaw,Poland,country,Kraków
+Lisbon,Portugal,country,Porto
+Doha,Qatar,country,Al Rayyan
+Taipei,Taiwan,country,Kaohsiung
+Bucharest,Romania,country,Cluj-Napoca
+Moscow,Russia,country,Saint Petersburg
+Kigali,Rwanda,country,Butare
+Apia,Samoa,country,Savai'i
+Riyadh,Saudi Arabia,country,Jeddah
+Edinburgh,Scotland,country,Glasgow
+Dakar,Senegal,country,Saint-Louis
+Belgrade,Serbia,country,Niš
+Victoria,Seychelles,country,Praslin
+Freetown,Sierra Leone,country,Kono
+Singapore,Singapore,country,Jurong
+Bratislava,Slovakia,country,Košice
+Ljubljana,Slovenia,country,Maribor
+Mogadishu,Somalia,country,Kismayo
+Pretoria,South Africa,country,Johannesburg
+Seoul,South Korea,country,Busan
+Madrid,Spain,country,Barcelona
+Khartoum,Sudan,country,Port Sudan
+Paramaribo,Suriname,country,Lelydorp
+Mbabane,Swaziland,country,Manzini
+Stockholm,Sweden,country,Gothenburg
+Bern,Switzerland,country,Zurich
+Damascus,Syria,country,Aleppo
+Dushanbe,Tajikistan,country,Khujand
+Dodoma,Tanzania,country,Dar es Salaam
+Bangkok,Thailand,country,Chiang Mai
+Tunis,Tunisia,country,Sfax
+Ankara,Turkey,country,Istanbul
+Ashgabat,Turkmenistan,country,Turkmenbashi
+Funafuti,Tuvalu,country,Nui
+Kampala,Uganda,country,Gulu
+Kyiv,Ukraine,country,Kharkiv
+Montevideo,Uruguay,country,Punta del Este
+Tashkent,Uzbekistan,country,Samarkand
+Port Vila,Vanuatu,country,Espiritu Santo
+Caracas,Venezuela,country,Valencia
+Hanoi,Vietnam,country,Ho Chi Minh City
+Lusaka,Zambia,country,Ndola
+Harare,Zimbabwe,country,Bulawayo

@@ -1,0 +1,8 @@
+output_dir: "outputs/baselines"
+behaviours:
+  - capitals
+  - addition
+  - units
+save_logits: true
+save_top_k_tokens: 20
+seed: 787
