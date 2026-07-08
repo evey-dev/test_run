@@ -376,10 +376,16 @@ def main() -> None:
             # SAE Decode
             x_hat_norm = sae_model.decoder(z) + sae_model.decoder_bias
             x_hat = x_hat_norm * scaling_factor
-            
-            # Replace MLP output at last token position
+
+            # Error-preserving straight-through edit at the last token position.
+            # The forward VALUE stays the model's true activation (so predictions are
+            # bit-for-bit identical to the clean run), while gradients still flow
+            # through the SAE latents z via (x_hat - x_hat.detach()) == 0 in value.
+            # This avoids stacking every hooked layer's reconstruction error into the
+            # forward pass (which previously swamped the signal and collapsed the
+            # prediction to a bare token). Mirrors the splice edit used in intervention.py.
             new_output = output_t.clone()
-            new_output[:, -1, :] = x_hat
+            new_output[:, -1, :] = last_token_act + (x_hat - x_hat.detach())
             return new_output
         return hook_fn
 
