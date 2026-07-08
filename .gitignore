@@ -23,14 +23,12 @@ dist/
 .eggs/
 
 # Generated data and outputs
-outputs/
 *.csv
 !data/capitals_base.csv
 !data/generate_datasets.py
 
 # Large model and activation artifacts
 models/
-mechanistic_data/*
 
 # OS files
 .DS_Store
