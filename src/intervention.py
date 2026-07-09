@@ -246,51 +246,76 @@ def run_swap_in_intervention(
     swap_features: Dict[int, List[int]] | None = None,
     target_tokens: List[str] | None = None,
     edit_strength: float = 1.0,
-    raw_mlp_swap: bool = False
+    raw_mlp_swap: bool = False,
+    position_spec: str = "last"
 ) -> Dict[str, Any]:
-    """Capture activations from a source prompt and swap them into the target prompt run."""
-    # 1. Capture source prompt latents
+    """Capture activations from a source prompt and swap them into the target prompt run.
+
+    The swap can target any set of token positions (``position_spec``), not just the
+    final token. For a minimal-pair activation patch (e.g. a carry vs no-carry prompt
+    that differ in a single token), the source and target must tokenize to the same
+    length so positions line up; this is validated below.
+    """
+    source_inputs = tokenizer(source_prompt, return_tensors="pt").to(model.device)
+    target_inputs = tokenizer(target_prompt, return_tensors="pt").to(model.device)
+    src_len = source_inputs["input_ids"].shape[1]
+    tgt_len = target_inputs["input_ids"].shape[1]
+
+    # Positions are resolved against the target sequence; the same indices are read
+    # from the captured source activations, so alignment requires equal lengths for
+    # any non-final position spec.
+    position_idxs = resolve_positions(position_spec, tgt_len)
+    if position_spec.strip().lower() not in {"last", "final"} and src_len != tgt_len:
+        raise ValueError(
+            f"Position-aligned swap needs equal-length prompts, but source has {src_len} "
+            f"tokens and target has {tgt_len}. Use --positions last, or pick a minimal "
+            f"pair that tokenizes to the same length."
+        )
+    tgt_input_ids = target_inputs["input_ids"][0].detach().cpu().tolist()
+    position_records = token_position_records(tokenizer, tgt_input_ids, position_idxs)
+
+    # 1. Capture source prompt latents (and raw MLP outputs) at the selected positions.
     source_z = {}
     source_raw_mlp = {}
     hooks = []
-    
+
     def make_capture_hook(layer_idx, sae_model, scaling_factor):
         def hook_fn(module, input_t, output_t):
-            source_raw_mlp[layer_idx] = output_t[:, -1, :].detach()
+            sel_act = output_t[:, position_idxs, :]
+            source_raw_mlp[layer_idx] = sel_act.detach()
             if raw_mlp_swap:
                 return output_t
-            last_token_act = output_t[:, -1, :]
-            last_token_norm = last_token_act / scaling_factor
-            x_centered = last_token_norm - sae_model.decoder_bias
+            flat = sel_act.reshape(-1, sel_act.shape[-1]) / scaling_factor
+            x_centered = flat - sae_model.decoder_bias
             z = torch.relu(sae_model.encoder(x_centered))
             source_z[layer_idx] = z.detach()
             return output_t
         return hook_fn
-        
+
     for layer in layers:
         sae_model, scaling_factor = saes[layer]
         h = model.model.layers[layer].mlp.register_forward_hook(
             make_capture_hook(layer, sae_model, scaling_factor)
         )
         hooks.append(h)
-        
-    source_inputs = tokenizer(source_prompt, return_tensors="pt").to(model.device)
-    print(f"Capturing source activations on prompt: '{source_prompt}'...")
+
+    print(f"Capturing source activations on prompt: '{source_prompt}' at positions {position_idxs}...")
     with torch.no_grad():
         model(**source_inputs)
-        
+
     for h in hooks:
         h.remove()
-        
-    # 2. Run target prompt while swapping in source activations
+
+    # 2. Run target prompt while swapping in source activations at the same positions.
     swap_hooks = []
 
     def make_swap_hook(layer_idx, sae_model, scaling_factor, src_z, f_list):
         def hook_fn(module, input_t, output_t):
-            last_token_act = output_t[:, -1, :]
-            last_token_norm = last_token_act / scaling_factor
+            sel_act = output_t[:, position_idxs, :]
+            flat = sel_act.reshape(-1, sel_act.shape[-1])
+            flat_norm = flat / scaling_factor
 
-            x_centered = last_token_norm - sae_model.decoder_bias
+            x_centered = flat_norm - sae_model.decoder_bias
             z = torch.relu(sae_model.encoder(x_centered))
 
             # Align src_z device/dtype
@@ -312,13 +337,13 @@ def run_swap_in_intervention(
             # target's true activation. With f_list=None this equals the full source
             # reconstruction plus the target's own reconstruction error.
             delta_norm = sae_model.decoder(z_swapped - z) * edit_strength
-            new_last = last_token_act + delta_norm * scaling_factor
+            new_sel = sel_act + (delta_norm * scaling_factor).reshape_as(sel_act)
 
             new_output = output_t.clone()
-            new_output[:, -1, :] = new_last
+            new_output[:, position_idxs, :] = new_sel
             return new_output
         return hook_fn
-        
+
     for layer in layers:
         sae_model, scaling_factor = saes[layer]
         src_z = source_z.get(layer)
@@ -327,10 +352,10 @@ def run_swap_in_intervention(
         # swap_features is a dict => only touch layers it names; others are a no-op ([]).
         f_list = None if swap_features is None else swap_features.get(layer, [])
         if raw_mlp_swap:
-            def make_raw_swap_hook(layer_idx, raw_last_token):
+            def make_raw_swap_hook(layer_idx, raw_sel):
                 def hook_fn(module, input_t, output_t):
                     new_output = output_t.clone()
-                    new_output[:, -1, :] = raw_last_token.to(device=output_t.device, dtype=output_t.dtype)
+                    new_output[:, position_idxs, :] = raw_sel.to(device=output_t.device, dtype=output_t.dtype)
                     return new_output
                 return hook_fn
             h = model.model.layers[layer].mlp.register_forward_hook(
@@ -341,21 +366,21 @@ def run_swap_in_intervention(
                 make_swap_hook(layer, sae_model, scaling_factor, src_z, f_list)
             )
         swap_hooks.append(h)
-        
-    target_inputs = tokenizer(target_prompt, return_tensors="pt").to(model.device)
-    print(f"Running target pass with swap-in on prompt: '{target_prompt}'...")
+
+    print(f"Running target pass with swap-in on prompt: '{target_prompt}' at positions {position_idxs}...")
+    print_position_selection(tokenizer, tgt_input_ids, position_idxs, label="Swapping into")
     with torch.no_grad():
         outputs = model(**target_inputs)
-        
+
     for h in swap_hooks:
         h.remove()
-        
+
     logits = outputs.logits[0, -1, :]
     probs = torch.softmax(logits, dim=-1)
-    
+
     intervened_top_id = torch.argmax(logits).item()
     intervened_top_tok = tokenizer.decode([intervened_top_id])
-    
+
     targets_info = {}
     if target_tokens:
         for t in target_tokens:
@@ -369,12 +394,14 @@ def run_swap_in_intervention(
                     "logit": float(logits[t_id].item()),
                     "prob": float(probs[t_id].item())
                 }
-            
+
     return {
         "top_token": intervened_top_tok,
         "top_logit": float(logits[intervened_top_id].item()),
         "top_prob": float(probs[intervened_top_id].item()),
-        "targets": targets_info
+        "targets": targets_info,
+        "positions": position_idxs,
+        "position_tokens": position_records,
     }
 
 
@@ -869,16 +896,52 @@ def main() -> None:
             swap_desc = "RAW MLP output at every requested layer"
         else:
             swap_desc = "FULL latent code at every requested layer" if not features_dict else f"features {features_dict}"
-        print(f"\nRunning Swap-In Intervention (swapping {swap_desc} from source to target; edit_strength={args.edit_strength})...")
+        print(f"\nRunning Swap-In Intervention (swapping {swap_desc} from source to target "
+              f"at positions '{args.positions}'; edit_strength={args.edit_strength})...")
         inter_res = run_swap_in_intervention(
-            model, tokenizer, args.source_prompt, args.prompt, args.layers, saes, 
-            features_dict if features_dict else None, target_tokens, args.edit_strength, args.raw_mlp_swap
+            model, tokenizer, args.source_prompt, args.prompt, args.layers, saes,
+            features_dict if features_dict else None, target_tokens, args.edit_strength,
+            args.raw_mlp_swap, args.positions
         )
         results["intervention"] = inter_res
         print(f"  - Top prediction: '{inter_res['top_token']}' (prob: {inter_res['top_prob']:.4f}, logit: {inter_res['top_logit']:.2f})")
         for t, info in inter_res.get("targets", {}).items():
             t_rep = t.replace("\n", "\\n").replace("\r", "\\r")
             print(f"  - Target '{t_rep}': prob: {info['prob']:.4f}, logit: {info['logit']:.2f}")
+
+        # --layer-scan (swap mode): patch source activations one layer at a time to
+        # localize which layer's swap moves the target/contrast digits the most. This
+        # is the swap-mode analogue of the full-knockout layer scan and is the clean
+        # way to test whether a single layer (e.g. layer 24) carries the effect.
+        if args.layer_scan:
+            print(f"\n[diagnostic] Per-layer swap scan (one layer patched at a time):")
+            layer_scan_results = []
+            for layer in args.layers:
+                # Restrict the swap to this single layer: full latent code if no
+                # features were named, else that layer's named features (others no-op).
+                if features_dict:
+                    single = {layer: features_dict.get(layer, [])}
+                else:
+                    single = {L: (None if L == layer else []) for L in args.layers}
+                layer_res = run_swap_in_intervention(
+                    model, tokenizer, args.source_prompt, args.prompt, args.layers, saes,
+                    single, target_tokens, args.edit_strength, args.raw_mlp_swap, args.positions
+                )
+                layer_scan_results.append({"layer": layer, "result": layer_res})
+                print(f"\n  --- Layer {layer} only ---")
+                print(f"  Top prediction: '{layer_res['top_token']}' "
+                      f"(prob: {layer_res['top_prob']:.4f}, logit: {layer_res['top_logit']:.2f})")
+                for t, info in layer_res.get("targets", {}).items():
+                    t_id = tokenizer.convert_tokens_to_ids(t)
+                    if t_id == tokenizer.unk_token_id:
+                        ids = tokenizer.encode(t, add_special_tokens=False)
+                        if ids:
+                            t_id = ids[0]
+                    if t_id != tokenizer.unk_token_id:
+                        delta = info["logit"] - float(base_logits[t_id].item())
+                        t_rep = t.replace("\n", "\\n").replace("\r", "\\r")
+                        print(f"  Target '{t_rep}': logit: {info['logit']:.2f} (delta from clean: {delta:+.2f})")
+            results["layer_scan"] = layer_scan_results
 
     # Save results
     output_path = resolve_path(args.output, repo_root)
