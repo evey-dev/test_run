@@ -62,6 +62,57 @@ def get_baseline_predictions(model, tokenizer, prompt: str) -> Tuple[torch.Tenso
     return logits, top_id, top_tok
 
 
+def resolve_positions(position_spec: str, seq_len: int) -> List[int]:
+    """Resolve a position spec into concrete token indices."""
+    spec = position_spec.strip().lower()
+    if spec in {"last", "final"}:
+        return [seq_len - 1]
+    if spec == "all":
+        return list(range(seq_len))
+
+    positions: List[int] = []
+    for raw_part in spec.split(","):
+        part = raw_part.strip()
+        if not part:
+            continue
+        idx = int(part)
+        if idx < 0:
+            idx = seq_len + idx
+        if idx < 0 or idx >= seq_len:
+            raise ValueError(f"Position {raw_part!r} resolved to {idx}, outside sequence length {seq_len}")
+        if idx not in positions:
+            positions.append(idx)
+    if not positions:
+        raise ValueError(f"Could not parse --positions value: {position_spec!r}")
+    return positions
+
+
+def token_position_records(tokenizer, input_ids: List[int], positions: List[int]) -> List[Dict[str, Any]]:
+    """Return readable token metadata for selected prompt positions."""
+    records = []
+    for idx in positions:
+        tok_id = int(input_ids[idx])
+        tok = tokenizer.decode([tok_id]).replace("\n", "\\n").replace("\r", "\\r")
+        records.append({"position": int(idx), "token_id": tok_id, "token": tok})
+    return records
+
+
+def print_position_selection(tokenizer, input_ids: List[int], positions: List[int], label: str = "Editing") -> None:
+    """Print the exact prompt tokens that an intervention will edit."""
+    records = token_position_records(tokenizer, input_ids, positions)
+    print(f"{label} token positions:")
+    for rec in records:
+        print(f"  {rec['position']:>2}: id={rec['token_id']:<8} token={rec['token']!r}")
+
+
+def print_token_positions(tokenizer, prompt: str) -> None:
+    """Print prompt token indices for choosing --positions values."""
+    encoded = tokenizer(prompt, return_tensors="pt")
+    ids = encoded["input_ids"][0].tolist()
+    print_position_selection(tokenizer, ids, list(range(len(ids))), label="Prompt")
+    print(f"Use --positions last, --positions all, or comma-separated indices such as --positions 4,5,9")
+
+
 def run_inhibition_intervention(
     model,
     tokenizer,
@@ -69,7 +120,9 @@ def run_inhibition_intervention(
     layers: List[int],
     saes: Dict[int, Tuple[SparseAutoencoder, float]],
     inhibited_features: Dict[int, List[int]],
-    target_tokens: List[str] | None = None
+    target_tokens: List[str] | None = None,
+    edit_strength: float = 1.0,
+    position_spec: str = "last"
 ) -> Dict[str, Any]:
     """Zero-out specific feature activations and measure changes in model output.
 
@@ -83,16 +136,20 @@ def run_inhibition_intervention(
     reconstruction error of every hooked layer.
     """
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    position_idxs = resolve_positions(position_spec, inputs["input_ids"].shape[1])
+    input_ids = inputs["input_ids"][0].detach().cpu().tolist()
+    position_records = token_position_records(tokenizer, input_ids, position_idxs)
     hooks = []
     # Record the pre-ablation activation of each targeted feature for diagnostics.
-    captured_feature_acts: Dict[int, Dict[int, float]] = {}
+    captured_feature_acts: Dict[int, Dict[int, Dict[str, Any]]] = {}
 
     def make_inhibition_hook(layer_idx, sae_model, scaling_factor, f_list):
         def hook_fn(module, input_t, output_t):
-            last_token_act = output_t[:, -1, :]
-            last_token_norm = last_token_act / scaling_factor
+            selected_act = output_t[:, position_idxs, :]
+            flat_act = selected_act.reshape(-1, selected_act.shape[-1])
+            flat_norm = flat_act / scaling_factor
 
-            x_centered = last_token_norm - sae_model.decoder_bias
+            x_centered = flat_norm - sae_model.decoder_bias
             z = torch.relu(sae_model.encoder(x_centered))
 
             if not f_list:
@@ -103,16 +160,28 @@ def run_inhibition_intervention(
             z_ablated = z.clone()
             for f_idx in f_list:
                 if 0 <= f_idx < z.shape[1]:
-                    layer_acts[int(f_idx)] = float(z[:, f_idx].max().item())
+                    vals = z[:, f_idx].detach().float().cpu().tolist()
+                    by_position = []
+                    for pos_rec, act in zip(position_records, vals):
+                        by_position.append({
+                            "position": pos_rec["position"],
+                            "token": pos_rec["token"],
+                            "activation": float(act),
+                        })
+                    layer_acts[int(f_idx)] = {
+                        "max": float(max(vals)) if vals else 0.0,
+                        "mean": float(np.mean(vals)) if vals else 0.0,
+                        "by_position": by_position,
+                    }
                     z_ablated[:, f_idx] = 0.0
             captured_feature_acts[layer_idx] = layer_acts
 
             # Error-preserving edit: add only the *change* in reconstruction (decoder is bias-free).
-            delta_norm = sae_model.decoder(z_ablated - z)
-            new_last = last_token_act + delta_norm * scaling_factor
+            delta_norm = sae_model.decoder(z_ablated - z) * edit_strength
+            new_selected = selected_act + (delta_norm * scaling_factor).reshape_as(selected_act)
 
             new_output = output_t.clone()
-            new_output[:, -1, :] = new_last
+            new_output[:, position_idxs, :] = new_selected
             return new_output
         return hook_fn
 
@@ -125,7 +194,8 @@ def run_inhibition_intervention(
         )
         hooks.append(h)
 
-    print(f"Running forward pass with inhibition: {inhibited_features}...")
+    print(f"Running forward pass with inhibition at positions {position_idxs}: {inhibited_features}...")
+    print_position_selection(tokenizer, input_ids, position_idxs)
     with torch.no_grad():
         outputs = model(**inputs)
     logits = outputs.logits[0, -1, :]
@@ -161,6 +231,8 @@ def run_inhibition_intervention(
         "top_prob": float(probs[intervened_top_id].item()),
         "targets": targets_info,
         "feature_activations": captured_feature_acts,
+        "positions": position_idxs,
+        "position_tokens": position_records,
     }
 
 
@@ -172,15 +244,21 @@ def run_swap_in_intervention(
     layers: List[int],
     saes: Dict[int, Tuple[SparseAutoencoder, float]],
     swap_features: Dict[int, List[int]] | None = None,
-    target_tokens: List[str] | None = None
+    target_tokens: List[str] | None = None,
+    edit_strength: float = 1.0,
+    raw_mlp_swap: bool = False
 ) -> Dict[str, Any]:
     """Capture activations from a source prompt and swap them into the target prompt run."""
     # 1. Capture source prompt latents
     source_z = {}
+    source_raw_mlp = {}
     hooks = []
     
     def make_capture_hook(layer_idx, sae_model, scaling_factor):
         def hook_fn(module, input_t, output_t):
+            source_raw_mlp[layer_idx] = output_t[:, -1, :].detach()
+            if raw_mlp_swap:
+                return output_t
             last_token_act = output_t[:, -1, :]
             last_token_norm = last_token_act / scaling_factor
             x_centered = last_token_norm - sae_model.decoder_bias
@@ -233,7 +311,7 @@ def run_swap_in_intervention(
             # Error-preserving edit: apply only the change in reconstruction to the
             # target's true activation. With f_list=None this equals the full source
             # reconstruction plus the target's own reconstruction error.
-            delta_norm = sae_model.decoder(z_swapped - z)
+            delta_norm = sae_model.decoder(z_swapped - z) * edit_strength
             new_last = last_token_act + delta_norm * scaling_factor
 
             new_output = output_t.clone()
@@ -243,13 +321,25 @@ def run_swap_in_intervention(
         
     for layer in layers:
         sae_model, scaling_factor = saes[layer]
-        src_z = source_z[layer]
+        src_z = source_z.get(layer)
+        src_raw = source_raw_mlp[layer]
         # swap_features is None => swap entire latent code at every layer.
         # swap_features is a dict => only touch layers it names; others are a no-op ([]).
         f_list = None if swap_features is None else swap_features.get(layer, [])
-        h = model.model.layers[layer].mlp.register_forward_hook(
-            make_swap_hook(layer, sae_model, scaling_factor, src_z, f_list)
-        )
+        if raw_mlp_swap:
+            def make_raw_swap_hook(layer_idx, raw_last_token):
+                def hook_fn(module, input_t, output_t):
+                    new_output = output_t.clone()
+                    new_output[:, -1, :] = raw_last_token.to(device=output_t.device, dtype=output_t.dtype)
+                    return new_output
+                return hook_fn
+            h = model.model.layers[layer].mlp.register_forward_hook(
+                make_raw_swap_hook(layer, src_raw)
+            )
+        else:
+            h = model.model.layers[layer].mlp.register_forward_hook(
+                make_swap_hook(layer, sae_model, scaling_factor, src_z, f_list)
+            )
         swap_hooks.append(h)
         
     target_inputs = tokenizer(target_prompt, return_tensors="pt").to(model.device)
@@ -300,8 +390,16 @@ def main() -> None:
     parser.add_argument("--sae-config", default="configs/sae_config.yaml")
     parser.add_argument("--output", default="outputs/intervention_results.json", help="Path to save output results")
     parser.add_argument("--graph-json", default=None, help="Path to attribution graph JSON; extracts all features from nodes to use as ablation targets")
+    parser.add_argument("--graph-feature-sign", choices=["all", "positive", "negative"], default="all", help="When using --graph-json, keep all features, only positive-attribution features, or only negative-attribution features")
+    parser.add_argument("--edit-strength", type=float, default=1.0, help="Multiplier for SAE decoder-delta edits. 1.0 is a literal ablation/swap; >1 is a stress-test diagnostic")
+    parser.add_argument("--raw-mlp-swap", action="store_true", help="Swap raw source MLP outputs instead of SAE latents (swap-mode upper-bound diagnostic; currently uses final token)")
     parser.add_argument("--scan", action="store_true", help="Progressive ablation scan: ablate top-10/25/50/100/ALL features by attribution magnitude")
-    parser.add_argument("--full-knockout", action="store_true", help="Zero out entire MLP output at last token position for all hooked layers (diagnostic)")
+    parser.add_argument("--full-knockout", action="store_true", help="Zero out an entire component at selected token positions for all hooked layers (diagnostic)")
+    parser.add_argument("--knockout-component", choices=["mlp", "attn", "block"], default="mlp", help="Component to zero for --full-knockout. 'block' zeros the layer output hidden state at the last token.")
+    parser.add_argument("--layer-scan", action="store_true", help="With --full-knockout, also run one knockout per layer to localize which layer matters most")
+    parser.add_argument("--position-scan", action="store_true", help="With --full-knockout, also run one knockout per selected token position")
+    parser.add_argument("--positions", default="last", help="Token positions to edit: 'last', 'all', or comma-separated indices such as '4,5,9'. Negative indices are allowed.")
+    parser.add_argument("--print-tokens", action="store_true", help="Print prompt token positions and exit")
     args = parser.parse_args()
 
     repo_root = get_repo_root()
@@ -312,6 +410,10 @@ def main() -> None:
     
     print("Loading model...")
     model, tokenizer, model_cfg = load_model_and_tokenizer(repo_root / args.model_config)
+
+    if args.print_tokens:
+        print_token_positions(tokenizer, args.prompt)
+        return
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
     saes = load_sae_models(args.layers, sae_dir, hidden_size, latent_dim, device, model.dtype)
@@ -336,18 +438,38 @@ def main() -> None:
         with open(graph_path, "r", encoding="utf-8") as fh:
             graph_data = json.load(fh)
         graph_nodes = graph_data.get("nodes", [])
-        # Build features_dict from graph nodes whose id matches "layer_X_feature_Y"
+        # Build features_dict from graph nodes whose id matches "layer_X_feature_Y".
+        # Positive attribution means the feature supports the graphed target logit;
+        # negative attribution means it suppresses that logit. For inhibition, mixing
+        # both signs can cancel the effect, so --graph-feature-sign positive is often
+        # the cleanest "remove support for this answer" test.
         graph_features_dict: Dict[int, List[int]] = {}
+        skipped_by_sign = 0
+        skipped_by_layer = 0
         for node in graph_nodes:
             node_id = node.get("id", "")
             m = re.match(r"layer_(\d+)_feature_(\d+)", node_id)
             if m:
                 layer_idx = int(m.group(1))
+                if layer_idx not in args.layers:
+                    skipped_by_layer += 1
+                    continue
+                attribution = float(node.get("attribution", 0.0))
+                if args.graph_feature_sign == "positive" and attribution <= 0:
+                    skipped_by_sign += 1
+                    continue
+                if args.graph_feature_sign == "negative" and attribution >= 0:
+                    skipped_by_sign += 1
+                    continue
                 feat_idx = int(m.group(2))
                 graph_features_dict.setdefault(layer_idx, []).append(feat_idx)
         features_dict = graph_features_dict
         print(f"Loaded {len(graph_nodes)} nodes from graph JSON; extracted features across {len(features_dict)} layers "
               f"({sum(len(v) for v in features_dict.values())} total features)")
+        if skipped_by_layer:
+            print(f"  Layer filter: using layers {args.layers} (skipped {skipped_by_layer} graph feature nodes)")
+        if args.graph_feature_sign != "all":
+            print(f"  Graph feature sign filter: {args.graph_feature_sign} (skipped {skipped_by_sign} feature nodes)")
 
     # Validate --scan usage
     if args.scan and not args.graph_json:
@@ -431,7 +553,7 @@ def main() -> None:
         # Run SAE reconstruction-only baseline (no features inhibited)
         print("\n[2/3] Running SAE Reconstruction-only Baseline (no features inhibited)...")
         recon_res = run_inhibition_intervention(
-            model, tokenizer, args.prompt, args.layers, saes, {}, target_tokens
+            model, tokenizer, args.prompt, args.layers, saes, {}, target_tokens, position_spec=args.positions
         )
         results["reconstruction_baseline"] = recon_res
         print(f"  - Top prediction: '{recon_res['top_token']}' (prob: {recon_res['top_prob']:.4f}, logit: {recon_res['top_logit']:.2f})")
@@ -439,59 +561,178 @@ def main() -> None:
             t_rep = t.replace("\n", "\\n").replace("\r", "\\r")
             print(f"  - Target '{t_rep}': prob: {info['prob']:.4f}, logit: {info['logit']:.2f}")
 
-        # --full-knockout: zero out entire MLP output at last token for all hooked layers
+        # --full-knockout: zero out an entire component at selected token positions.
         if args.full_knockout:
-            print(f"\n[3/3] Running Full MLP Knockout (zeroing MLP output at last token for layers {args.layers})...")
-            inputs_ko = tokenizer(args.prompt, return_tensors="pt").to(model.device)
-            ko_hooks = []
+            def run_component_knockout(
+                knockout_layers: List[int],
+                show_positions: bool = False,
+                position_spec_override: str | None = None
+            ) -> Dict[str, Any]:
+                inputs_ko = tokenizer(args.prompt, return_tensors="pt").to(model.device)
+                position_spec = position_spec_override if position_spec_override is not None else args.positions
+                position_idxs = resolve_positions(position_spec, inputs_ko["input_ids"].shape[1])
+                input_ids = inputs_ko["input_ids"][0].detach().cpu().tolist()
+                position_records = token_position_records(tokenizer, input_ids, position_idxs)
+                if show_positions:
+                    print_position_selection(
+                        tokenizer,
+                        input_ids,
+                        position_idxs,
+                        label=f"{args.knockout_component.upper()} knockout editing",
+                    )
+                ko_hooks = []
+                component_activation_norms: Dict[int, List[Dict[str, Any]]] = {}
 
-            def make_full_knockout_hook(layer_idx):
-                def hook_fn(module, input_t, output_t):
-                    new_output = output_t.clone()
-                    new_output[:, -1, :] = 0.0
-                    return new_output
-                return hook_fn
+                def make_full_knockout_hook(layer_idx):
+                    def hook_fn(module, input_t, output_t):
+                        # MLP modules return a tensor. Attention/layer modules may return
+                        # either a tensor or a tuple whose first item is hidden states.
+                        if isinstance(output_t, tuple):
+                            original_hidden = output_t[0]
+                            selected = original_hidden[:, position_idxs, :].detach().float()
+                            l2_norms = selected.norm(dim=-1)[0].cpu().tolist()
+                            mean_abs = selected.abs().mean(dim=-1)[0].cpu().tolist()
+                            component_activation_norms[layer_idx] = [
+                                {
+                                    "position": rec["position"],
+                                    "token": rec["token"],
+                                    "l2_norm": float(l2),
+                                    "mean_abs": float(ma),
+                                }
+                                for rec, l2, ma in zip(position_records, l2_norms, mean_abs)
+                            ]
+                            hidden = original_hidden.clone()
+                            hidden[:, position_idxs, :] = 0.0
+                            return (hidden,) + output_t[1:]
+                        selected = output_t[:, position_idxs, :].detach().float()
+                        l2_norms = selected.norm(dim=-1)[0].cpu().tolist()
+                        mean_abs = selected.abs().mean(dim=-1)[0].cpu().tolist()
+                        component_activation_norms[layer_idx] = [
+                            {
+                                "position": rec["position"],
+                                "token": rec["token"],
+                                "l2_norm": float(l2),
+                                "mean_abs": float(ma),
+                            }
+                            for rec, l2, ma in zip(position_records, l2_norms, mean_abs)
+                        ]
+                        new_output = output_t.clone()
+                        new_output[:, position_idxs, :] = 0.0
+                        return new_output
+                    return hook_fn
 
-            for layer in args.layers:
-                h = model.model.layers[layer].mlp.register_forward_hook(
-                    make_full_knockout_hook(layer)
+                for layer in knockout_layers:
+                    block = model.model.layers[layer]
+                    if args.knockout_component == "mlp":
+                        module = block.mlp
+                    elif args.knockout_component == "attn":
+                        module = block.self_attn
+                    else:
+                        module = block
+                    h = module.register_forward_hook(make_full_knockout_hook(layer))
+                    ko_hooks.append(h)
+
+                with torch.no_grad():
+                    ko_outputs = model(**inputs_ko)
+                ko_logits = ko_outputs.logits[0, -1, :]
+
+                for h in ko_hooks:
+                    h.remove()
+
+                ko_probs = torch.softmax(ko_logits, dim=-1)
+                ko_top_id = torch.argmax(ko_logits).item()
+                ko_top_tok = tokenizer.decode([ko_top_id])
+                ko_result = {
+                    "top_token": ko_top_tok,
+                    "top_logit": float(ko_logits[ko_top_id].item()),
+                    "top_prob": float(ko_probs[ko_top_id].item()),
+                    "knockout_component": args.knockout_component,
+                    "layers": knockout_layers,
+                    "position_spec": position_spec,
+                    "positions": position_idxs,
+                    "position_tokens": position_records,
+                    "component_activation_norms": component_activation_norms,
+                    "targets": {}
+                }
+                for t in target_tokens:
+                    t_id = tokenizer.convert_tokens_to_ids(t)
+                    if t_id == tokenizer.unk_token_id:
+                        ids = tokenizer.encode(t, add_special_tokens=False)
+                        if ids:
+                            t_id = ids[0]
+                    if t_id != tokenizer.unk_token_id:
+                        ko_result["targets"][t] = {
+                            "logit": float(ko_logits[t_id].item()),
+                            "prob": float(ko_probs[t_id].item()),
+                            "delta_logit": float(ko_logits[t_id].item()) - float(base_logits[t_id].item())
+                        }
+                return ko_result
+
+            def print_knockout_result(ko_result: Dict[str, Any]) -> None:
+                print(
+                    f"  - Top prediction: '{ko_result['top_token']}' "
+                    f"(prob: {ko_result['top_prob']:.4f}, logit: {ko_result['top_logit']:.2f})"
                 )
-                ko_hooks.append(h)
-
-            with torch.no_grad():
-                ko_outputs = model(**inputs_ko)
-            ko_logits = ko_outputs.logits[0, -1, :]
-
-            for h in ko_hooks:
-                h.remove()
-
-            ko_probs = torch.softmax(ko_logits, dim=-1)
-            ko_top_id = torch.argmax(ko_logits).item()
-            ko_top_tok = tokenizer.decode([ko_top_id])
-
-            ko_result = {
-                "top_token": ko_top_tok,
-                "top_logit": float(ko_logits[ko_top_id].item()),
-                "top_prob": float(ko_probs[ko_top_id].item()),
-                "targets": {}
-            }
-            print(f"  - Top prediction: '{ko_top_tok}' (prob: {ko_probs[ko_top_id].item():.4f}, logit: {ko_logits[ko_top_id].item():.2f})")
-            for t in target_tokens:
-                t_id = tokenizer.convert_tokens_to_ids(t)
-                if t_id == tokenizer.unk_token_id:
-                    ids = tokenizer.encode(t, add_special_tokens=False)
-                    if ids:
-                        t_id = ids[0]
-                if t_id != tokenizer.unk_token_id:
-                    ko_result["targets"][t] = {
-                        "logit": float(ko_logits[t_id].item()),
-                        "prob": float(ko_probs[t_id].item())
-                    }
-                    delta = float(ko_logits[t_id].item()) - float(base_logits[t_id].item())
+                for t, info in ko_result.get("targets", {}).items():
                     t_rep = t.replace("\n", "\\n").replace("\r", "\\r")
-                    print(f"  - Target '{t_rep}': prob: {ko_probs[t_id].item():.4f}, logit: {ko_logits[t_id].item():.2f} (delta: {delta:+.2f})")
+                    print(
+                        f"  - Target '{t_rep}': prob: {info['prob']:.4f}, "
+                        f"logit: {info['logit']:.2f} (delta: {info['delta_logit']:+.2f})"
+                    )
+                norms = ko_result.get("component_activation_norms", {})
+                if norms:
+                    print(f"  [diagnostic] Pre-knockout {ko_result['knockout_component']} output norms:")
+                    for layer in ko_result.get("layers", []):
+                        rows = norms.get(layer, [])
+                        if not rows:
+                            continue
+                        if len(rows) <= 8:
+                            detail = ", ".join(
+                                f"{r['position']}:{r['token']!r} l2={r['l2_norm']:.2f}"
+                                for r in rows
+                            )
+                            print(f"    L{layer}: {detail}")
+                        else:
+                            l2_vals = [float(r["l2_norm"]) for r in rows]
+                            max_row = rows[int(np.argmax(l2_vals))]
+                            print(
+                                f"    L{layer}: mean_l2={float(np.mean(l2_vals)):.2f}, "
+                                f"max_l2={float(max(l2_vals)):.2f} "
+                                f"at {max_row['position']}:{max_row['token']!r}"
+                            )
 
+            print(
+                f"\n[3/3] Running Full {args.knockout_component.upper()} Knockout "
+                f"(zeroing {args.knockout_component} output at positions '{args.positions}' for layers {args.layers})..."
+            )
+            ko_result = run_component_knockout(args.layers, show_positions=True)
+            print_knockout_result(ko_result)
             results["full_knockout"] = ko_result
+
+            if args.layer_scan:
+                print(f"\n[diagnostic] Per-layer {args.knockout_component.upper()} knockout scan:")
+                layer_scan_results = []
+                for layer in args.layers:
+                    layer_res = run_component_knockout([layer])
+                    layer_scan_results.append(layer_res)
+                    print(f"\n  --- Layer {layer} only ---")
+                    print_knockout_result(layer_res)
+                results["layer_scan"] = layer_scan_results
+
+            if args.position_scan:
+                scan_inputs = tokenizer(args.prompt, return_tensors="pt")
+                scan_positions = resolve_positions(args.positions, scan_inputs["input_ids"].shape[1])
+                input_ids = scan_inputs["input_ids"][0].tolist()
+                scan_records = token_position_records(tokenizer, input_ids, scan_positions)
+                print(f"\n[diagnostic] Per-position {args.knockout_component.upper()} knockout scan:")
+                position_scan_results = []
+                for rec in scan_records:
+                    pos = int(rec["position"])
+                    pos_res = run_component_knockout(args.layers, position_spec_override=str(pos))
+                    position_scan_results.append(pos_res)
+                    print(f"\n  --- Position {pos}: {rec['token']!r} only ---")
+                    print_knockout_result(pos_res)
+                results["position_scan"] = position_scan_results
 
         # --scan: progressive ablation by attribution magnitude
         elif args.scan:
@@ -503,8 +744,15 @@ def main() -> None:
                 m = re.match(r"layer_(\d+)_feature_(\d+)", node_id)
                 if m:
                     layer_idx = int(m.group(1))
+                    if layer_idx not in args.layers:
+                        continue
                     feat_idx = int(m.group(2))
-                    attribution = abs(float(node.get("attribution", 0.0)))
+                    signed_attribution = float(node.get("attribution", 0.0))
+                    if args.graph_feature_sign == "positive" and signed_attribution <= 0:
+                        continue
+                    if args.graph_feature_sign == "negative" and signed_attribution >= 0:
+                        continue
+                    attribution = abs(signed_attribution)
                     scored_features.append((attribution, layer_idx, feat_idx))
             # Sort descending by absolute attribution
             scored_features.sort(key=lambda x: x[0], reverse=True)
@@ -526,7 +774,7 @@ def main() -> None:
                     level_features.setdefault(l_idx, []).append(f_idx)
 
                 level_res = run_inhibition_intervention(
-                    model, tokenizer, args.prompt, args.layers, saes, level_features, target_tokens
+                    model, tokenizer, args.prompt, args.layers, saes, level_features, target_tokens, args.edit_strength, args.positions
                 )
                 print(f"\n  --- Top-{level} features ablated ---")
                 print(f"  Top prediction: '{level_res['top_token']}' (prob: {level_res['top_prob']:.4f}, logit: {level_res['top_logit']:.2f})")
@@ -551,7 +799,7 @@ def main() -> None:
             # Run actual inhibition intervention (normal mode)
             print(f"\n[3/3] Running Inhibition Intervention (inhibited features: {features_dict})...")
             inter_res = run_inhibition_intervention(
-                model, tokenizer, args.prompt, args.layers, saes, features_dict, target_tokens
+                model, tokenizer, args.prompt, args.layers, saes, features_dict, target_tokens, args.edit_strength, args.positions
             )
             results["intervention"] = inter_res
             print(f"  - Top prediction: '{inter_res['top_token']}' (prob: {inter_res['top_prob']:.4f}, logit: {inter_res['top_logit']:.2f})")
@@ -565,11 +813,26 @@ def main() -> None:
             any_dead = False
             for layer in args.layers:
                 for f_idx in features_dict.get(layer, []) or []:
-                    act = feat_acts.get(layer, {}).get(int(f_idx), 0.0)
-                    flag = "" if act > 0 else "  <-- INACTIVE (no-op)"
-                    if act <= 0:
+                    act_info = feat_acts.get(layer, {}).get(int(f_idx), {})
+                    if isinstance(act_info, dict):
+                        max_act = float(act_info.get("max", 0.0))
+                        mean_act = float(act_info.get("mean", 0.0))
+                        by_pos = act_info.get("by_position", [])
+                    else:
+                        max_act = float(act_info or 0.0)
+                        mean_act = max_act
+                        by_pos = []
+                    flag = "" if max_act > 0 else "  <-- INACTIVE (no-op)"
+                    if max_act <= 0:
                         any_dead = True
-                    print(f"  - L{layer} F{f_idx}: activation={act:.4f}{flag}")
+                    print(f"  - L{layer} F{f_idx}: max={max_act:.4f}, mean={mean_act:.4f}{flag}")
+                    if by_pos:
+                        compact = ", ".join(
+                            f"{p['position']}:{p['token']!r}={p['activation']:.3g}"
+                            for p in by_pos[:24]
+                        )
+                        suffix = " ..." if len(by_pos) > 24 else ""
+                        print(f"      by position: {compact}{suffix}")
             if any_dead:
                 print("  NOTE: inactive features cannot change the output. Pick features that are"
                       " actually active for this prompt (see the attribution graph nodes).")
@@ -602,10 +865,14 @@ def main() -> None:
                 t_rep = t.replace("\n", "\\n").replace("\r", "\\r")
                 print(f"  - Target '{t_rep}': prob: {src_probs[t_id].item():.4f}, logit: {src_logits[t_id].item():.2f}")
         
-        print(f"\nRunning Swap-In Intervention (swapping features {features_dict} from source to target)...")
+        if args.raw_mlp_swap:
+            swap_desc = "RAW MLP output at every requested layer"
+        else:
+            swap_desc = "FULL latent code at every requested layer" if not features_dict else f"features {features_dict}"
+        print(f"\nRunning Swap-In Intervention (swapping {swap_desc} from source to target; edit_strength={args.edit_strength})...")
         inter_res = run_swap_in_intervention(
             model, tokenizer, args.source_prompt, args.prompt, args.layers, saes, 
-            features_dict if features_dict else None, target_tokens
+            features_dict if features_dict else None, target_tokens, args.edit_strength, args.raw_mlp_swap
         )
         results["intervention"] = inter_res
         print(f"  - Top prediction: '{inter_res['top_token']}' (prob: {inter_res['top_prob']:.4f}, logit: {inter_res['top_logit']:.2f})")

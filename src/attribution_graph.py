@@ -306,6 +306,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Construct an attribution graph from inputs to output logits")
     parser.add_argument("--prompt", required=True, help="Input prompt to run mechanistic attribution analysis on")
     parser.add_argument("--target", default=None, help="Target next token to attribute (defaults to model's top prediction)")
+    parser.add_argument("--contrast-target", default=None, help="Optional contrast token; attributes target_logit - contrast_logit instead of the raw target logit")
     parser.add_argument("--layers", nargs="+", type=int, default=[4, 8, 12, 16, 20, 24, 28, 32], help="SAE layers to construct dependency graph through")
     parser.add_argument("--top-k-nodes", type=int, default=20, help="Number of nodes to keep per layer in the pruned graph")
     parser.add_argument("--top-k-edges", type=int, default=30, help="Number of edges to keep per layer in the pruned graph")
@@ -412,13 +413,13 @@ def main() -> None:
         print(f"  '{tokenizer.decode([i.item()])}' (prob: {p.item():.4f}, logit: {logits[i.item()].item():.2f})")
     print()
 
-    # Determine Target Token
-    if args.target:
-        # Try both the raw target, target with space, and stripped target
-        targets_to_try = [args.target, " " + args.target, args.target.strip()]
+    def resolve_token_id(token_text: str) -> Tuple[int, str]:
+        """Resolve a display token to the single token ID with highest current probability."""
+        # Try both the raw target, target with space, and stripped target.
+        targets_to_try = [token_text, " " + token_text, token_text.strip()]
         best_token_id = None
         best_prob = -1.0
-        
+
         for t in targets_to_try:
             tid = tokenizer.convert_tokens_to_ids(t)
             if tid == tokenizer.unk_token_id:
@@ -430,23 +431,43 @@ def main() -> None:
                 if prob > best_prob:
                     best_prob = prob
                     best_token_id = tid
-                    
+
         if best_token_id is not None:
-            target_token_id = best_token_id
-            target_token = tokenizer.decode([target_token_id])
-        else:
-            raise ValueError(f"Could not tokenize target token: '{args.target}'")
+            return best_token_id, tokenizer.decode([best_token_id])
+        raise ValueError(f"Could not tokenize target token: '{token_text}'")
+
+    # Determine Target Token
+    if args.target:
+        target_token_id, target_token = resolve_token_id(args.target)
     else:
         # Default to top predicted token
         target_token_id = torch.argmax(logits).item()
         target_token = tokenizer.decode([target_token_id])
-        
+
+    contrast_token_id = None
+    contrast_token = None
+    if args.contrast_target:
+        contrast_token_id, contrast_token = resolve_token_id(args.contrast_target)
+
     print(f"Target token for attribution: '{target_token}' (ID: {target_token_id}, probability: {probs[target_token_id].item():.4f})")
+    if contrast_token_id is not None:
+        print(f"Contrast token: '{contrast_token}' (ID: {contrast_token_id}, probability: {probs[contrast_token_id].item():.4f})")
     
     # 4. Run Backward Pass from Target Logit
     target_logit = logits[target_token_id]
-    print(f"Running backward pass on logit: {target_logit.item():.4f}")
-    target_logit.backward(retain_graph=True)
+    attribution_objective = target_logit
+    objective_label = f"Logit: '{target_token}'"
+    if contrast_token_id is not None:
+        contrast_logit = logits[contrast_token_id]
+        attribution_objective = target_logit - contrast_logit
+        objective_label = f"Logit diff: '{target_token}' - '{contrast_token}'"
+        print(
+            f"Running backward pass on logit difference: "
+            f"{target_logit.item():.4f} - {contrast_logit.item():.4f} = {attribution_objective.item():.4f}"
+        )
+    else:
+        print(f"Running backward pass on logit: {target_logit.item():.4f}")
+    attribution_objective.backward(retain_graph=True)
     
     # Gather node attributions and gradients
     z_dict = {}
@@ -562,8 +583,8 @@ def main() -> None:
                 })
 
     # Add terminal target logit node
-    node_attributions["target_logit"] = float(target_logit.item())
-    node_labels["target_logit"] = f"Logit: '{target_token}'"
+    node_attributions["target_logit"] = float(attribution_objective.item())
+    node_labels["target_logit"] = objective_label
     node_top_outputs["target_logit"] = []
     
     # Last SAE Layer to Logit Edges (direct attribution is the node attribution score)
@@ -655,6 +676,10 @@ def main() -> None:
         "prompt": args.prompt,
         "target": target_token,
         "target_prob": float(probs[target_token_id].item()),
+        "contrast_target": contrast_token,
+        "contrast_target_prob": float(probs[contrast_token_id].item()) if contrast_token_id is not None else None,
+        "attribution_objective": objective_label,
+        "attribution_objective_value": float(attribution_objective.item()),
         "nodes": pruned_nodes_list,
         "edges": pruned_edges
     }
@@ -665,14 +690,15 @@ def main() -> None:
     print(f"Saved pruned graph JSON to {json_path}")
     
     # 2. Mermaid Diagram
-    mermaid_content = generate_mermaid_vis(pruned_nodes_list, pruned_edges, f"Attribution Graph: {args.prompt} -> {target_token}")
+    graph_title = f"Attribution Graph: {args.prompt} -> {objective_label}"
+    mermaid_content = generate_mermaid_vis(pruned_nodes_list, pruned_edges, graph_title)
     mermaid_path = resolve_path(args.output_mermaid, repo_root)
     with open(mermaid_path, "w", encoding="utf-8") as fh:
         fh.write(mermaid_content)
     print(f"Saved Mermaid chart to {mermaid_path}")
     
     # 3. HTML vis.js Visualization
-    html_content = generate_html_vis(pruned_nodes_list, pruned_edges, f"Attribution Graph: {args.prompt} -> {target_token}")
+    html_content = generate_html_vis(pruned_nodes_list, pruned_edges, graph_title)
     html_path = resolve_path(args.output_html, repo_root)
     with open(html_path, "w", encoding="utf-8") as fh:
         fh.write(html_content)

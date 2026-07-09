@@ -1,0 +1,167 @@
+AI handoff summary for this thread
+==================================
+
+Project context:
+
+The user is doing an MPhil reproducibility project on mechanistic
+interpretability, inspired by Anthropic's "On the Biology of a Large Language
+Model". The goal is not merely to match the paper but to investigate whether
+similar mechanisms can be found in Qwen3-4B-Instruct with an independent,
+resource-constrained pipeline. Source of truth is project.txt. There is also
+IMPLEMENTATION_PLAN.md.
+
+Current focus:
+
+run_gpu_math.ipynb, arithmetic/addition carry behaviour, especially:
+
+  Question: What is 58 + 83? Answer: 1
+
+This is the tens digit of 141. Correct next token is "4"; dropped-carry
+alternative is "3"; the tested swap source 32+42 has next token "7".
+
+Major changes:
+
+1. Added contrast attribution in src/attribution_graph.py:
+
+   --target "4" --contrast-target "3"
+
+   This attributes logit("4") - logit("3"), which better matches the carry-vs-
+   dropped-carry question than raw logit("4").
+
+2. Added intervention controls in src/intervention.py:
+
+   --graph-feature-sign positive|negative|all
+   --edit-strength
+   --raw-mlp-swap
+   --knockout-component mlp|attn|block
+   --layer-scan
+   --positions last|all|comma-separated indices
+   --print-tokens
+
+3. Cleaned run_gpu_math.ipynb:
+
+   Preserved the user's Colab/Drive sync cells, including existing !cp and !rm
+   lines. Added the contrast graph, component knockout diagnostics, and the main
+   all-position MLP follow-up. Removed distracting cells that no longer supported
+   the report direction, including raw MLP swap and the extra layer-24 position
+   scan block.
+
+Key empirical results:
+
+Clean tens-digit baseline:
+
+  logit("4") = 30.62
+  prob("4") ~= 1.0000
+  logit("3") = 23.50
+  prob("3") = 0.0008
+  gap 4 - 3 = 7.12
+
+MLP knockout over layers 4,8,12,16,20,24,28:
+
+  logit("4") increased to 33.25
+  logit("3") stayed 23.50
+  output stayed "4"
+
+Interpretation: final-token MLP outputs do not contain a causally necessary
+localized carry mechanism.
+
+Attention knockout over layers 4,8,12,16,20,24,28:
+
+  logit("4") fell to 30.00
+  logit("3") fell slightly to 23.38
+  prob("4") fell to 0.9961
+
+Interpretation: attention/residual pathway contributes modestly.
+
+Block knockout over layers 4,8,12,16,20,24,28:
+
+  top token became "="
+  logit("4") fell to 6.31
+  logit("3") fell to 8.50
+
+Interpretation: residual stream state through these layers is necessary, but the
+intervention is too destructive to localize a clean circuit.
+
+Contrast-feature scan:
+
+  top 10 features: logit("3") +0.12, logit("4") +0.00
+  top 25 features: logit("3") +0.25, logit("4") +0.00
+  top 50 features: logit("3") +0.38, logit("4") -0.12
+  top 70 features: logit("3") +0.38, logit("4") +0.00
+
+Targeted inhibition of all graph-positive contrast features:
+
+  logit("3") rose to 23.88
+  prob("3") rose to 0.0012
+  logit("4") stayed 30.62
+  output stayed "4"
+
+Graph-feature swap from 32+42 to 58+83:
+
+  source top token "7"
+  source prob("3") = 0.0527
+  after swap, target logit("3") rose from 23.50 to 23.75
+  output stayed "4"
+
+Raw MLP-output swap from 32+42 to 58+83:
+
+  top token became "7" with prob 0.7305
+  "4" dropped to prob 0.2695
+
+Interpretation: raw source activations can overwrite answer identity, but this is
+source-token leakage toward "7", not a clean dropped-carry intervention.
+
+Latest addition:
+
+End-of-notebook cells now test whether final-token-only interventions were too
+narrow. The all-position MLP knockout should be treated as the main positive
+causal result:
+
+  clean gap: logit("4") - logit("3") = 7.12
+  all-position MLP knockout gap: logit("4") - logit("3") = 1.25
+  prob("4") fell to 0.6406
+  prob("3") rose to 0.1836
+  prob("2") also rose to 0.1426
+
+This supports the interpretation that carry-relevant computation is distributed
+across prompt positions, not localized to final-token MLP outputs. It is still a
+coarse component knockout, not a clean sparse SAE feature circuit, because "2"
+also rises.
+
+The notebook includes:
+
+  --print-tokens
+  all-position MLP knockout with --layer-scan
+  all-position attention knockout
+  all-position graph-positive SAE-feature inhibition
+
+The position-localized Diagnostic 4 cells were removed after they failed to show
+the same effect. A later layer-24 position-scan block was also removed to keep the
+notebook focused; layer 24 is still visible in the all-position MLP --layer-scan
+output.
+
+Layer-24 note:
+
+Layer 24 was the most disruptive single-layer MLP knockout in the all-position
+layer scan, but it pushed the model toward "2" rather than cleanly toward the
+dropped-carry "3". Interpret this as supporting evidence that layer 24 MLP has a
+large effect on digit selection, not as a clean carry-specific result.
+
+Instrumentation update:
+
+src/intervention.py now prints the exact token text for edited positions. For
+full component knockouts, it records and prints pre-knockout output norms by layer
+and position, so the user can verify that the edited positions had nonzero
+activation. For SAE feature inhibition, it records max/mean feature activation
+and a compact by-position activation list.
+
+Scientific interpretation:
+
+The report should not claim a clean Anthropic-style circuit reproduction. It
+should frame the result as a rigorous partial/negative reproduction: the method was
+implemented, per-digit and contrast attribution were necessary, and broad
+all-position MLP knockout strongly affects the carry digit. However, lightweight
+SAE features did not causally control the carry digit cleanly. There is weak,
+directionally correct evidence that contrast SAE features relate to dropped-carry
+behaviour because "3" increases under ablation/swap, but effects are small
+relative to the clean logit margin.
