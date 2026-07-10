@@ -193,6 +193,35 @@ Notebook/code changes:
       activations.
     - added --position-scan for full knockouts.
 
+Colab code sourcing update:
+
+  run_gpu.ipynb, run_gpu_math.ipynb, and run_gpu_units.ipynb now pull code from
+  GitHub first:
+
+    https://github.com/evey-dev/test_run.git
+
+  Drive project.zip remains the backup fallback, and SAE checkpoint files still
+  restore from Drive. The math/units notebooks also have a GitHub refresh cell
+  where the old Drive-first Python-file copy lived; Drive Python files are now
+  fallback only. Remember that Colab only receives changes that have been pushed
+  to GitHub.
+
+Focused units hypertraining attempt:
+
+  Added run_gpu_units_hypertrain.ipynb and
+  configs/sae_units_l24_l28_hyper_config.yaml.
+
+  The notebook trains units-only SAEs for layers 24 and 28, keeping latent_dim
+  8192 so the tuned layers can be mixed with the original checkpoints. It saves
+  tuned artifacts to:
+
+    /content/drive/MyDrive/mphil-project/mechanistic_data/sae_checkpoints_units_l24_l28_hyper
+
+  It then builds a mixed checkpoint directory with original layers plus tuned
+  24/28, writes a runtime SAE config, rebuilds units_hyper_* contrast graphs,
+  and reruns only SAE-affected units interventions with units_hyper_* output
+  names.
+
 Layer-24 note:
 
 Layer 24 was the most disruptive single-layer all-position MLP knockout, but it

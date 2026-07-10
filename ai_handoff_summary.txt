@@ -46,6 +46,24 @@ Major changes:
    the report direction, including raw MLP swap and the extra layer-24 position
    scan block.
 
+4. Updated Colab code sourcing:
+
+   run_gpu.ipynb, run_gpu_math.ipynb, and run_gpu_units.ipynb now use
+   https://github.com/evey-dev/test_run.git as the primary code source in Step 1.
+   Drive project.zip remains the backup fallback. SAE checkpoints still restore
+   from Drive. The old Drive Python-file overwrite flow was replaced with a
+   GitHub refresh cell in the math/units notebooks, with Drive Python files kept
+   as fallback. Important: Colab will only see changes that have been pushed to
+   GitHub.
+
+5. Added a focused units SAE hypertraining notebook:
+
+   run_gpu_units_hypertrain.ipynb trains units-only SAEs for layers 24 and 28
+   using configs/sae_units_l24_l28_hyper_config.yaml. It saves tuned checkpoints
+   to Drive under mechanistic_data/sae_checkpoints_units_l24_l28_hyper, builds a
+   mixed checkpoint directory with old layers plus tuned 24/28, and reruns only
+   SAE-affected units experiments with outputs named units_hyper_*.
+
 Key empirical results:
 
 Clean tens-digit baseline:
