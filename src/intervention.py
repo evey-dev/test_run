@@ -352,6 +352,12 @@ def run_swap_in_intervention(
         # swap_features is a dict => only touch layers it names; others are a no-op ([]).
         f_list = None if swap_features is None else swap_features.get(layer, [])
         if raw_mlp_swap:
+            # In a raw-MLP layer scan, non-selected layers are represented by an
+            # empty feature list. Honour that no-op marker instead of patching
+            # every requested layer and mislabelling the result as single-layer.
+            if f_list == []:
+                continue
+
             def make_raw_swap_hook(layer_idx, raw_sel):
                 def hook_fn(module, input_t, output_t):
                     new_output = output_t.clone()
@@ -419,7 +425,7 @@ def main() -> None:
     parser.add_argument("--graph-json", default=None, help="Path to attribution graph JSON; extracts all features from nodes to use as ablation targets")
     parser.add_argument("--graph-feature-sign", choices=["all", "positive", "negative"], default="all", help="When using --graph-json, keep all features, only positive-attribution features, or only negative-attribution features")
     parser.add_argument("--edit-strength", type=float, default=1.0, help="Multiplier for SAE decoder-delta edits. 1.0 is a literal ablation/swap; >1 is a stress-test diagnostic")
-    parser.add_argument("--raw-mlp-swap", action="store_true", help="Swap raw source MLP outputs instead of SAE latents (swap-mode upper-bound diagnostic; currently uses final token)")
+    parser.add_argument("--raw-mlp-swap", action="store_true", help="Swap raw source MLP outputs instead of SAE latents at the positions selected by --positions (upper-bound diagnostic)")
     parser.add_argument("--scan", action="store_true", help="Progressive ablation scan: ablate top-10/25/50/100/ALL features by attribution magnitude")
     parser.add_argument("--full-knockout", action="store_true", help="Zero out an entire component at selected token positions for all hooked layers (diagnostic)")
     parser.add_argument("--knockout-component", choices=["mlp", "attn", "block"], default="mlp", help="Component to zero for --full-knockout. 'block' zeros the layer output hidden state at the last token.")
