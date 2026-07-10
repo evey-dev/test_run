@@ -1,72 +1,124 @@
-AI handoff summary for this thread
-==================================
+AI handoff summary
+==================
 
-Project context:
+Project context
+---------------
 
 The user is doing an MPhil reproducibility project on mechanistic
-interpretability, inspired by Anthropic's "On the Biology of a Large Language
-Model". The goal is not merely to match the paper but to investigate whether
-similar mechanisms can be found in Qwen3-4B-Instruct with an independent,
-resource-constrained pipeline. Source of truth is project.txt. There is also
-IMPLEMENTATION_PLAN.md.
+interpretability, inspired by Anthropic's *On the Biology of a Large Language
+Model*. The source of truth is `project.txt`.
 
-Current focus:
+The project asks whether similar attribution-graph and intervention methods can
+find circuits in `Qwen3-4B-Instruct`. The brief explicitly allows partial or
+negative reproduction if the analysis is rigorous.
 
-run_gpu_math.ipynb, arithmetic/addition carry behaviour, especially:
+
+Current recommendation
+----------------------
+
+Stop major experimentation and start writing the report.
+
+Use this report framing:
+
+1. Physics units: strongest positive result.
+2. Arithmetic carry: partial reproduction.
+3. Capitals: weak/negative reproduction.
+
+Do not frame the project as a failed exact replication. Frame it as a rigorous
+test of method transfer under a lightweight open-model setup.
+
+
+Important files
+---------------
+
+Recommended final notebooks:
+
+- `run_gpu_units_hypertrain.ipynb`
+- `run_gpu_math_final.ipynb`
+- `run_gpu_capitals_final.ipynb`
+
+Main notes:
+
+- `README.md`: run instructions and notebook roles.
+- `report_notes.txt`: report structure and scientific interpretation.
+- `changes_summary.txt`: implementation and methodological change log.
+
+Important source files:
+
+- `src/attribution_graph.py`
+- `src/intervention.py`
+- `src/train.py`
+
+Important configs:
+
+- `configs/sae_units_final_train_config.yaml`
+- `configs/sae_math_final_train_config.yaml`
+- `configs/sae_capitals_final_train_config.yaml`
+
+
+Major code capabilities added
+-----------------------------
+
+`src/attribution_graph.py`
+
+- Supports `--contrast-target`.
+- With a contrast target, objective is:
+
+    target logit - contrast target logit
+
+`src/intervention.py`
+
+- Supports:
+  - `--graph-feature-sign positive|negative|all`
+  - `--edit-strength`
+  - `--raw-mlp-swap`
+  - `--knockout-component mlp|attn|block`
+  - `--layer-scan`
+  - `--position-scan`
+  - `--positions last|all|comma-separated indices`
+  - `--print-tokens`
+
+- Prints token positions and activation diagnostics so the user can verify what
+  was edited.
+
+`src/train.py`
+
+- Saves the best validation checkpoint rather than the final epoch.
+
+
+Execution setup
+---------------
+
+Colab notebooks were used because CSD3 was unavailable. This should be stated in
+the report or README as an execution constraint, not as a scientific dependency.
+
+The notebooks pull code from GitHub first. Drive remains the artifact store for
+SAE checkpoints and outputs. The standalone scripts can still be run locally or
+on another GPU system.
+
+
+Math carry details
+------------------
+
+Main prompt:
 
   Question: What is 58 + 83? Answer: 1
 
-This is the tens digit of 141. Correct next token is "4"; dropped-carry
-alternative is "3"; the tested swap source 32+42 has next token "7".
+This studies the tens digit of `141`.
 
-Major changes:
+Correct token:
 
-1. Added contrast attribution in src/attribution_graph.py:
+  4
 
-   --target "4" --contrast-target "3"
+Dropped-carry alternative:
 
-   This attributes logit("4") - logit("3"), which better matches the carry-vs-
-   dropped-carry question than raw logit("4").
+  3
 
-2. Added intervention controls in src/intervention.py:
+Use contrast attribution:
 
-   --graph-feature-sign positive|negative|all
-   --edit-strength
-   --raw-mlp-swap
-   --knockout-component mlp|attn|block
-   --layer-scan
-   --positions last|all|comma-separated indices
-   --print-tokens
+  --target "4" --contrast-target "3"
 
-3. Cleaned run_gpu_math.ipynb:
-
-   Preserved the user's Colab/Drive sync cells, including existing !cp and !rm
-   lines. Added the contrast graph, component knockout diagnostics, and the main
-   all-position MLP follow-up. Removed distracting cells that no longer supported
-   the report direction, including raw MLP swap and the extra layer-24 position
-   scan block.
-
-4. Updated Colab code sourcing:
-
-   run_gpu.ipynb, run_gpu_math.ipynb, and run_gpu_units.ipynb now use
-   https://github.com/evey-dev/test_run.git as the primary code source in Step 1.
-   Drive project.zip remains the backup fallback. SAE checkpoints still restore
-   from Drive. The old Drive Python-file overwrite flow was replaced with a
-   GitHub refresh cell in the math/units notebooks, with Drive Python files kept
-   as fallback. Important: Colab will only see changes that have been pushed to
-   GitHub.
-
-5. Added a focused units SAE hypertraining notebook:
-
-   run_gpu_units_hypertrain.ipynb trains units-only SAEs for layers 24 and 28
-   using configs/sae_units_l24_l28_hyper_config.yaml. It saves tuned checkpoints
-   to Drive under mechanistic_data/sae_checkpoints_units_l24_l28_hyper, builds a
-   mixed checkpoint directory with old layers plus tuned 24/28, and reruns only
-   SAE-affected units experiments with outputs named units_hyper_*.
-
-Key empirical results:
-
-Clean tens-digit baseline:
+Clean baseline:
 
   logit("4") = 30.62
   prob("4") ~= 1.0000
@@ -74,112 +126,135 @@ Clean tens-digit baseline:
   prob("3") = 0.0008
   gap 4 - 3 = 7.12
 
-MLP knockout over layers 4,8,12,16,20,24,28:
+Final-token MLP knockout:
 
   logit("4") increased to 33.25
   logit("3") stayed 23.50
   output stayed "4"
 
-Interpretation: final-token MLP outputs do not contain a causally necessary
-localized carry mechanism.
+Interpretation:
 
-Attention knockout over layers 4,8,12,16,20,24,28:
+Final-token MLP features are not the localized causal carry mechanism.
 
-  logit("4") fell to 30.00
-  logit("3") fell slightly to 23.38
-  prob("4") fell to 0.9961
+All-position MLP knockout:
 
-Interpretation: attention/residual pathway contributes modestly.
-
-Block knockout over layers 4,8,12,16,20,24,28:
-
-  top token became "="
-  logit("4") fell to 6.31
-  logit("3") fell to 8.50
-
-Interpretation: residual stream state through these layers is necessary, but the
-intervention is too destructive to localize a clean circuit.
-
-Contrast-feature scan:
-
-  top 10 features: logit("3") +0.12, logit("4") +0.00
-  top 25 features: logit("3") +0.25, logit("4") +0.00
-  top 50 features: logit("3") +0.38, logit("4") -0.12
-  top 70 features: logit("3") +0.38, logit("4") +0.00
-
-Targeted inhibition of all graph-positive contrast features:
-
-  logit("3") rose to 23.88
-  prob("3") rose to 0.0012
-  logit("4") stayed 30.62
-  output stayed "4"
-
-Graph-feature swap from 32+42 to 58+83:
-
-  source top token "7"
-  source prob("3") = 0.0527
-  after swap, target logit("3") rose from 23.50 to 23.75
-  output stayed "4"
-
-Raw MLP-output swap from 32+42 to 58+83:
-
-  top token became "7" with prob 0.7305
-  "4" dropped to prob 0.2695
-
-Interpretation: raw source activations can overwrite answer identity, but this is
-source-token leakage toward "7", not a clean dropped-carry intervention.
-
-Latest addition:
-
-End-of-notebook cells now test whether final-token-only interventions were too
-narrow. The all-position MLP knockout should be treated as the main positive
-causal result:
-
-  clean gap: logit("4") - logit("3") = 7.12
-  all-position MLP knockout gap: logit("4") - logit("3") = 1.25
   prob("4") fell to 0.6406
+  logit("4") fell to 27.25
   prob("3") rose to 0.1836
-  prob("2") also rose to 0.1426
+  logit("3") rose to 26.00
+  prob("2") rose to 0.1426
+  gap 4 - 3 fell from 7.12 to 1.25
 
-This supports the interpretation that carry-relevant computation is distributed
-across prompt positions, not localized to final-token MLP outputs. It is still a
-coarse component knockout, not a clean sparse SAE feature circuit, because "2"
-also rises.
+Interpretation:
 
-The notebook includes:
+This is the main positive math result. The carry-relevant state is affected by
+broad MLP/residual updates across prompt positions. It is not a clean sparse SAE
+carry circuit because other digit alternatives also rise.
 
-  --print-tokens
-  all-position MLP knockout with --layer-scan
-  all-position attention knockout
-  all-position graph-positive SAE-feature inhibition
+Sparse SAE interventions:
 
-The position-localized Diagnostic 4 cells were removed after they failed to show
-the same effect. A later layer-24 position-scan block was also removed to keep the
-notebook focused; layer 24 is still visible in the all-position MLP --layer-scan
-output.
+They weakly and directionally move `3` upward, but do not flip the output. Report
+this as partial evidence, not as a clean reproduction.
 
-Layer-24 note:
 
-Layer 24 was the most disruptive single-layer MLP knockout in the all-position
-layer scan, but it pushed the model toward "2" rather than cleanly toward the
-dropped-carry "3". Interpret this as supporting evidence that layer 24 MLP has a
-large effect on digit selection, not as a clean carry-specific result.
+Can the carry feature be isolated?
+----------------------------------
 
-Instrumentation update:
+Not cleanly with current results.
 
-src/intervention.py now prints the exact token text for edited positions. For
-full component knockouts, it records and prints pre-knockout output norms by layer
-and position, so the user can verify that the edited positions had nonzero
-activation. For SAE feature inhibition, it records max/mean feature activation
-and a compact by-position activation list.
+The activation-level signal exists, but sparse graph-selected SAE features do not
+control it on their own. Possible reasons:
 
-Scientific interpretation:
+- distributed representation
+- nonlinear feature interactions
+- relevant signal in SAE reconstruction error
+- selected layers miss part of the computation
+- final-token-only edits were too narrow
+- very large clean confidence margin
+- attention/residual pathways matter too
 
-The report should not claim a clean Anthropic-style circuit reproduction. It
-should frame the result as a rigorous partial/negative reproduction: the method was
-implemented, per-digit and contrast attribution were necessary, and broad
-all-position MLP knockout strongly affects the carry digit. However, lightweight
-SAE features did not causally control the carry digit cleanly. There is weak,
-directionally correct evidence that contrast SAE features relate to dropped-carry
-behaviour because "3" increases under ablation/swap, but effects are small
-relative to the clean logit margin.
+This is a limitation of the current SAE setup, not a proof that SAEs cannot ever
+find carry features.
+
+
+Capitals details
+----------------
+
+Dallas/Oakland prompts were weak:
+
+  Dallas/Austin probability around 0.277
+  Oakland/Sacramento probability around 0.222
+
+Higher-confidence controls were added:
+
+  Zarqa -> Amman
+  Basra -> Baghdad
+
+These also did not produce a clean swap. Therefore capitals should be reported as
+a weak/negative reproduction. Do not make capitals the headline result.
+
+
+Physics units details
+---------------------
+
+Physics units are the best result and should be the headline positive behaviour.
+Use `run_gpu_units_hypertrain.ipynb` outputs for the report. The units task is
+more promising because the source/target behaviours are narrower and the
+intervention effects are easier to interpret than capitals.
+
+
+Report strategy
+---------------
+
+Recommended structure:
+
+1. Motivation and project brief.
+2. Pipeline implementation.
+3. Units positive result.
+4. Math partial result.
+5. Capitals negative result.
+6. Comparison with Anthropic.
+7. Limitations and future work.
+
+Important message:
+
+  The methodology transferred, but the clean sparse-circuit result did not
+  transfer uniformly under this lightweight Qwen3-4B-Instruct SAE setup.
+
+
+Final validation extension
+--------------------------
+
+New recommended final step:
+
+  run_gpu_final_validation.ipynb
+
+This notebook restores the final math, units and capitals checkpoints and the
+fixed math/units graph JSONs. It does not retrain or rebuild a graph. It:
+
+- recaptures deterministic final-position activation bundles only when missing;
+- runs `src/sae_diagnostics.py` on original train/validation splits;
+- runs `src/heldout_validation.py` on 12 graph-held-out arithmetic pairs and 12
+  graph-held-out unit pairs;
+- generates `fig_sae_diagnostics`, `fig_heldout_generalisation` and
+  `fig_math_attribution_graph` in PDF and PNG form;
+- copies new outputs to the Drive report-figures directory.
+
+Interpret reconstruction results conditionally. Poor FVE can support
+reconstruction failure as one contributor; good FVE rules out that simple
+explanation. Neither result alone identifies the cause of sparse-intervention
+failure. The old error-preserving reconstruction baseline is a forward identity,
+not a fidelity metric.
+
+The arithmetic benchmark pairs are absent from the SAE corpus. Unit sources are
+selected from the SAE validation split and their matched energy targets are
+absent from the SAE corpus. All benchmark pairs are graph-held-out, but unit
+sources are not fully SAE-held-out.
+
+Figure source of truth:
+
+  report/FIGURE_PLAN.txt
+
+Four vector figures are already inserted into `report/report.tex`. Three figures
+remain pending the final notebook run. The static carry graph is deliberately a
+readable subset; the full JSON/HTML graph remains authoritative.

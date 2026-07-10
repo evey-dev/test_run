@@ -1,0 +1,246 @@
+REPORT FIGURE PLAN
+==================
+
+Purpose
+-------
+This file is the source of truth for every main-report figure. Use vector PDF
+files in report/report.tex; PNG files are previews only. The existing plots and
+pipeline diagram are generated from code, so no manual redrawing is required.
+The interactive graph HTML files remain useful supplementary artifacts but are
+too dense to serve as primary report figures.
+
+Status key
+----------
+INSERTED: generated, checked in the compiled report, and already referenced.
+PENDING RUN: code exists, but the final GPU notebook must generate real values.
+PENDING INSERT: output exists only after that run and must then be copied into
+report/figures and referenced from report.tex.
+
+
+1. Experimental pipeline
+------------------------
+Exact filename: report/figures/fig_pipeline.pdf
+Editable source: report/figures/fig_pipeline.tex
+Status: INSERTED as Figure 1, label fig:pipeline.
+Location: Methods, immediately after the contrast-attribution-graph method.
+
+Content:
+- prompt corpora;
+- selected final-token MLP activations;
+- independent per-layer SAEs;
+- local contrast graph;
+- sparse, complete-latent and raw-MLP causal tests.
+
+Build command, from report/figures:
+  latexmk -pdf -interaction=nonstopmode -halt-on-error fig_pipeline.tex
+
+
+2. Carry attribution graph
+--------------------------
+Exact filename: report/figures/fig_math_attribution_graph.pdf
+Generator: src/plot_attribution_graph.py
+Source artifact: outputs/math_final_carry_58_83_4v3_graph.json
+Status: PENDING RUN, then PENDING INSERT.
+Location: Methods, after Figure fig:pipeline and before the causal-intervention
+subsection. Suggested label: fig:math-graph.
+
+Content:
+- input, layers 4/8/12/16/20/24/28 and the logit(4)-logit(3) objective;
+- up to five backward-connected nodes per stage;
+- positive and negative node/edge attribution signs;
+- an explicit note that this is a visual subset of the complete JSON/HTML graph.
+
+Suggested caption:
+  Backward-connected visual subset of the arithmetic attribution graph for the
+  contrast logit(4)-logit(3). Up to five nodes per stage and fourteen edges per
+  transition are displayed for legibility; the complete pruned graph is
+  retained in JSON and interactive HTML form.
+
+Generation command:
+  python src/plot_attribution_graph.py \
+    --graph outputs/math_final_carry_58_83_4v3_graph.json \
+    --output-dir outputs/report_figures \
+    --stem fig_math_attribution_graph
+
+After generation, copy both PDF and PNG from:
+  /content/drive/MyDrive/mphil-project/outputs/report_figures/
+to:
+  report/figures/
+
+
+3. SI-unit interventions
+------------------------
+Exact filename: report/figures/fig_units_interventions.pdf
+Editable source: report/figures/fig_units_interventions.tex
+Status: INSERTED, label fig:units.
+Location: Results, SI-unit subsection.
+
+Source results:
+- outputs/units_final_swap_minpair_force_to_energy.json
+- outputs/units_final_swap_sparse_force_to_energy.json
+- outputs/units_final_swap_minpair_energy_to_force.json
+- outputs/units_final_swap_sparse_energy_to_force.json
+
+Content:
+- first-token probabilities for j and new on the energy target;
+- shared logit contrast logit(new)-logit(j) for both swap directions;
+- clean, complete-latent and sparse-feature conditions.
+
+Build command, from report/figures:
+  latexmk -pdf -interaction=nonstopmode -halt-on-error \
+    fig_units_interventions.tex
+
+
+4. Arithmetic interventions and controls
+-----------------------------------------
+Exact filename: report/figures/fig_math_interventions.pdf
+Editable source: report/figures/fig_math_interventions.tex
+Status: INSERTED, label fig:math.
+Location: Results, arithmetic subsection.
+
+Source results:
+- outputs/math_final_scan_carry_positive_allpos.json
+- outputs/math_final_swap_full_nocarry_to_carry.json
+- outputs/math_final_swap_full_nocarry_to_carry_strength2.json
+- outputs/math_final_swap_raw_mlp_nocarry_to_carry.json
+- outputs/math_final_knockout_mlp_allpos_carry_58_83.json
+- outputs/math_final_swap_full_44_83_to_58_83_strength2.json
+
+Content:
+- correct-minus-dropped-carry gap under all principal interventions;
+- probability controls showing that broad interventions also transfer or
+  increase other source-specific answer digits.
+
+Build command, from report/figures:
+  latexmk -pdf -interaction=nonstopmode -halt-on-error \
+    fig_math_interventions.tex
+
+
+5. Capital-city interventions
+-----------------------------
+Exact filename: report/figures/fig_capitals_interventions.pdf
+Editable source: report/figures/fig_capitals_interventions.tex
+Status: INSERTED, label fig:capitals.
+Location: Results, capital-city subsection.
+
+Source results:
+- outputs/capitals_final_swap_full_oakland_to_dallas.json
+- outputs/capitals_final_swap_full_dallas_to_oakland.json
+- outputs/capitals_final_hiconf_swap_full_basra_to_zarqa.json
+- outputs/capitals_final_hiconf_swap_full_zarqa_to_basra.json
+
+Content:
+- source- and target-answer logit changes under complete-latent patches;
+- target-answer probabilities before and after each patch;
+- low-confidence Dallas/Oakland and high-confidence Zarqa/Basra comparisons.
+
+Build command, from report/figures:
+  latexmk -pdf -interaction=nonstopmode -halt-on-error \
+    fig_capitals_interventions.tex
+
+
+6. SAE reconstruction and sparsity diagnostics
+-----------------------------------------------
+Exact filename: report/figures/fig_sae_diagnostics.pdf
+Generator: src/plot_validation.py
+Source artifacts:
+- outputs/final_sae_diagnostics_math.csv
+- outputs/final_sae_diagnostics_units.csv
+- outputs/final_sae_diagnostics_capitals.csv
+Status: PENDING RUN, then PENDING INSERT.
+Location: Results, in a new subsection immediately after baseline competence.
+Suggested label: fig:sae-diagnostics.
+
+Content:
+- held-out validation fraction of variance explained (FVE) by layer;
+- mean active latent count (L0) by layer;
+- dead-feature fraction by layer;
+- separate curves for addition, SI units and capitals.
+
+Suggested caption:
+  Layerwise SAE fidelity and achieved sparsity on the original deterministic
+  validation splits. FVE quantifies reconstruction relative to prediction by
+  the training-set mean; L0 is the mean number of non-zero latents, and the
+  dead-feature fraction is measured over the combined training and validation
+  activation support.
+
+Interpretation rule:
+- Low FVE or large relative error supports poor reconstruction fidelity as one
+  plausible contributor to weak sparse interventions.
+- High FVE with weak sparse interventions rules out that simple explanation and
+  shifts attention to achieved sparsity, feature instability, graph selection,
+  support mismatch and nonlinear feature interactions.
+- These are diagnostic associations. They do not prove that reconstruction
+  error caused an intervention failure.
+
+Required report edit after the run:
+The current Discussion sentence saying that final L0, dead-feature and related
+diagnostics were not retained must be replaced with the measured values. Do not
+retain that sentence once this figure is inserted.
+
+
+7. Graph-held-out intervention benchmark
+-----------------------------------------
+Exact filename: report/figures/fig_heldout_generalisation.pdf
+Generator: src/plot_validation.py
+Source artifact: outputs/final_heldout_validation.json
+Status: PENDING RUN, then PENDING INSERT.
+Location: Results, after the arithmetic and SI-unit single-prompt results, in a
+new subsection titled Graph-held-out validation. Suggested label:
+fig:heldout-generalisation.
+
+Content:
+- one point per baseline-qualified prompt pair;
+- black diamonds for condition means;
+- arithmetic change in correct-minus-dropped-carry gap;
+- units change in force-minus-energy-prefix gap;
+- sparse, complete-latent and raw-MLP conditions.
+
+Suggested caption:
+  Intervention effects on prompt pairs not used to construct either retained
+  attribution graph. Points denote baseline-qualified cases and diamonds denote
+  condition means. Negative changes are predicted for the arithmetic contrast;
+  positive changes are predicted for the force-to-energy unit transfer.
+
+Insertion rule:
+Report the eligible case count shown in each panel. If very few cases satisfy
+the clean-baseline criterion, retain the numerical output as a limitation and do
+not present the plot as a population-level estimate. These prompts are
+graph-held-out; describe SAE-training or validation support separately and do
+not call all of them fully held-out without that qualification.
+
+
+How to generate all pending figures
+-----------------------------------
+Run run_gpu_final_validation.ipynb from top to bottom. It does not retrain an SAE
+or construct a new attribution graph. It restores the existing final artifacts,
+recaptures deterministic activation matrices only if absent, evaluates the
+checkpoints, runs 12 arithmetic and 12 unit prompt-pair interventions, generates
+the three pending figures and copies outputs to Drive.
+
+Expected runtime is approximately 10--20 minutes on a Colab GPU, depending on
+model loading and Drive transfer. It should be substantially shorter than the
+attribution-graph cells. The graph-held-out benchmark is the only GPU-intensive
+part; figure generation itself is CPU-only and fast.
+
+
+Figures not intended for the main report
+----------------------------------------
+- Full interactive attribution graph HTML: retain in the reproducibility pack;
+  do not use a browser screenshot in the report.
+- Mermaid graph: retain as a portable source view; do not insert the complete
+  dense rendering into the report.
+- Every exploratory scan: retain JSON/notebook outputs, but summarise only the
+  prespecified comparisons and controls in main-text tables/figures.
+
+
+Final verification checklist
+----------------------------
+1. Run the final validation notebook and inspect every reported eligible count.
+2. Copy the three pending PDFs into report/figures.
+3. Insert only figures whose captions are supported by the observed values.
+4. Update the reconstruction paragraph and numerical tables from saved CSV/JSON.
+5. Recalculate the report word count.
+6. Run, from report/:
+     latexmk -pdf -interaction=nonstopmode -halt-on-error report.tex
+7. Inspect the complete PDF at 100 percent zoom for clipped labels and floats.

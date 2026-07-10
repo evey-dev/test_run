@@ -1,304 +1,359 @@
-Report notes: arithmetic SAE intervention results
-=================================================
+Report preparation notes
+========================
 
-Working thesis
---------------
+Working report thesis
+---------------------
 
-The arithmetic/carry experiment is best reported as a partial reproduction with a
-clear limitation result. The strongest causal finding is not the SAE-feature
-intervention, but the all-position MLP knockout: removing selected-layer MLP
-outputs across every prompt position sharply reduces the model's preference for
-the correct carry digit "4" and raises the dropped-carry alternative "3".
+This should be written as a reproducibility investigation, not as a failed attempt
+to exactly copy Anthropic's result.
 
-This supports the claim that carry-relevant arithmetic information is present and
-causally important in the model, but distributed across prompt positions and MLP /
-residual updates. The current lightweight SAE setup does not recover a clean,
-sparse, Anthropic-style carry feature circuit.
+The project implemented the requested pipeline: prompt sets, baseline evaluation,
+activation capture, lightweight per-layer SAEs, contrast attribution graphs, and
+inhibition/swap interventions. The results are mixed:
 
-This is still a valid reproducibility result: with constrained resources,
-pooled/compact SAEs, a small prompt set, and final-token MLP interventions, the
-published-style mechanism was not cleanly reproduced. The report should emphasize
-what was reproducible at the level of method and qualitative diagnostics, where the
-attempt failed, and what this implies about resource sensitivity and circuit
-localization.
+1. Physics units are the strongest positive reproduction.
+2. Arithmetic carry is a partial reproduction.
+3. Capitals/factual recall are weak or negative.
+
+The defensible claim is that Anthropic-style attribution graphs and interventions
+can produce useful causal diagnostics in this setup, but the lightweight SAE
+features do not reliably recover clean sparse circuits across behaviours.
 
 
-Experiment context
-------------------
+Why the final notebooks are structured this way
+-----------------------------------------------
 
-Main prompt studied:
+The final notebooks are behaviour-specific because mixed or older checkpoints
+made interpretation harder. Behaviour-specific runs make the report cleaner:
+
+- `run_gpu_units_hypertrain.ipynb`: final units evidence.
+- `run_gpu_math_final.ipynb`: final arithmetic evidence.
+- `run_gpu_capitals_final.ipynb`: final capitals evidence.
+
+Colab was used because CSD3 was unavailable. This is an execution detail, not a
+methodological dependency. All substantive steps are standalone scripts under
+`src/`.
+
+Old notebooks should remain as provenance unless there is a reason to remove
+them. They show the path from exploratory attempts to the final protocol, but
+the report should cite final notebooks and script outputs only.
+
+
+Methodology decisions that matter
+---------------------------------
+
+Selected layers:
+
+The project brief says "a few selected layers" and "lightweight SAEs per layer".
+It does not require every transformer layer. The selected layers were
+4, 8, 12, 16, 20, 24, and 28. Layer 32 was deprioritized because earlier results
+were weak/noisy and the main final effects were already visible in earlier/mid
+layers.
+
+Per-digit arithmetic:
+
+Qwen tokenizes many numbers digit-by-digit. Whole-answer attribution is therefore
+misleading for multi-digit arithmetic because it often studies only the first
+generated token. Arithmetic experiments use teacher forcing to study the relevant
+digit position directly.
+
+For `58 + 83 = 141`, the tens-position prompt is:
 
   Question: What is 58 + 83? Answer: 1
 
-This is the tens digit of 141. The correct next token is "4"; the dropped-carry
-alternative is "3"; the source-swap prompt 32 + 42 has next token "7".
+The correct next token is `4`. The dropped-carry alternative is `3`.
 
-Important methodological correction:
+Contrast attribution:
 
-The key attribution graph should be a contrast graph:
+For carry, the meaningful objective is not just "what raises 4?" but "what makes
+the model prefer 4 over 3?" Therefore the math graph should use:
 
-  target = "4"
-  contrast-target = "3"
-  objective = logit("4") - logit("3")
+  --target "4" --contrast-target "3"
 
-This is preferable to a raw "4" attribution graph because the carry question is
-not merely "what raises 4?", but "what makes the model prefer 4 over the
-dropped-carry alternative 3?".
+This attributes `logit(4) - logit(3)`.
+
+All-position interventions:
+
+Early final-token-only interventions were too narrow. The important positive math
+diagnostic came from editing all prompt positions. This suggests carry-relevant
+state is distributed across prompt positions and residual/MLP updates, not
+localized only at the final token.
+
+Feature sign filtering:
+
+Attribution graphs include features with positive and negative effects on the
+chosen objective. Sparse interventions should often use:
+
+  --graph-feature-sign positive
+
+This avoids mixing features that support the target with features that suppress
+it.
 
 
-Key results from run_gpu_math.ipynb
------------------------------------
+Main results to write about
+---------------------------
 
-Clean baseline for the tens digit:
+1. Physics units
 
-  top token = "4"
+This should be the headline positive result. The units experiments had the
+cleanest intervention behaviour. The report should present this as the best
+evidence that the independent pipeline can find behaviour-relevant features and
+causal directions.
+
+Key framing:
+
+- The behaviour is narrower and less saturated than capitals.
+- Source/target swaps are easier to interpret.
+- Results are closer to the intended Anthropic-style validation pattern.
+
+2. Arithmetic carry
+
+Main prompt:
+
+  Question: What is 58 + 83? Answer: 1
+
+Clean baseline:
+
   logit("4") = 30.62
   prob("4") ~= 1.0000
   logit("3") = 23.50
   prob("3") = 0.0008
-  logit gap 4 - 3 = 7.12
+  gap 4 - 3 = 7.12
 
-The model is extremely confident, which makes logit-level shifts more informative
-than top-1 accuracy. Most interventions do not flip the answer because the clean
-margin is large.
+Important consequence:
 
-MLP knockout:
+The model is very confident. Small sparse-feature interventions are unlikely to
+flip the answer, so logit movement is more informative than top-1 accuracy.
 
-  zeroed MLP output at final token for layers 4,8,12,16,20,24,28
-  logit("4") increased from 30.62 to 33.25
+Final-token MLP knockout:
+
+  logit("4") increased to 33.25
   logit("3") stayed at 23.50
-  gap increased to 9.75
 
-Interpretation: the correct tens digit is not localized in the final-token MLP
-outputs of these layers. This is a negative result for the SAE-MLP circuit
-hypothesis. It may even mean those MLP outputs slightly suppress the dominant "4"
-prediction.
+Interpretation:
+
+The carry digit is not localized in final-token MLP outputs of the selected
+layers.
 
 All-position MLP knockout:
 
-  zeroed MLP output at all prompt positions for layers 4,8,12,16,20,24,28
-  logit("4") fell from 30.62 to 27.25
   prob("4") fell to 0.6406
-  logit("3") rose from 23.50 to 26.00
+  logit("4") fell to 27.25
   prob("3") rose to 0.1836
-  logit gap 4 - 3 collapsed from 7.12 to 1.25
-  logit("2") also rose to 25.75
+  logit("3") rose to 26.00
+  gap 4 - 3 collapsed from 7.12 to 1.25
+  prob("2") also rose to 0.1426
 
-Interpretation: this is the strongest causal result. Final-token-only MLP
-intervention was too narrow; MLP/residual updates across the prompt help stabilize
-the correct carry digit. Because "2" also rises, this is broad digit/arithmetic
-destabilization rather than a clean carry-specific feature knockout.
+Interpretation:
 
-Attention knockout:
+This is the main positive arithmetic result. Broad MLP/residual updates across
+positions help stabilize the correct carry digit. However, because `2` also
+rises, the intervention is not carry-specific; it broadly destabilizes digit
+selection.
 
-  zeroed attention output at final token for layers 4,8,12,16,20,24,28
-  logit("4") fell from 30.62 to 30.00
-  logit("3") fell slightly from 23.50 to 23.38
-  gap fell from 7.12 to 6.62
-  prob("4") fell to 0.9961
+Sparse SAE-feature inhibition:
 
-Interpretation: attention/residual pathways contribute to the answer more than the
-MLP-SAE pathway does, but the effect is still not enough to flip the output.
+Graph-positive feature ablations produced small but directionally relevant
+movements, including increases in the dropped-carry `3` logit. They did not flip
+the output.
 
-Block knockout:
+Interpretation:
 
-  zeroed whole block output hidden state at final token for layers 4,8,12,16,20,24,28
-  top token became "="
-  logit("4") fell from 30.62 to 6.31
-  logit("3") fell from 23.50 to 8.50
+The contrast graph contains some features related to the carry-vs-no-carry
+distinction, but the current SAE basis does not isolate a compact causal carry
+feature set.
 
-Interpretation: this is a blunt upper-bound diagnostic. It proves the final-token
-residual stream through these layers is necessary for normal arithmetic output, but
-it does not localize a clean circuit. It corrupts the representation rather than
-selectively removing carry information.
+Swaps:
 
-Per-layer block knockout:
+Some math swaps moved probability in the desired direction. They are useful as
+supporting evidence, but should not be oversold as a clean carry-feature transfer.
+When the source prompt has a different answer token, swaps can leak source answer
+identity rather than isolate carry.
 
-Several single-layer block knockouts strongly corrupted the answer. Notable examples:
+3. Capitals
 
-  layer 4 only: top token "1"; logit("4") = 13.25, logit("3") = 13.81
-  layer 12 only: top token "5"; logit("4") = 20.75, logit("3") = 20.75
-  layer 16 only: top token space; logit("4") = 19.38, logit("3") = 19.25
-  layer 20 only: top token " that"; logit("4") = 4.53, logit("3") = 4.59
-  layer 24 only: top token " in"; logit("4") = 5.59, logit("3") = 6.16
-  layer 28 only: top token "="; logit("4") = 6.31, logit("3") = 8.50
+Dallas/Oakland capitals were weak because the model was not very confident:
 
-Interpretation: later blocks and some mid layers are essential for preserving a
-well-formed answer representation, but single block knockouts are also too coarse
-to identify sparse carry features.
+  Dallas/Austin probability about 0.277
+  Oakland/Sacramento probability about 0.222
 
-Contrast-feature ablation scan:
+Higher-confidence controls such as Zarqa/Amman and Basra/Baghdad were added, but
+they still did not produce a clean swap story.
 
-Using the contrast graph, positive graph features were progressively inhibited.
-The output remained "4", but the dropped-carry alternative moved upward:
+Interpretation:
 
-  top 10 features: logit("3") +0.12, logit("4") +0.00
-  top 25 features: logit("3") +0.25, logit("4") +0.00
-  top 50 features: logit("3") +0.38, logit("4") -0.12
-  top 70 features: logit("3") +0.38, logit("4") +0.00
-
-Interpretation: this is the most encouraging SAE-level sign. It does not flip the
-answer, but it moves the model weakly toward the dropped-carry alternative. This
-supports a cautious claim that the contrast graph contains features related to the
-carry-vs-no-carry distinction, but they are not sufficient to control the output.
-
-Targeted inhibition of all graph-positive contrast features:
-
-  logit("3") rose from 23.50 to 23.88
-  prob("3") rose from 0.0008 to 0.0012
-  logit("4") stayed at 30.62
-  output remained "4"
-
-Interpretation: same direction as the scan. Feature inhibition partially shifts
-the dropped-carry logit, but the effect is small relative to the large clean
-margin.
-
-Graph-feature swap from 32+42 into 58+83:
-
-  source prompt: Question: What is 32 + 42? Answer:
-  source top token: "7"
-  source logit("3") = 25.62, prob("3") = 0.0527
-  target clean logit("3") = 23.50, prob("3") = 0.0008
-  after graph-feature swap: logit("3") = 23.75, prob("3") = 0.0010
-  logit("4") stayed at 30.62
-
-Interpretation: a small but directionally correct increase in "3" after swapping
-selected features. However, this is not a clean dropped-carry source because
-32+42's next token is "7", not "3".
-
-Raw MLP-output swap from 32+42 into 58+83:
-
-  top token became "7"
-  prob("7") = 0.7305
-  prob("4") = 0.2695
-  logit("3") fell to 22.75
-
-Interpretation: raw MLP outputs can transfer source-answer identity, but this is
-coarse source leakage rather than a clean carry intervention. It demonstrates that
-stronger, non-SAE swaps can causally change the output, but the change follows the
-source token "7" rather than the dropped-carry token "3".
+Capitals should be reported as a negative or weak reproduction. This may reflect
+that factual recall is distributed differently from units, that the selected SAE
+layers do not capture the relevant factual representation, or that prompt/token
+alignment makes all-position swaps hard to interpret.
 
 
-Main limitations to report
---------------------------
-
-1. The model is saturated on the prompt.
-   The clean 4-vs-3 logit gap is about 7.12, so small feature interventions are not
-   expected to flip the answer.
-
-2. The SAEs are lightweight and pooled across behaviours.
-   They were trained under limited compute and not optimized specifically for a
-   clean arithmetic carry circuit. Layer 32 was especially weak and was excluded.
-
-3. The interventions target final-token MLP features.
-   Anthropic-style addition mechanisms may involve attention, residual stream
-   state, earlier positions, and distributed interactions rather than only final
-   token MLP features.
-
-4. The swap source is not ideal.
-   32+42 gives next token "7". It is useful as a no-carry/source-leakage probe, but
-   not as a clean source for making 141 behave like 131. A cleaner dropped-carry
-   source would need next token "3".
-
-5. Block knockouts are informative but not mechanistically precise.
-   They show that residual stream state is necessary, but they destroy normal
-   computation and should not be overinterpreted as feature-level evidence.
-
-6. Initial interventions mostly targeted the final token position.
-   This was too narrow. The all-position MLP knockout is now the main causal
-   follow-up result, while all-position attention and SAE-feature inhibition are
-   supporting limitation checks.
-
-
-Suggested direction for the report
+Can we isolate a "carry 1" feature?
 ----------------------------------
 
-Frame the arithmetic experiment as a rigorous negative/partial reproduction:
+Current answer: not cleanly with this setup.
 
-  "I successfully implemented the components of the attribution-graph and
-  intervention workflow, including per-digit teacher forcing and contrast-logit
-  attribution. Under the available SAE/resource setup, I did not recover a sparse
-  MLP-SAE feature group that causally controls the carry digit. However, a broad
-  all-position MLP knockout substantially reduced the correct carry digit and
-  increased the dropped-carry alternative, suggesting that the relevant arithmetic
-  information is distributed across MLP/residual updates over multiple prompt
-  positions."
+The carry signal appears to exist in model activations because broad MLP/latent
+interventions move the model toward dropped-carry alternatives. However, the
+sparse graph-selected SAE features do not by themselves control the output.
 
-Potential report sections:
+This is not evidence that SAEs can never isolate carry. It is evidence that this
+specific lightweight SAE setup did not recover a clean causal carry feature.
 
-1. Motivation and target reproduction
-   Explain Anthropic's addition/carry circuit claim and why it is a good
-   small-scale reproducibility target.
+Likely reasons:
 
-2. Setup
-   Qwen3-4B-Instruct, prompt generation, per-digit teacher forcing, pooled SAEs,
-   selected layers 4,8,12,16,20,24,28.
+- carry information may be distributed across many latents
+- the signal may depend on nonlinear feature interactions
+- relevant information may sit in SAE reconstruction error
+- the chosen layers may miss part of the computation
+- final-token-only interventions were too narrow
+- the model's confidence margin is very large
+- attention/residual stream state may matter alongside MLP features
 
-3. Methodological adaptation
-   Explain why whole-answer attribution fails for digit-tokenized numbers and why
-   the tens digit must use logit("4") - logit("3").
+Optional future experiment:
 
-4. Baseline behaviour
-   Show the model strongly predicts the correct digit, with a large logit margin.
-
-5. Attribution graph and SAE interventions
-   Present the contrast graph and the weak but directionally correct ablation/swap
-   effects on the "3" logit.
-
-6. Component knockouts
-   Contrast final-token MLP knockout with all-position MLP knockout. The final-token
-   result is negative, but the all-position result is the main positive causal
-   finding. Attention remains weak and block knockout is too destructive.
-
-7. Discussion
-   Emphasize non-reproduction of clean sparse SAE circuit, likely reasons, and how
-   this supports the project goal of investigating reproducibility rather than just
-   matching a result.
-
-8. Future work
-   Train stronger arithmetic-specific SAEs, use less saturated prompts, test source
-   prompts with next token "3", patch earlier token positions, and add attention
-   attribution/activation patching rather than only MLP SAE features.
-
-Position-intervention addendum:
-
-The non-final-position cells changed the interpretation. The all-position MLP
-knockout is the strongest causal result so far:
-
-  clean gap: logit("4") - logit("3") = 7.12
-  all-position MLP knockout gap: logit("4") - logit("3") = 1.25
-  prob("4") fell to 0.6406
-  prob("3") rose to 0.1836
-
-This should be treated as a main result, not merely an optional diagnostic. The
-important claim is that final-token-only interventions were too narrow: the
-carry-relevant computation appears distributed across prompt positions in the MLP
-/ residual stream. However, because all-position MLP knockout is coarse and also
-raises other alternatives such as "2", it is not evidence for a clean sparse SAE
-carry circuit.
-
-The later position-localized Diagnostic 4 cells did not reproduce the strong
-all-position effect and were removed from the notebook. For the report, do not
-lean on them. Instead, use the all-position MLP knockout with layer scan as the
-main follow-up, and use all-position attention / SAE-feature inhibition as
-negative or limitation checks.
-
-Layer-24 note:
-
-The all-position MLP layer scan showed layer 24 as the most disruptive single MLP
-layer: knocking out layer-24 MLP outputs across all positions made the model
-predict "2" rather than "4". This is useful supporting evidence that some MLP
-layers strongly affect digit selection, but it is not a clean dropped-carry result
-because it does not selectively raise "3". Keep it as a caveat/supporting detail,
-not a separate headline experiment.
+Rank individual or grouped SAE features by marginal effect on
+`logit(4) - logit(3)` using ablation or swap. This would not prove a clean carry
+feature, but it could support the claim that effects are diffuse rather than
+separable.
 
 
-Suggested cautious claim
-------------------------
+Suggested report structure
+--------------------------
 
-"The reproduction did not identify a compact SAE-mediated carry circuit analogous
-to the published system. Nevertheless, all-position MLP knockout collapsed the
-model's correct-vs-dropped-carry margin, and contrast-feature interventions
-produced smaller directionally correct shifts. This suggests that the arithmetic
-mechanism is present and causally important, but not captured cleanly by the
-current lightweight final-token MLP SAE setup."
+1. Introduction
+   - Anthropic paper and motivation.
+   - Reproducibility goal in an open model.
+   - Why partial/negative reproduction is scientifically useful.
+
+2. Methods
+   - Qwen3-4B-Instruct.
+   - Prompt sets for units, arithmetic, capitals.
+   - Activation capture on selected layers.
+   - Lightweight per-layer SAEs.
+   - Attribution graph construction.
+   - Contrast targets.
+   - Inhibition and swap interventions.
+   - Colab execution due to CSD3 unavailability; standalone scripts remain the
+     real pipeline.
+
+3. Physics units
+   - Present strongest positive result.
+   - Include graph and intervention table.
+
+4. Arithmetic carry
+   - Explain digit-tokenization and teacher forcing.
+   - Present contrast objective.
+   - Show baseline confidence.
+   - Compare final-token MLP, all-position MLP, sparse SAE inhibition, and swaps.
+   - State that broad causal signal exists but sparse SAE feature recovery is
+     incomplete.
+
+5. Capitals
+   - Present as weak/negative reproduction.
+   - Explain low-confidence prompt issue and high-confidence follow-up.
+   - Avoid making capitals the headline.
+
+6. Comparison to Anthropic
+   - Similar pipeline components were implemented.
+   - Clean sparse circuits were not consistently recovered.
+   - Results appear sensitive to model, behaviour, prompt confidence, SAE quality,
+     layer choice, and intervention locality.
+
+7. Limitations and future work
+   - Larger/stronger SAEs.
+   - More prompts and less saturated arithmetic cases.
+   - Systematic feature-impact ranking.
+   - Attention/residual attribution.
+   - Better source/target prompt matching.
+   - More compute and repeated seeds.
+
+
+Presentation framing
+--------------------
+
+Use a three-column story:
+
+  Units: works best.
+  Math: partially works, but sparse carry feature not isolated.
+  Capitals: does not cleanly work.
+
+The main conclusion should be:
+
+  "The method transferred as a pipeline, but the clean sparse-circuit story did
+  not transfer uniformly under this lightweight open-model setup."
+
+
+Final diagnostic extension (July 2026)
+--------------------------------------
+
+One short final notebook was added: `run_gpu_final_validation.ipynb`. It does
+not retrain the SAEs and does not construct a new attribution graph. It restores
+the existing final checkpoints and graph JSONs, then performs two checks that
+materially improve the evidential quality of the report.
+
+1. SAE fidelity and achieved sparsity
+
+`src/sae_diagnostics.py` evaluates every final behaviour-specific checkpoint on
+the original deterministic train/validation activation split. It reports FVE,
+normalised MSE, cosine similarity, relative L2 error, L0, active fraction,
+dead-feature fraction and encoder/decoder norm distributions.
+
+This analysis is a hypothesis test, not a post-hoc excuse:
+
+- Poor validation FVE would support reconstruction insufficiency as one
+  plausible contributor to weak sparse causal control.
+- Good FVE with weak intervention effects would rule out that simple account and
+  point instead toward achieved sparsity, unstable/non-unique features, graph
+  selection, distribution mismatch or nonlinear interactions.
+- Reconstruction statistics alone cannot establish which factor caused an
+  intervention to fail.
+
+The earlier "SAE reconstruction-only baseline" in `intervention.py` is not a
+reconstruction-quality measurement. It uses an error-preserving splice and is a
+forward-pass identity by construction. It should not be cited as evidence that
+the SAE reconstructs well.
+
+2. Graph-held-out prompt pairs
+
+`src/heldout_validation.py` reuses the fixed final carry and force graphs on 12
+new arithmetic pairs and 12 new unit pairs. It compares the clean condition with
+sparse graph-feature edits, complete latent swaps and raw MLP patches. It reports
+per-case effects, baseline-qualified aggregate means, deterministic bootstrap
+intervals, directional success rates and top-token transfer rates.
+
+Scope must be described exactly:
+
+- The arithmetic pairs are absent from the complete addition SAE corpus and were
+  not used to construct the graph.
+- Unit source prompts are selected from the SAE validation split; their matched
+  energy variants are absent from the corpus. Both are absent from graph
+  construction, but the source is not SAE-held-out.
+- Therefore "graph-held-out" is accurate for both domains. "Fully held-out" is
+  not accurate for every unit source.
+
+The benchmark uses edit strength 1 and all aligned token positions. It does not
+tune feature sets, strengths or prompts after observing benchmark outcomes.
+
+
+Final figure policy
+-------------------
+
+`report/FIGURE_PLAN.txt` is now the source of truth for all report figures.
+Four vector figures are already generated and inserted in `report/report.tex`:
+
+- pipeline schematic;
+- SI-unit intervention comparison;
+- arithmetic interventions and specificity controls;
+- capital-city intervention comparison.
+
+The final validation notebook will generate three additional figures from real
+saved artifacts:
+
+- `fig_sae_diagnostics.pdf`;
+- `fig_heldout_generalisation.pdf`;
+- `fig_math_attribution_graph.pdf`.
+
+The carry graph figure is a backward-connected visual subset for readability.
+The complete JSON and HTML remain the authoritative graph artifacts, and the
+caption must state that nodes and edges were omitted from the printed view.
