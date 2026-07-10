@@ -1,0 +1,78 @@
+\documentclass[border=5pt]{standalone}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{compat=1.18}
+
+\definecolor{targetblue}{HTML}{2166AC}
+\definecolor{sourceorange}{HTML}{D6604D}
+\definecolor{neutralgray}{HTML}{6C757D}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=2 by 1, horizontal sep=1.6cm},
+    width=7.5cm,
+    height=6.0cm,
+    ymajorgrids,
+    grid style={draw=black!12},
+    axis line style={draw=black!55},
+    tick label style={font=\sffamily\scriptsize},
+    label style={font=\sffamily\small},
+    title style={font=\sffamily\small\bfseries},
+    legend style={font=\sffamily\scriptsize, draw=none, fill=none},
+    enlarge x limits=0.20,
+]
+
+\nextgroupplot[
+    title={(a) Energy target: answer-prefix probabilities},
+    ybar=2pt,
+    bar width=9pt,
+    ymin=0,
+    ymax=0.9,
+    ylabel={Probability},
+    symbolic x coords={Clean,Full,Sparse},
+    xtick=data,
+    xticklabels={Clean,Full latent,Sparse features},
+    x tick label style={rotate=16,anchor=east},
+    legend columns=2,
+    legend style={at={(0.5,0.98)},anchor=north,fill=white,fill opacity=0.92,
+        text opacity=1},
+    ymax=1.08,
+]
+\addplot+[fill=targetblue, draw=targetblue!80] coordinates {
+    (Clean,0.7969) (Full,0.2354) (Sparse,0.8008)
+};
+\addlegendentry{Energy prefix \texttt{j}}
+\addplot+[fill=sourceorange, draw=sourceorange!80] coordinates {
+    (Clean,0.0240) (Full,0.4980) (Sparse,0.0352)
+};
+\addlegendentry{Force prefix \texttt{new}}
+
+\nextgroupplot[
+    title={(b) Shared next-token logit contrast},
+    ybar=2pt,
+    bar width=9pt,
+    ymin=-5,
+    ymax=13.5,
+    ylabel={$\ell(\texttt{new})-\ell(\texttt{j})$},
+    symbolic x coords={Clean,Full,Sparse},
+    xtick=data,
+    xticklabels={Clean,Full latent,Sparse features},
+    x tick label style={rotate=16,anchor=east},
+    legend columns=2,
+    legend style={at={(0.5,0.98)},anchor=north,fill=white,fill opacity=0.92,
+        text opacity=1},
+]
+\addplot+[fill=targetblue, draw=targetblue!80] coordinates {
+    (Clean,-3.50) (Full,0.76) (Sparse,-3.13)
+};
+\addlegendentry{Energy target}
+\addplot+[fill=sourceorange, draw=sourceorange!80] coordinates {
+    (Clean,10.56) (Full,5.57) (Sparse,10.69)
+};
+\addlegendentry{Force target}
+\draw[black!60, dashed] (axis cs:Clean,0) -- (axis cs:Sparse,0);
+
+\end{groupplot}
+\end{tikzpicture}
+\end{document}
