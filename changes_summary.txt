@@ -231,3 +231,26 @@ Optional TopK mathematics experiment
   specificity control.
 - Added `src/plot_topk_math.py` and `run_gpu_math_topk_retrain.ipynb`.
 - All new checkpoints and outputs use separate `topk_math_retrain` paths.
+
+TopK result and final carry screen
+----------------------------------
+
+- The completed metric-only selection chose TopK 256: mean validation FVE
+  0.9410, minimum layer FVE 0.9319, mean validation L0 171.6 and mean dead
+  fraction 0.716.
+- Sparse graph-feature inhibition strengthened from -0.396 with the original
+  ReLU SAE to -0.875 in correct-minus-dropped-carry logit-gap delta.
+- The matched no-carry control changed by -0.885. The paired carry-minus-control
+  estimate was +0.010 (bootstrap 95% CI [-0.125, +0.167]), so the stronger
+  intervention is not evidence of carry specificity.
+- Added a configurable `--positions` option to `src/heldout_validation.py` while
+  retaining `all` as its backward-compatible default.
+- Added `src/math_carry_feature_screen.py`, which excludes the already inspected
+  benchmark, screens individual features on an eight-case discovery split,
+  freezes the ordering, and confirms a predeclared top-10 panel on 24 fresh
+  cases with multiple negative controls. Partial output is resumable.
+- Added `src/plot_math_carry_screen.py` and
+  `run_gpu_math_carry_feature_followup.ipynb`. The notebook restores existing
+  TopK checkpoints and graph, repeats specificity at the final token, runs the
+  discovery/confirmation screen, and stores checkpoints under
+  `outputs/topk_math_followup` in Drive.

@@ -99,6 +99,17 @@ Optional targeted follow-up:
   - Uses separate local and Drive folders under `topk_math_retrain`; it does not
     overwrite the final ReLU checkpoints or outputs.
 
+- `run_gpu_math_carry_feature_followup.ipynb`
+  - Run after `run_gpu_math_topk_retrain.ipynb`; it restores the selected TopK
+    256 checkpoints and completed graph rather than retraining or rebuilding it.
+  - First repeats the matched benchmark at the final token, aligning the
+    intervention with the SAE training support and attribution graph.
+  - Then screens graph features on eight fresh discovery pairs, freezes their
+    ordering, and evaluates a predeclared top-10 panel on 24 separate
+    confirmation pairs with layer, reverse-rank, random and full-graph controls.
+  - Checkpoints the long screen directly to Drive under `topk_math_followup`, so
+    rerunning an interrupted cell resumes completed features and panels.
+
 ## Standalone Pipeline
 
 ### 1. Generate Prompt Data
@@ -305,6 +316,42 @@ The `k=256` paths above are illustrative; use the configuration recorded in
 carry-graph features to each matched no-carry source. A negative paired
 carry-minus-control effect supports carry selectivity; a similar effect in both
 conditions instead suggests generic arithmetic-answer support.
+
+The completed selection chose TopK 256. It achieved mean validation FVE 0.941
+with mean validation L0 171.6, compared with roughly two thousand active latents
+for the original ReLU mathematics SAEs. Sparse inhibition became larger
+(`-0.875` versus `-0.396` in correct-minus-dropped-carry logit-gap delta), but
+the matched no-carry effect was nearly identical (`-0.885`). The paired
+carry-minus-control estimate was `+0.010` with bootstrap 95% interval
+`[-0.125, +0.167]`; this does not support carry specificity.
+
+The final-position discovery/confirmation follow-up can be run standalone after
+restoring the selected checkpoints and graph:
+
+```bash
+python -m src.heldout_validation \
+  --math-sae-config configs/sae_math_topk256_config.yaml \
+  --math-graph outputs/topk_math_retrain/math_topk256_carry_58_83_4v3_graph.json \
+  --math-cases 12 \
+  --skip-units \
+  --math-specificity-control \
+  --positions last \
+  --output outputs/topk_math_followup/math_topk256_heldout_specificity_last.json
+
+python -m src.math_carry_feature_screen \
+  --sae-config configs/sae_math_topk256_config.yaml \
+  --graph outputs/topk_math_retrain/math_topk256_carry_58_83_4v3_graph.json \
+  --positions last \
+  --discovery-cases 8 \
+  --confirmation-cases 24 \
+  --output outputs/topk_math_followup/math_topk256_carry_feature_screen.json
+```
+
+The screen excludes the 12 already inspected benchmark pairs. Confirmation data
+never influence feature ordering. The primary top-10 panel supports carry
+selectivity only if its paired mean is negative, its bootstrap 95% interval is
+entirely below zero, and its mean carry-target effect is negative. Secondary
+panel sizes must not be selected post hoc.
 
 ## Current Scientific Bottom Line
 

@@ -216,7 +216,8 @@ Exact filename:
   report/figures/fig_math_topk_tradeoff_specificity.pdf
 Generator: src/plot_topk_math.py
 Notebook: run_gpu_math_topk_retrain.ipynb
-Status: PENDING OPTIONAL RUN.
+Status: PENDING INSERT; already generated under
+outputs/topk_math_retrain/figures.
 Suggested location: Results, after the graph-held-out intervention benchmark.
 Suggested label: fig:math-topk-specificity.
 
@@ -245,6 +246,37 @@ Suggested neutral caption:
   graph-feature inhibition on graph-held-out carry targets with the corresponding
   no-carry source controls. Lines connect matched prompt pairs and diamonds mark
   condition means.
+
+
+9. Final-position carry feature screen
+---------------------------------------
+Exact filename:
+  report/figures/fig_math_carry_feature_screen.pdf
+Generator: src/plot_math_carry_screen.py
+Notebook: run_gpu_math_carry_feature_followup.ipynb
+Source artifact:
+  outputs/topk_math_followup/math_topk256_carry_feature_screen.json
+Status: PENDING RUN, then PENDING INSERT only if discussed in the report.
+Suggested location: Results, immediately after the TopK trade-off/specificity
+figure. Suggested label: fig:math-carry-screen.
+
+Content:
+- the 20 highest-ranked discovery features and their paired carry-minus-control
+  effects, coloured by layer;
+- confirmation effects and bootstrap intervals for the frozen cumulative
+  panels, complete positive graph set and reverse-ranked control;
+- paired carry-target and no-carry effects for the predeclared top-10 panel.
+
+Insertion rule:
+- The top-10 panel is the sole primary confirmation result. Do not select a
+  different panel size after viewing confirmation outcomes.
+- Insert a null figure if space permits because it documents a controlled failed
+  attempt to isolate carry and strengthens the reproducibility analysis.
+- A successful primary result requires a negative paired mean, a bootstrap 95%
+  interval wholly below zero and a negative carry-target mean. Random matched
+  panels remain an important qualitative specificity check.
+- The figure concerns final-token inhibition only. Do not combine it numerically
+  with the previous all-position estimate without labelling the position change.
 
 
 How to generate all pending figures

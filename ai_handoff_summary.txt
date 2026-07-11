@@ -275,3 +275,39 @@ specificity; equal effects support generic arithmetic-answer influence.
 
 No old checkpoint or output is overwritten. If no candidate passes selection,
 the notebook backs diagnostics up to Drive and stops before graph construction.
+
+
+Completed TopK result and next arithmetic run
+----------------------------------------------
+
+The TopK notebook has now been run. Metric-only selection chose k=256. Mean
+validation FVE is 0.9410 (minimum layer 0.9319), mean validation L0 is 171.6 and
+mean dead-feature fraction is 0.716. This is a real sparsity improvement over the
+original dense ReLU SAE codes.
+
+The sparse held-out carry effect strengthened from -0.396 to -0.875 in
+correct-minus-dropped-carry logit-gap delta, but the matched no-carry control was
+-0.885. The paired target-minus-control estimate is +0.010 with bootstrap 95% CI
+[-0.125, +0.167]. Therefore the completed TopK result does not isolate carry;
+the graph feature group has a generic arithmetic-answer effect under the tested
+all-position intervention. Do not call this an inherent flaw of all SAEs.
+
+There is a position mismatch worth resolving before the report: SAE training and
+graph construction use the final answer-prefix token, while the completed
+held-out script used all token positions. `src.heldout_validation` now supports
+`--positions last` (default remains `all` for backward compatibility).
+
+The final justified GPU experiment is
+`run_gpu_math_carry_feature_followup.ipynb`. It restores k=256 checkpoints and
+the existing graph, runs final-token specificity, then calls
+`src/math_carry_feature_screen.py`. The screen excludes the 12 inspected cases,
+uses 8 fresh discovery pairs to rank all positive graph features by carry effect
+minus no-carry effect, freezes that ranking, and evaluates a predeclared top-10
+panel on 24 separate confirmation pairs. It also runs cumulative sizes, full
+graph, bottom-ranked, per-layer and layer-count-matched random controls. The long
+JSON is saved directly to Drive after each feature/panel and resumes safely.
+
+The primary rule is fixed: mean paired difference below zero, bootstrap 95% CI
+upper endpoint below zero, and mean carry-target delta below zero. If it fails,
+do not select a secondary panel post hoc. Use the TopK sparsity gain and failed
+specificity confirmation as a rigorous negative/partial reproduction.

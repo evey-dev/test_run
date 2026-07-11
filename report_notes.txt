@@ -388,5 +388,65 @@ features on each no-carry source. The paired quantity is target carry-gap delta
 minus no-carry correct-gap delta. Negative values favour carry selectivity;
 similar negative changes in both conditions indicate generic answer support.
 
-All artifacts use `topk_math_retrain` paths. Existing final ReLU outputs remain
-the primary results unless and until this guarded follow-up is completed.
+All artifacts use `topk_math_retrain` paths. Existing final ReLU outputs are not
+overwritten.
+
+Completed TopK result
+---------------------
+
+TopK 256 was selected before intervention. Its mean validation FVE was 0.9410
+(minimum layer FVE 0.9319), mean validation L0 was 171.6 and mean dead-feature
+fraction was 0.716. The original mathematics ReLU SAEs had approximately two
+thousand active latents per example, so the TopK model is a substantial and
+measured sparsity improvement while preserving high reconstruction fidelity.
+
+On the same 12 graph-held-out carry pairs, positive-feature inhibition changed
+the correct-minus-dropped-carry gap by -0.875 on average (95% bootstrap CI
+[-0.969, -0.771]), compared with -0.396 for the original ReLU graph. Full-latent
+swap changed from -0.385 to -0.563. Neither sparse nor full-latent conditions
+changed the top prediction; raw MLP transfer remained the upper-bound diagnostic
+and transferred all top predictions.
+
+The new matched control prevents overinterpretation. Inhibiting the same graph
+features on the corresponding no-carry prompts changed their correct-minus-
+carry-injected gap by -0.885. The paired carry-minus-control estimate was +0.010
+with bootstrap 95% CI [-0.125, +0.167], and only 4/12 carry effects were more
+negative than their matched controls. Thus TopK strengthened the graph-selected
+intervention but did not establish a carry-selective feature set. The features
+currently behave like generic arithmetic-answer support under this intervention.
+
+This result must not be described as an inherent failure of SAEs. It is evidence
+against a compact carry circuit recovered by this final-position, per-layer,
+lightweight TopK/ReLU pipeline and its single-graph feature selection.
+
+
+Final-position confirmatory follow-up
+-------------------------------------
+
+`run_gpu_math_carry_feature_followup.ipynb` is the final justified arithmetic
+experiment before report writing. It addresses a specific mismatch: the SAE
+training corpus and graph use final-token activations, whereas the completed
+held-out benchmark inhibited those feature directions at all token positions.
+All-position editing can perturb operand-token representations and is therefore
+not a clean test of the final-token graph.
+
+The notebook first repeats the unchanged 12-pair benchmark with `--positions
+last`. It then excludes those 12 inspected cases, baseline-qualifies a fresh case
+pool, assigns eight pairs to discovery and 24 separate pairs to confirmation,
+and screens every positive graph feature individually at the final token. The
+discovery score is:
+
+  carry-target gap delta - matched no-carry control gap delta.
+
+Negative values favour carry selectivity. Feature order is frozen before any
+confirmation intervention. The predeclared primary panel is the first ten
+features. Prefix panels of sizes 1, 3, 5, 10 and 20 are a secondary dose response;
+the run also evaluates the full graph set, reverse-ranked features, each layer's
+feature group and five random panels matched to the top-10 layer counts.
+
+The primary panel is counted as confirmation only if its mean paired difference
+is negative, the upper endpoint of its bootstrap 95% interval is below zero, and
+its mean carry-target effect is negative. If this rule fails, do not choose a
+better-looking secondary panel. The defensible conclusion is then that explicit
+TopK sparsity improves compactness and intervention magnitude but still does not
+recover cross-prompt carry-specific causality.

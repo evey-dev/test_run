@@ -278,6 +278,7 @@ def evaluate_math_cases(
     cases: List[Dict[str, Any]],
     verbose: bool,
     specificity_control: bool = False,
+    position_spec: str = "all",
 ) -> List[Dict[str, Any]]:
     rows = []
     for index, case in enumerate(cases, start=1):
@@ -306,7 +307,7 @@ def evaluate_math_cases(
                 saes,
                 features,
                 [correct_token, dropped_token],
-                position_spec="all",
+                position_spec=position_spec,
             )
             full_result = run_swap_in_intervention(
                 model,
@@ -317,7 +318,7 @@ def evaluate_math_cases(
                 saes,
                 None,
                 [correct_token, dropped_token],
-                position_spec="all",
+                position_spec=position_spec,
             )
             raw_result = run_swap_in_intervention(
                 model,
@@ -329,7 +330,7 @@ def evaluate_math_cases(
                 None,
                 [correct_token, dropped_token],
                 raw_mlp_swap=True,
-                position_spec="all",
+                position_spec=position_spec,
             )
             if specificity_control:
                 source_sparse_result = run_inhibition_intervention(
@@ -340,7 +341,7 @@ def evaluate_math_cases(
                     saes,
                     features,
                     [dropped_token, correct_token],
-                    position_spec="all",
+                    position_spec=position_spec,
                 )
 
         row = dict(case)
@@ -385,6 +386,7 @@ def evaluate_unit_cases(
     features: Dict[int, List[int]],
     cases: List[Dict[str, Any]],
     verbose: bool,
+    position_spec: str = "all",
 ) -> List[Dict[str, Any]]:
     rows = []
     newton_id = first_token_id(tokenizer, "newtons")
@@ -414,7 +416,7 @@ def evaluate_unit_cases(
                 saes,
                 features,
                 [newton_token, joule_token],
-                position_spec="all",
+                position_spec=position_spec,
             )
             full_result = run_swap_in_intervention(
                 model,
@@ -425,7 +427,7 @@ def evaluate_unit_cases(
                 saes,
                 None,
                 [newton_token, joule_token],
-                position_spec="all",
+                position_spec=position_spec,
             )
             raw_result = run_swap_in_intervention(
                 model,
@@ -437,7 +439,7 @@ def evaluate_unit_cases(
                 None,
                 [newton_token, joule_token],
                 raw_mlp_swap=True,
-                position_spec="all",
+                position_spec=position_spec,
             )
 
         row = dict(case)
@@ -591,6 +593,11 @@ def main() -> None:
     parser.add_argument("--skip-math", action="store_true")
     parser.add_argument("--skip-units", action="store_true")
     parser.add_argument(
+        "--positions",
+        default="all",
+        help="Token positions to edit: 'last', 'all', or comma-separated indices",
+    )
+    parser.add_argument(
         "--math-specificity-control",
         action="store_true",
         help="Also inhibit carry-graph features on each matched no-carry source prompt",
@@ -607,7 +614,7 @@ def main() -> None:
         "method": {
             "seed": args.seed,
             "layers": LAYERS,
-            "positions": "all",
+            "positions": args.positions,
             "graph_features": "positive-attribution nodes selected on one original graph prompt",
             "literal_edit_strength": 1.0,
             "math_specificity_control": args.math_specificity_control,
@@ -635,6 +642,7 @@ def main() -> None:
             math_cases,
             args.verbose,
             specificity_control=args.math_specificity_control,
+            position_spec=args.positions,
         )
         payload["math"] = {
             "gap_definition": "logit(correct tens digit) - logit(dropped-carry digit)",
@@ -678,7 +686,15 @@ def main() -> None:
         )
         print(f"Loaded {sum(map(len, unit_features.values()))} positive units graph features")
         unit_saes = load_domain_saes(model, units_config_path)
-        unit_rows = evaluate_unit_cases(model, tokenizer, unit_saes, unit_features, unit_cases, args.verbose)
+        unit_rows = evaluate_unit_cases(
+            model,
+            tokenizer,
+            unit_saes,
+            unit_features,
+            unit_cases,
+            args.verbose,
+            position_spec=args.positions,
+        )
         payload["units"] = {
             "gap_definition": "logit(force prefix 'new') - logit(energy prefix 'j') on energy targets",
             "predicted_direction": "positive delta",
