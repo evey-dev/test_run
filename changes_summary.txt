@@ -254,3 +254,20 @@ TopK result and final carry screen
   TopK checkpoints and graph, repeats specificity at the final token, runs the
   discovery/confirmation screen, and stores checkpoints under
   `outputs/topk_math_followup` in Drive.
+
+Guarded TopK units experiment
+-----------------------------
+
+- Added fixed units TopK k=128/256/512 configurations using the same
+  hyperparameters and metric-only selection thresholds as mathematics.
+- Added `src/units_feature_screen.py`. It ranks positive force-graph features on
+  eight discovery systems, freezes a Top-10 panel, and confirms it on sixteen
+  different systems with one prompt per system.
+- Fresh force, energy and mass prompts are exact-string absent from the SAE
+  corpus; physical-system groups are disjoint between discovery and
+  confirmation.
+- The primary specificity contrast is force-source swap delta minus matched
+  mass-source swap delta on the same energy target. Random, reverse-ranked,
+  layer, full-graph, full-latent and raw-MLP controls are retained as secondary.
+- Added `src/plot_topk_units.py` and `run_gpu_units_topk_retrain.ipynb` with
+  resumable Drive checkpoints under `topk_units_retrain`.

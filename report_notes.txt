@@ -450,3 +450,44 @@ its mean carry-target effect is negative. If this rule fails, do not choose a
 better-looking secondary panel. The defensible conclusion is then that explicit
 TopK sparsity improves compactness and intervention magnitude but still does not
 recover cross-prompt carry-specific causality.
+
+
+Guarded TopK units follow-up
+----------------------------
+
+The original final units ReLU SAEs reconstruct well (mean validation FVE 0.959)
+but are extremely dense (mean validation L0 3544.6). Unlike arithmetic, units
+already has a position-consistent sparse effect: on six baseline-qualified
+graph-held-out pairs, final-token force-feature swaps increase the newtons-minus-
+joules logit gap by +0.229 on average, with bootstrap 95% CI [+0.146, +0.333].
+This combination motivates one final cross-domain TopK test.
+
+`run_gpu_units_topk_retrain.ipynb` trains fixed TopK k=128, 256 and 512
+candidates on the same deterministic final-token units activation corpus. It
+uses the same latent width, seed, epochs, learning rate, decoder normalisation,
+selection thresholds and metric-only selection rule as the mathematics sweep.
+Only the selected candidate receives a force-versus-energy graph.
+
+The selected model is first evaluated on 20 existing validation-context pairs
+at the final token. A separate feature screen then uses new force, mass and
+energy prompts whose exact strings are absent from the SAE corpus. Physical
+systems are assigned wholly to discovery or confirmation, preventing related
+prompt variants from crossing the split.
+
+For every feature panel, the same energy target receives either a force-source
+swap or a matched mass-source swap. The primary specificity estimand is:
+
+  force-source newtons-minus-joules gap delta
+  minus mass-source newtons-minus-joules gap delta.
+
+Eight discovery systems rank positive graph features. The ordering is frozen
+before sixteen different confirmation systems are evaluated, with one prompt
+per system. The Top-10 panel is the sole primary result; Top-1/3/5/20, complete
+graph, reverse rank, layer groups, five
+layer-count-matched random panels, full latent and raw MLP swaps are secondary
+controls.
+
+Primary success requires both the force-source mean and force-minus-mass mean to
+be positive with bootstrap 95% intervals wholly above zero. If this rule fails,
+do not choose another k, panel size or layer after viewing confirmation. Retain
+the ReLU final-position result and report the compact TopK test as negative.

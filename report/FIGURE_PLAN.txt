@@ -279,6 +279,37 @@ Insertion rule:
   with the previous all-position estimate without labelling the position change.
 
 
+10. Units TopK selection and confirmation
+------------------------------------------
+Exact filename:
+  report/figures/fig_units_topk_selection_confirmation.pdf
+Generator: src/plot_topk_units.py
+Notebook: run_gpu_units_topk_retrain.ipynb
+Source artifacts:
+- outputs/topk_units_retrain/units_topk_selection.json;
+- outputs/topk_units_retrain/units_topk*_diagnostics.csv;
+- outputs/topk_units_retrain/units_topk*_feature_screen.json.
+Status: PENDING RUN, then PENDING INSERT if discussed in the report.
+Suggested location: Results, after the final-position units robustness result.
+Suggested label: fig:units-topk-confirmation.
+
+Content:
+- reconstruction FVE against mean L0 for all fixed TopK candidates and the
+  original ReLU units SAE;
+- discovery force-minus-mass feature ranking;
+- frozen confirmation panel effects and bootstrap intervals;
+- paired force-source and mass-source effects for the primary Top-10 panel.
+
+Insertion rule:
+- The selected k must come exclusively from the saved diagnostic selection JSON.
+- The Top-10 panel is the only primary causal result. Do not replace it with a
+  secondary size, layer or random panel after viewing confirmation.
+- Primary success requires both the force-source effect and force-minus-mass
+  specificity effect to have bootstrap 95% intervals wholly above zero.
+- Insert a null result when space permits because it tests whether TopK
+  compactness transfers across domains without changing the original corpus.
+
+
 How to generate all pending figures
 -----------------------------------
 Run run_gpu_final_validation.ipynb from top to bottom. It does not retrain an SAE

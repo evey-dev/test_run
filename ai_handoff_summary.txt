@@ -311,3 +311,25 @@ The primary rule is fixed: mean paired difference below zero, bootstrap 95% CI
 upper endpoint below zero, and mean carry-target delta below zero. If it fails,
 do not select a secondary panel post hoc. Use the TopK sparsity gain and failed
 specificity confirmation as a rigorous negative/partial reproduction.
+
+
+Guarded units TopK experiment
+-----------------------------
+
+The final units ReLU SAEs have mean validation FVE 0.959 but mean validation L0
+3544.6. Their final-token held-out sparse force-to-energy effect remains positive
+on all 6/6 baseline-qualified cases (mean +0.229, bootstrap 95% CI
+[+0.146, +0.333]). This motivated one final fixed TopK cross-domain test.
+
+`run_gpu_units_topk_retrain.ipynb` trains k=128/256/512, selects without causal
+outcomes, builds one selected force graph and runs only final-token validation.
+`src/units_feature_screen.py` uses exact-prompt SAE-absent contexts with disjoint
+physical systems across discovery and confirmation. The primary Top-10 panel is
+ranked on eight discovery systems and tested on sixteen different confirmation
+systems, with one prompt per system.
+
+Specificity compares a force-source swap with a matched mass-source swap into
+the same energy target. Success requires both the force effect and
+force-minus-mass difference to have bootstrap 95% intervals wholly above zero.
+All other panel sizes, layers and controls are secondary. Stop after this run
+regardless of outcome.

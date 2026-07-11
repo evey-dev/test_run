@@ -1,0 +1,1646 @@
+{
+  "method": {
+    "seed": 787,
+    "layers": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28
+    ],
+    "positions": "last",
+    "graph_features": "positive-attribution nodes selected on one original graph prompt",
+    "literal_edit_strength": 1.0,
+    "math_specificity_control": true,
+    "important_scope_note": "Graph-held-out means the evaluation prompt was not used to construct the graph. The units source prompts may occur in the SAE validation corpus; target energy variants do not."
+  },
+  "math": {
+    "gap_definition": "logit(correct tens digit) - logit(dropped-carry digit)",
+    "predicted_direction": "negative delta",
+    "cases": [
+      {
+        "target_a": 89,
+        "source_a": 87,
+        "b": 62,
+        "target_sum": 151,
+        "source_sum": 149,
+        "correct_digit": "5",
+        "dropped_carry_digit": "4",
+        "target_prompt": "Question: What is 89 + 62? Answer: 1",
+        "source_prompt": "Question: What is 87 + 62? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "5",
+        "dropped_carry_token": "4",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 30.25,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 23.0,
+            "probability": 0.00070953369140625
+          },
+          "gap": 7.25,
+          "top_token": "4",
+          "top_token_id": 19,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 30.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.25,
+              "probability": 0.0003795623779296875
+            },
+            "gap": 7.875,
+            "top_token": "5",
+            "top_token_id": 20,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 29.75,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.625,
+              "probability": 0.000804901123046875
+            },
+            "gap": 7.125,
+            "top_token": "5",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 20,
+            "second_token_id": 19
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 30.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.5,
+              "probability": 0.00048828125
+            },
+            "gap": 7.625,
+            "top_token": "5",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 20,
+            "second_token_id": 19
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 30.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.375,
+              "probability": 0.0013275146484375
+            },
+            "gap": 6.625,
+            "top_token": "5",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 20,
+            "second_token_id": 19
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 30.25,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.0,
+              "probability": 0.00070953369140625
+            },
+            "gap": 7.25,
+            "top_token": "4",
+            "top_token_id": 19,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 29.5,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 22.75,
+              "probability": 0.00116729736328125
+            },
+            "gap": 6.75,
+            "top_token": "4",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 19,
+            "second_token_id": 20
+          },
+          "gap_delta": -0.5
+        }
+      },
+      {
+        "target_a": 77,
+        "source_a": 74,
+        "b": 75,
+        "target_sum": 152,
+        "source_sum": 149,
+        "correct_digit": "5",
+        "dropped_carry_digit": "4",
+        "target_prompt": "Question: What is 77 + 75? Answer: 1",
+        "source_prompt": "Question: What is 74 + 75? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "5",
+        "dropped_carry_token": "4",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 29.375,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 20.625,
+            "probability": 0.0001583099365234375
+          },
+          "gap": 8.75,
+          "top_token": "4",
+          "top_token_id": 19,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 30.875,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.5,
+              "probability": 0.0002307891845703125
+            },
+            "gap": 8.375,
+            "top_token": "5",
+            "top_token_id": 20,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 30.5,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.75,
+              "probability": 0.000431060791015625
+            },
+            "gap": 7.75,
+            "top_token": "5",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 20,
+            "second_token_id": 19
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 31.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.75,
+              "probability": 0.0002613067626953125
+            },
+            "gap": 8.25,
+            "top_token": "5",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 20,
+            "second_token_id": 19
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 30.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.375,
+              "probability": 0.0013275146484375
+            },
+            "gap": 6.625,
+            "top_token": "5",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 20,
+            "second_token_id": 19
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 29.375,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 20.625,
+              "probability": 0.0001583099365234375
+            },
+            "gap": 8.75,
+            "top_token": "4",
+            "top_token_id": 19,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 28.75,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 20.625,
+              "probability": 0.0002956390380859375
+            },
+            "gap": 8.125,
+            "top_token": "4",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 19,
+            "second_token_id": 20
+          },
+          "gap_delta": -0.625
+        }
+      },
+      {
+        "target_a": 88,
+        "source_a": 84,
+        "b": 95,
+        "target_sum": 183,
+        "source_sum": 179,
+        "correct_digit": "8",
+        "dropped_carry_digit": "7",
+        "target_prompt": "Question: What is 88 + 95? Answer: 1",
+        "source_prompt": "Question: What is 84 + 95? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "8",
+        "dropped_carry_token": "7",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 29.875,
+            "probability": 0.99609375
+          },
+          "second": {
+            "logit": 23.25,
+            "probability": 0.00131988525390625
+          },
+          "gap": 6.625,
+          "top_token": "7",
+          "top_token_id": 22,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 32.75,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.375,
+              "probability": 8.487701416015625e-05
+            },
+            "gap": 9.375,
+            "top_token": "8",
+            "top_token_id": 23,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 32.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.25,
+              "probability": 0.0001583099365234375
+            },
+            "gap": 8.75,
+            "top_token": "8",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 23,
+            "second_token_id": 22
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 33.25,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.875,
+              "probability": 8.487701416015625e-05
+            },
+            "gap": 9.375,
+            "top_token": "8",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 23,
+            "second_token_id": 22
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 25.25,
+              "probability": 0.00592041015625
+            },
+            "second": {
+              "logit": 30.375,
+              "probability": 0.9921875
+            },
+            "gap": -5.125,
+            "top_token": "7",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 23,
+            "second_token_id": 22
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 29.875,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 23.25,
+              "probability": 0.00131988525390625
+            },
+            "gap": 6.625,
+            "top_token": "7",
+            "top_token_id": 22,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 29.0,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 23.125,
+              "probability": 0.0027923583984375
+            },
+            "gap": 5.875,
+            "top_token": "7",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 22,
+            "second_token_id": 23
+          },
+          "gap_delta": -0.75
+        }
+      },
+      {
+        "target_a": 67,
+        "source_a": 64,
+        "b": 45,
+        "target_sum": 112,
+        "source_sum": 109,
+        "correct_digit": "1",
+        "dropped_carry_digit": "0",
+        "target_prompt": "Question: What is 67 + 45? Answer: 1",
+        "source_prompt": "Question: What is 64 + 45? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "1",
+        "dropped_carry_token": "0",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 30.0,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 22.25,
+            "probability": 0.000431060791015625
+          },
+          "gap": 7.75,
+          "top_token": "0",
+          "top_token_id": 15,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 31.875,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.625,
+              "probability": 0.0002613067626953125
+            },
+            "gap": 8.25,
+            "top_token": "1",
+            "top_token_id": 16,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 31.5,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.75,
+              "probability": 0.000431060791015625
+            },
+            "gap": 7.75,
+            "top_token": "1",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 16,
+            "second_token_id": 15
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 32.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.875,
+              "probability": 0.0002956390380859375
+            },
+            "gap": 8.125,
+            "top_token": "1",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 16,
+            "second_token_id": 15
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 31.5,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 25.125,
+              "probability": 0.00170135498046875
+            },
+            "gap": 6.375,
+            "top_token": "1",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 16,
+            "second_token_id": 15
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 30.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.25,
+              "probability": 0.000431060791015625
+            },
+            "gap": 7.75,
+            "top_token": "0",
+            "top_token_id": 15,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 29.625,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.75,
+              "probability": 0.00102996826171875
+            },
+            "gap": 6.875,
+            "top_token": "0",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 15,
+            "second_token_id": 16
+          },
+          "gap_delta": -0.875
+        }
+      },
+      {
+        "target_a": 39,
+        "source_a": 37,
+        "b": 92,
+        "target_sum": 131,
+        "source_sum": 129,
+        "correct_digit": "3",
+        "dropped_carry_digit": "2",
+        "target_prompt": "Question: What is 39 + 92? Answer: 1",
+        "source_prompt": "Question: What is 37 + 92? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "3",
+        "dropped_carry_token": "2",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 29.125,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 22.5,
+            "probability": 0.0013275146484375
+          },
+          "gap": 6.625,
+          "top_token": "2",
+          "top_token_id": 17,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 31.375,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.25,
+              "probability": 0.0002956390380859375
+            },
+            "gap": 8.125,
+            "top_token": "3",
+            "top_token_id": 18,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 30.875,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.5,
+              "probability": 0.0006256103515625
+            },
+            "gap": 7.375,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 30.875,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.125,
+              "probability": 0.000431060791015625
+            },
+            "gap": 7.75,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 30.75,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.25,
+              "probability": 0.000553131103515625
+            },
+            "gap": 7.5,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 29.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.5,
+              "probability": 0.0013275146484375
+            },
+            "gap": 6.625,
+            "top_token": "2",
+            "top_token_id": 17,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 28.625,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 22.5,
+              "probability": 0.0021820068359375
+            },
+            "gap": 6.125,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 18
+          },
+          "gap_delta": -0.5
+        }
+      },
+      {
+        "target_a": 78,
+        "source_a": 76,
+        "b": 33,
+        "target_sum": 111,
+        "source_sum": 109,
+        "correct_digit": "1",
+        "dropped_carry_digit": "0",
+        "target_prompt": "Question: What is 78 + 33? Answer: 1",
+        "source_prompt": "Question: What is 76 + 33? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "1",
+        "dropped_carry_token": "0",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 29.125,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 21.875,
+            "probability": 0.00070953369140625
+          },
+          "gap": 7.25,
+          "top_token": "0",
+          "top_token_id": 15,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 31.375,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.875,
+              "probability": 0.000553131103515625
+            },
+            "gap": 7.5,
+            "top_token": "1",
+            "top_token_id": 16,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 31.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 24.0,
+              "probability": 0.000911712646484375
+            },
+            "gap": 7.0,
+            "top_token": "1",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 16,
+            "second_token_id": 15
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 31.25,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.625,
+              "probability": 0.00048828125
+            },
+            "gap": 7.625,
+            "top_token": "1",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 16,
+            "second_token_id": 15
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 30.625,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.625,
+              "probability": 0.000911712646484375
+            },
+            "gap": 7.0,
+            "top_token": "1",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 16,
+            "second_token_id": 15
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 29.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 21.875,
+              "probability": 0.00070953369140625
+            },
+            "gap": 7.25,
+            "top_token": "0",
+            "top_token_id": 15,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 28.5,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 22.125,
+              "probability": 0.00170135498046875
+            },
+            "gap": 6.375,
+            "top_token": "0",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 15,
+            "second_token_id": 16
+          },
+          "gap_delta": -0.875
+        }
+      },
+      {
+        "target_a": 26,
+        "source_a": 22,
+        "b": 97,
+        "target_sum": 123,
+        "source_sum": 119,
+        "correct_digit": "2",
+        "dropped_carry_digit": "1",
+        "target_prompt": "Question: What is 26 + 97? Answer: 1",
+        "source_prompt": "Question: What is 22 + 97? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "2",
+        "dropped_carry_token": "1",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 28.75,
+            "probability": 0.99609375
+          },
+          "second": {
+            "logit": 22.75,
+            "probability": 0.002471923828125
+          },
+          "gap": 6.0,
+          "top_token": "1",
+          "top_token_id": 16,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 29.5,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 21.375,
+              "probability": 0.0002956390380859375
+            },
+            "gap": 8.125,
+            "top_token": "2",
+            "top_token_id": 17,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 29.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 21.375,
+              "probability": 0.00048828125
+            },
+            "gap": 7.625,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 16
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 29.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.0,
+              "probability": 0.000804901123046875
+            },
+            "gap": 7.125,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 16
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 27.375,
+              "probability": 0.62109375
+            },
+            "second": {
+              "logit": 26.875,
+              "probability": 0.376953125
+            },
+            "gap": 0.5,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 16
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 28.75,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 22.75,
+              "probability": 0.002471923828125
+            },
+            "gap": 6.0,
+            "top_token": "1",
+            "top_token_id": 16,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 28.125,
+              "probability": 0.9921875
+            },
+            "second": {
+              "logit": 22.625,
+              "probability": 0.004058837890625
+            },
+            "gap": 5.5,
+            "top_token": "1",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 16,
+            "second_token_id": 17
+          },
+          "gap_delta": -0.5
+        }
+      },
+      {
+        "target_a": 79,
+        "source_a": 77,
+        "b": 82,
+        "target_sum": 161,
+        "source_sum": 159,
+        "correct_digit": "6",
+        "dropped_carry_digit": "5",
+        "target_prompt": "Question: What is 79 + 82? Answer: 1",
+        "source_prompt": "Question: What is 77 + 82? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "6",
+        "dropped_carry_token": "5",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 28.625,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 21.5,
+            "probability": 0.000804901123046875
+          },
+          "gap": 7.125,
+          "top_token": "5",
+          "top_token_id": 20,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 31.75,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.25,
+              "probability": 0.00020313262939453125
+            },
+            "gap": 8.5,
+            "top_token": "6",
+            "top_token_id": 21,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 31.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.5,
+              "probability": 0.00048828125
+            },
+            "gap": 7.625,
+            "top_token": "6",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 21,
+            "second_token_id": 20
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 31.375,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.75,
+              "probability": 0.00048828125
+            },
+            "gap": 7.625,
+            "top_token": "6",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 21,
+            "second_token_id": 20
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 31.25,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 24.5,
+              "probability": 0.00116729736328125
+            },
+            "gap": 6.75,
+            "top_token": "6",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 21,
+            "second_token_id": 20
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 28.625,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 21.5,
+              "probability": 0.000804901123046875
+            },
+            "gap": 7.125,
+            "top_token": "5",
+            "top_token_id": 20,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 28.125,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 21.5,
+              "probability": 0.0013275146484375
+            },
+            "gap": 6.625,
+            "top_token": "5",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 20,
+            "second_token_id": 21
+          },
+          "gap_delta": -0.5
+        }
+      },
+      {
+        "target_a": 36,
+        "source_a": 32,
+        "b": 97,
+        "target_sum": 133,
+        "source_sum": 129,
+        "correct_digit": "3",
+        "dropped_carry_digit": "2",
+        "target_prompt": "Question: What is 36 + 97? Answer: 1",
+        "source_prompt": "Question: What is 32 + 97? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "3",
+        "dropped_carry_token": "2",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 29.0,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 22.375,
+            "probability": 0.0013275146484375
+          },
+          "gap": 6.625,
+          "top_token": "2",
+          "top_token_id": 17,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 30.75,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.875,
+              "probability": 0.0003795623779296875
+            },
+            "gap": 7.875,
+            "top_token": "3",
+            "top_token_id": 18,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 30.375,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.25,
+              "probability": 0.000804901123046875
+            },
+            "gap": 7.125,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 30.25,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.875,
+              "probability": 0.0006256103515625
+            },
+            "gap": 7.375,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 28.125,
+              "probability": 0.77734375
+            },
+            "second": {
+              "logit": 26.875,
+              "probability": 0.22265625
+            },
+            "gap": 1.25,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 29.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.375,
+              "probability": 0.0013275146484375
+            },
+            "gap": 6.625,
+            "top_token": "2",
+            "top_token_id": 17,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 28.5,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 22.625,
+              "probability": 0.0027923583984375
+            },
+            "gap": 5.875,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 18
+          },
+          "gap_delta": -0.75
+        }
+      },
+      {
+        "target_a": 78,
+        "source_a": 74,
+        "b": 45,
+        "target_sum": 123,
+        "source_sum": 119,
+        "correct_digit": "2",
+        "dropped_carry_digit": "1",
+        "target_prompt": "Question: What is 78 + 45? Answer: 1",
+        "source_prompt": "Question: What is 74 + 45? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "2",
+        "dropped_carry_token": "1",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 29.75,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 22.625,
+            "probability": 0.000804901123046875
+          },
+          "gap": 7.125,
+          "top_token": "1",
+          "top_token_id": 16,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 30.875,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.625,
+              "probability": 0.0002613067626953125
+            },
+            "gap": 8.25,
+            "top_token": "2",
+            "top_token_id": 17,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 30.5,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.0,
+              "probability": 0.000553131103515625
+            },
+            "gap": 7.5,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 16
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 31.25,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.875,
+              "probability": 0.0002307891845703125
+            },
+            "gap": 8.375,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 16
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 30.875,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.75,
+              "probability": 0.000804901123046875
+            },
+            "gap": 7.125,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 16
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 29.75,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.625,
+              "probability": 0.000804901123046875
+            },
+            "gap": 7.125,
+            "top_token": "1",
+            "top_token_id": 16,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 29.375,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 22.75,
+              "probability": 0.0013275146484375
+            },
+            "gap": 6.625,
+            "top_token": "1",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 16,
+            "second_token_id": 17
+          },
+          "gap_delta": -0.5
+        }
+      },
+      {
+        "target_a": 89,
+        "source_a": 87,
+        "b": 72,
+        "target_sum": 161,
+        "source_sum": 159,
+        "correct_digit": "6",
+        "dropped_carry_digit": "5",
+        "target_prompt": "Question: What is 89 + 72? Answer: 1",
+        "source_prompt": "Question: What is 87 + 72? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "6",
+        "dropped_carry_token": "5",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 29.125,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 22.25,
+            "probability": 0.00102996826171875
+          },
+          "gap": 6.875,
+          "top_token": "5",
+          "top_token_id": 20,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 31.5,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.75,
+              "probability": 0.0001583099365234375
+            },
+            "gap": 8.75,
+            "top_token": "6",
+            "top_token_id": 21,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 31.0,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.0,
+              "probability": 0.000335693359375
+            },
+            "gap": 8.0,
+            "top_token": "6",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 21,
+            "second_token_id": 20
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 31.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.125,
+              "probability": 0.000335693359375
+            },
+            "gap": 8.0,
+            "top_token": "6",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 21,
+            "second_token_id": 20
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 31.0,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 25.0,
+              "probability": 0.002471923828125
+            },
+            "gap": 6.0,
+            "top_token": "6",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 21,
+            "second_token_id": 20
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 29.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.25,
+              "probability": 0.00102996826171875
+            },
+            "gap": 6.875,
+            "top_token": "5",
+            "top_token_id": 20,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 28.625,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 22.375,
+              "probability": 0.001922607421875
+            },
+            "gap": 6.25,
+            "top_token": "5",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 20,
+            "second_token_id": 21
+          },
+          "gap_delta": -0.625
+        }
+      },
+      {
+        "target_a": 89,
+        "source_a": 87,
+        "b": 42,
+        "target_sum": 131,
+        "source_sum": 129,
+        "correct_digit": "3",
+        "dropped_carry_digit": "2",
+        "target_prompt": "Question: What is 89 + 42? Answer: 1",
+        "source_prompt": "Question: What is 87 + 42? Answer: 1",
+        "absent_from_sae_corpus": true,
+        "correct_token": "3",
+        "dropped_carry_token": "2",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 29.25,
+            "probability": 1.0
+          },
+          "second": {
+            "logit": 22.75,
+            "probability": 0.00150299072265625
+          },
+          "gap": 6.5,
+          "top_token": "2",
+          "top_token_id": 17,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 31.5,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 24.375,
+              "probability": 0.000804901123046875
+            },
+            "gap": 7.125,
+            "top_token": "3",
+            "top_token_id": 18,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 31.125,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 24.5,
+              "probability": 0.0013275146484375
+            },
+            "gap": 6.625,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 31.25,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.875,
+              "probability": 0.0006256103515625
+            },
+            "gap": 7.375,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 30.5,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 23.875,
+              "probability": 0.0013275146484375
+            },
+            "gap": 6.625,
+            "top_token": "3",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 18,
+            "second_token_id": 17
+          }
+        },
+        "specificity_control": {
+          "definition": "same carry-graph features inhibited on the matched no-carry source",
+          "clean": {
+            "first": {
+              "logit": 29.25,
+              "probability": 1.0
+            },
+            "second": {
+              "logit": 22.75,
+              "probability": 0.00150299072265625
+            },
+            "gap": 6.5,
+            "top_token": "2",
+            "top_token_id": 17,
+            "top_is_first": true,
+            "top_is_second": false
+          },
+          "sparse_inhibition": {
+            "first": {
+              "logit": 28.625,
+              "probability": 0.99609375
+            },
+            "second": {
+              "logit": 22.625,
+              "probability": 0.002471923828125
+            },
+            "gap": 6.0,
+            "top_token": "2",
+            "top_is_first": true,
+            "top_is_second": false,
+            "first_token_id": 17,
+            "second_token_id": 18
+          },
+          "gap_delta": -0.5
+        }
+      }
+    ],
+    "summary": {
+      "total_cases": 12,
+      "eligible_cases": 12,
+      "eligibility_definition": "clean target and source both have the expected first-token top prediction",
+      "desired_delta_sign": "negative",
+      "conditions": {
+        "full_latent_swap": {
+          "mean_gap_delta": -0.2916666666666667,
+          "median_gap_delta": -0.1875,
+          "bootstrap_95_ci_mean": [
+            -0.5208333333333334,
+            -0.07291666666666667
+          ],
+          "fraction_in_predicted_direction": 0.6666666666666666,
+          "top_prediction_transfer_fraction": 0.0
+        },
+        "raw_mlp_swap": {
+          "mean_gap_delta": -3.40625,
+          "median_gap_delta": -1.75,
+          "bootstrap_95_ci_mean": [
+            -5.895833333333333,
+            -1.4895833333333333
+          ],
+          "fraction_in_predicted_direction": 1.0,
+          "top_prediction_transfer_fraction": 0.08333333333333333
+        },
+        "sparse_inhibition": {
+          "mean_gap_delta": -0.65625,
+          "median_gap_delta": -0.6875,
+          "bootstrap_95_ci_mean": [
+            -0.7291666666666666,
+            -0.5833333333333334
+          ],
+          "fraction_in_predicted_direction": 1.0,
+          "top_prediction_transfer_fraction": 0.0
+        }
+      }
+    },
+    "specificity_summary": {
+      "eligible_cases": 12,
+      "target_definition": "carry-target correct-minus-dropped-carry gap delta",
+      "control_definition": "matched no-carry correct-minus-carry-injected alternative gap delta",
+      "paired_difference_definition": "target delta minus matched no-carry control delta; negative favours carry selectivity",
+      "mean_target_delta": -0.65625,
+      "bootstrap_95_ci_mean_target_delta": [
+        -0.7291666666666666,
+        -0.5833333333333334
+      ],
+      "mean_no_carry_control_delta": -0.625,
+      "bootstrap_95_ci_mean_no_carry_control_delta": [
+        -0.7083333333333334,
+        -0.5520833333333334
+      ],
+      "mean_paired_difference": -0.03125,
+      "bootstrap_95_ci_mean_paired_difference": [
+        -0.15625,
+        0.10416666666666667
+      ],
+      "fraction_target_more_negative_than_control": 0.4166666666666667
+    }
+  },
+  "runtime_seconds": 37.40004825592041
+}

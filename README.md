@@ -110,6 +110,18 @@ Optional targeted follow-up:
   - Checkpoints the long screen directly to Drive under `topk_math_followup`, so
     rerunning an interrupted cell resumes completed features and panels.
 
+- `run_gpu_units_topk_retrain.ipynb`
+  - Final guarded units follow-up; run only after the completed ReLU units work.
+  - Trains TopK `k=128,256,512` on the same final-token units corpus and selects
+    one candidate from reconstruction/sparsity diagnostics before intervention.
+  - Builds one selected force graph, reruns a 20-context final-token benchmark,
+    and freezes a Top-10 feature panel using separate discovery contexts.
+  - Confirmation uses exact-prompt SAE-absent contexts and compares force-source
+    swaps against matched mass-source swaps into the same energy targets.
+    Discovery and confirmation physical systems are disjoint.
+  - All checkpoints and outputs use `topk_units_retrain` Drive paths and the long
+    feature screen resumes after interruption.
+
 ## Standalone Pipeline
 
 ### 1. Generate Prompt Data
@@ -352,6 +364,38 @@ never influence feature ordering. The primary top-10 panel supports carry
 selectivity only if its paired mean is negative, its bootstrap 95% interval is
 entirely below zero, and its mean carry-target effect is negative. Secondary
 panel sizes must not be selected post hoc.
+
+### 8. Guarded TopK Units Follow-up
+
+The complete workflow is `run_gpu_units_topk_retrain.ipynb`. It uses:
+
+```text
+configs/sae_units_topk128_config.yaml
+configs/sae_units_topk256_config.yaml
+configs/sae_units_topk512_config.yaml
+```
+
+The selection thresholds and stopping rule are identical to the mathematics
+TopK sweep. The selected graph and feature screen always operate at the final
+token, matching SAE training. The standalone confirmation command is:
+
+```bash
+python -m src.units_feature_screen \
+  --sae-config configs/sae_units_topk256_config.yaml \
+  --graph outputs/topk_units_retrain/units_topk256_force_graph.json \
+  --positions last \
+  --discovery-cases 8 \
+  --confirmation-cases 16 \
+  --output outputs/topk_units_retrain/units_topk256_feature_screen.json
+```
+
+The `k=256` paths are illustrative; use `units_topk_selection.json`. Exact
+force, mass and energy prompts are absent from the SAE corpus. Discovery uses
+eight systems and confirmation uses sixteen different systems, with one prompt
+per system. The primary Top-10
+panel succeeds only when both the force-source effect and its advantage over the
+matched mass-source control have bootstrap 95% intervals wholly above zero.
+Confirmation panel sizes must not be selected post hoc.
 
 ## Current Scientific Bottom Line
 

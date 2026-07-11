@@ -1,0 +1,21 @@
+output_dir: "mechanistic_data/sae_checkpoints_units_topk512"
+data_dir: "mechanistic_data_units_topk_retrain"
+layers:
+  - 4
+  - 8
+  - 12
+  - 16
+  - 20
+  - 24
+  - 28
+hidden_size: 2560
+latent_dim: 8192
+activation_type: "topk"
+top_k: 512
+normalize_decoder: true
+batch_size: 64
+epochs: 75
+lr: 0.001
+l1_lambda: 0.0
+seed: 787
+device: "auto"
