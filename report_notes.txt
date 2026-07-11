@@ -357,3 +357,36 @@ saved artifacts:
 The carry graph figure is a backward-connected visual subset for readability.
 The complete JSON and HTML remain the authoritative graph artifacts, and the
 caption must state that nodes and edges were omitted from the printed view.
+
+
+Optional TopK mathematics follow-up
+-----------------------------------
+
+`run_gpu_math_topk_retrain.ipynb` tests one specific, diagnosed weakness of the
+final ReLU SAEs: thousands of active latents per example. It is deliberately
+limited to mathematics and reuses the same deterministic final-position
+activation support, layers, split, seed and latent width.
+
+Candidates use TopK k=128, 256 and 512, unit-normalised decoder columns and no L1
+penalty. TopK directly bounds L0, while decoder normalisation removes the simple
+encoder/decoder rescaling degree of freedom. This does not address the separate
+final-position-training versus all-position-intervention mismatch.
+
+Selection occurs before intervention:
+
+- mean validation FVE >= 0.90;
+- minimum layer validation FVE >= 0.85;
+- mean dead-feature fraction <= 0.80;
+- choose the smallest mean L0 among eligible candidates.
+
+If no candidate qualifies, the notebook saves diagnostics and stops before graph
+construction. If one qualifies, only that candidate receives a new 58+83 graph
+and the unchanged 12-pair held-out benchmark.
+
+A matched no-carry specificity control inhibits the same positive carry-graph
+features on each no-carry source. The paired quantity is target carry-gap delta
+minus no-carry correct-gap delta. Negative values favour carry selectivity;
+similar negative changes in both conditions indicate generic answer support.
+
+All artifacts use `topk_math_retrain` paths. Existing final ReLU outputs remain
+the primary results unless and until this guarded follow-up is completed.

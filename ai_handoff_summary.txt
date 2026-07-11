@@ -258,3 +258,20 @@ Figure source of truth:
 Four vector figures are already inserted into `report/report.tex`. Three figures
 remain pending the final notebook run. The static carry graph is deliberately a
 readable subset; the full JSON/HTML graph remains authoritative.
+
+
+Optional TopK follow-up
+-----------------------
+
+`run_gpu_math_topk_retrain.ipynb` is a guarded mathematics-only follow-up to the
+diagnosis that the final ReLU SAEs reconstruct well but activate thousands of
+latents. It trains TopK k=128/256/512 candidates with unit decoder norms, selects
+the sparsest candidate meeting fixed FVE/dead-feature thresholds before any
+intervention, builds one new graph and reruns the same 12 held-out pairs.
+
+The benchmark additionally inhibits the graph features on each matched no-carry
+source. A more-negative carry-target effect than no-carry control supports carry
+specificity; equal effects support generic arithmetic-answer influence.
+
+No old checkpoint or output is overwritten. If no candidate passes selection,
+the notebook backs diagnostics up to Drive and stops before graph construction.

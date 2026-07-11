@@ -277,6 +277,7 @@ def evaluate_math_cases(
     features: Dict[int, List[int]],
     cases: List[Dict[str, Any]],
     verbose: bool,
+    specificity_control: bool = False,
 ) -> List[Dict[str, Any]]:
     rows = []
     for index, case in enumerate(cases, start=1):
@@ -295,6 +296,7 @@ def evaluate_math_cases(
 
         clean = baseline_condition(model, tokenizer, case["target_prompt"], correct_id, dropped_id)
         source_clean = baseline_condition(model, tokenizer, case["source_prompt"], dropped_id, correct_id)
+        source_sparse_result = None
         with suppress_output(not verbose):
             sparse_result = run_inhibition_intervention(
                 model,
@@ -329,6 +331,17 @@ def evaluate_math_cases(
                 raw_mlp_swap=True,
                 position_spec="all",
             )
+            if specificity_control:
+                source_sparse_result = run_inhibition_intervention(
+                    model,
+                    tokenizer,
+                    case["source_prompt"],
+                    LAYERS,
+                    saes,
+                    features,
+                    [dropped_token, correct_token],
+                    position_spec="all",
+                )
 
         row = dict(case)
         row["correct_token"] = correct_token
@@ -347,6 +360,20 @@ def evaluate_math_cases(
                 raw_result, correct_token, dropped_token, correct_id, dropped_id
             ),
         }
+        if source_sparse_result is not None:
+            source_condition = condition_from_result(
+                source_sparse_result,
+                dropped_token,
+                correct_token,
+                dropped_id,
+                correct_id,
+            )
+            row["specificity_control"] = {
+                "definition": "same carry-graph features inhibited on the matched no-carry source",
+                "clean": source_clean,
+                "sparse_inhibition": source_condition,
+                "gap_delta": source_condition["gap"] - source_clean["gap"],
+            }
         rows.append(row)
     return rows
 
@@ -476,6 +503,50 @@ def summarise(rows: List[Dict[str, Any]], desired_direction: int, seed: int) -> 
     return summary
 
 
+def summarise_math_specificity(rows: List[Dict[str, Any]], seed: int) -> Dict[str, Any]:
+    eligible = [
+        row
+        for row in rows
+        if row.get("eligible")
+        and "specificity_control" in row
+        and "conditions" in row
+    ]
+    target_deltas = np.asarray(
+        [
+            row["conditions"]["sparse_inhibition"]["gap"]
+            - row["conditions"]["clean"]["gap"]
+            for row in eligible
+        ],
+        dtype=float,
+    )
+    source_deltas = np.asarray(
+        [row["specificity_control"]["gap_delta"] for row in eligible],
+        dtype=float,
+    )
+    if not eligible:
+        return {"eligible_cases": 0}
+
+    paired_difference = target_deltas - source_deltas
+    target_ci = bootstrap_mean_ci(target_deltas, seed)
+    source_ci = bootstrap_mean_ci(source_deltas, seed + 1)
+    paired_ci = bootstrap_mean_ci(paired_difference, seed + 2)
+    return {
+        "eligible_cases": len(eligible),
+        "target_definition": "carry-target correct-minus-dropped-carry gap delta",
+        "control_definition": "matched no-carry correct-minus-carry-injected alternative gap delta",
+        "paired_difference_definition": "target delta minus matched no-carry control delta; negative favours carry selectivity",
+        "mean_target_delta": float(target_deltas.mean()),
+        "bootstrap_95_ci_mean_target_delta": list(target_ci),
+        "mean_no_carry_control_delta": float(source_deltas.mean()),
+        "bootstrap_95_ci_mean_no_carry_control_delta": list(source_ci),
+        "mean_paired_difference": float(paired_difference.mean()),
+        "bootstrap_95_ci_mean_paired_difference": list(paired_ci),
+        "fraction_target_more_negative_than_control": float(
+            np.mean(target_deltas < source_deltas)
+        ),
+    }
+
+
 def load_domain_saes(model, config_path: Path) -> Dict[int, Any]:
     cfg = load_yaml_config(config_path)
     sae_dir = resolve_path(cfg["output_dir"], get_repo_root())
@@ -519,6 +590,11 @@ def main() -> None:
     parser.add_argument("--unit-cases", type=int, default=12)
     parser.add_argument("--skip-math", action="store_true")
     parser.add_argument("--skip-units", action="store_true")
+    parser.add_argument(
+        "--math-specificity-control",
+        action="store_true",
+        help="Also inhibit carry-graph features on each matched no-carry source prompt",
+    )
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--seed", type=int, default=787)
     parser.add_argument("--output", default="outputs/final_heldout_validation.json")
@@ -534,6 +610,7 @@ def main() -> None:
             "positions": "all",
             "graph_features": "positive-attribution nodes selected on one original graph prompt",
             "literal_edit_strength": 1.0,
+            "math_specificity_control": args.math_specificity_control,
             "important_scope_note": (
                 "Graph-held-out means the evaluation prompt was not used to construct the graph. "
                 "The units source prompts may occur in the SAE validation corpus; target energy variants do not."
@@ -550,14 +627,39 @@ def main() -> None:
         math_cases = generated_math_cases(args.math_cases, repo_root / "data/addition_data.csv", args.seed)
         print(f"Loaded {sum(map(len, math_features.values()))} positive math graph features")
         math_saes = load_domain_saes(model, repo_root / args.math_sae_config)
-        math_rows = evaluate_math_cases(model, tokenizer, math_saes, math_features, math_cases, args.verbose)
+        math_rows = evaluate_math_cases(
+            model,
+            tokenizer,
+            math_saes,
+            math_features,
+            math_cases,
+            args.verbose,
+            specificity_control=args.math_specificity_control,
+        )
         payload["math"] = {
             "gap_definition": "logit(correct tens digit) - logit(dropped-carry digit)",
             "predicted_direction": "negative delta",
             "cases": math_rows,
             "summary": summarise(math_rows, desired_direction=-1, seed=args.seed),
         }
+        if args.math_specificity_control:
+            payload["math"]["specificity_summary"] = summarise_math_specificity(
+                math_rows, seed=args.seed
+            )
         print_summary("Arithmetic generalisation", payload["math"]["summary"])
+        if args.math_specificity_control:
+            specificity = payload["math"]["specificity_summary"]
+            if specificity["eligible_cases"]:
+                paired_ci = specificity["bootstrap_95_ci_mean_paired_difference"]
+                print(
+                    "\nCarry specificity control: "
+                    f"target mean={specificity['mean_target_delta']:+.3f}, "
+                    f"no-carry mean={specificity['mean_no_carry_control_delta']:+.3f}, "
+                    f"paired difference={specificity['mean_paired_difference']:+.3f} "
+                    f"(95% CI [{paired_ci[0]:+.3f}, {paired_ci[1]:+.3f}])"
+                )
+            else:
+                print("\nCarry specificity control: no baseline-qualified cases")
         save_payload(payload, output_path)
         del math_saes
         gc.collect()

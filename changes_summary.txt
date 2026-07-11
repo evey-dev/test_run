@@ -214,3 +214,20 @@ Scientific interpretation of the new checks:
   reconstruction-error explanation untenable.
 - The new benchmark is graph-held-out. Unit sources may occur in the SAE
   validation split, so they must not all be described as fully SAE-held-out.
+
+
+Optional TopK mathematics experiment
+------------------------------------
+
+- Added backward-compatible `topk` activation support to `SparseAutoencoder`.
+- Attribution, inhibition, swapping and diagnostics now call the shared SAE
+  encoder and recover activation type and `top_k` from checkpoint metadata.
+- Added optional unit-norm decoder projection during training; original configs
+  retain their previous ReLU and unconstrained-decoder defaults.
+- Added fixed mathematics candidates at k=128, 256 and 512.
+- Added metric-only selection in `src/select_sae_candidate.py`; intervention
+  outputs cannot influence candidate choice.
+- Extended `src/heldout_validation.py` with an optional matched no-carry
+  specificity control.
+- Added `src/plot_topk_math.py` and `run_gpu_math_topk_retrain.ipynb`.
+- All new checkpoints and outputs use separate `topk_math_retrain` paths.

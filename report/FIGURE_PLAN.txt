@@ -210,6 +210,43 @@ graph-held-out; describe SAE-training or validation support separately and do
 not call all of them fully held-out without that qualification.
 
 
+8. Optional TopK mathematics follow-up
+---------------------------------------
+Exact filename:
+  report/figures/fig_math_topk_tradeoff_specificity.pdf
+Generator: src/plot_topk_math.py
+Notebook: run_gpu_math_topk_retrain.ipynb
+Status: PENDING OPTIONAL RUN.
+Suggested location: Results, after the graph-held-out intervention benchmark.
+Suggested label: fig:math-topk-specificity.
+
+Content:
+- mean validation FVE against mean L0 for TopK k=128, 256 and 512;
+- the original dense ReLU SAE as a reference point when its CSV is available;
+- the candidate selected without intervention outcomes marked explicitly;
+- paired sparse-inhibition effects on each carry target and matched no-carry
+  source control.
+
+Insertion rule:
+- Insert the figure whether the selected TopK intervention is stronger or weaker
+  only if a candidate passed all predeclared selection thresholds and the full
+  benchmark completed without code changes after outcomes were viewed.
+- If no candidate passes, report the reconstruction-sparsity trade-off briefly
+  as a negative follow-up; do not construct a graph merely to force a causal
+  result.
+- Carry selectivity requires the target-minus-control paired difference to be
+  coherently negative. A target effect that is equally present on no-carry
+  sources supports generic arithmetic-answer influence, not a carry circuit.
+
+Suggested neutral caption:
+  Predeclared TopK SAE selection and matched causal specificity test. Panel (a)
+  compares reconstruction fidelity with achieved sparsity; the selected model
+  was chosen before intervention outcomes were observed. Panel (b) compares
+  graph-feature inhibition on graph-held-out carry targets with the corresponding
+  no-carry source controls. Lines connect matched prompt pairs and diamonds mark
+  condition means.
+
+
 How to generate all pending figures
 -----------------------------------
 Run run_gpu_final_validation.ipynb from top to bottom. It does not retrain an SAE

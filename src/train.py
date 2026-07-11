@@ -29,18 +29,45 @@ from src.data_utils import get_repo_root, load_activation_splits, load_activatio
 
 
 class SparseAutoencoder(nn.Module):
-    def __init__(self, d_in: int, d_latent: int) -> None:
+    def __init__(
+        self,
+        d_in: int,
+        d_latent: int,
+        activation_type: str = "relu",
+        top_k: int | None = None,
+    ) -> None:
         super().__init__()
+        activation_type = activation_type.lower()
+        if activation_type not in {"relu", "topk"}:
+            raise ValueError(f"Unsupported SAE activation type: {activation_type!r}")
+        if activation_type == "topk" and (top_k is None or not 1 <= top_k <= d_latent):
+            raise ValueError(f"TopK SAE requires 1 <= top_k <= {d_latent}, got {top_k}")
+
+        self.activation_type = activation_type
+        self.top_k = int(top_k) if top_k is not None else None
         self.encoder = nn.Linear(d_in, d_latent)
         self.decoder = nn.Linear(d_latent, d_in, bias=False)
         self.decoder_bias = nn.Parameter(torch.zeros(d_in))
         self.register_buffer("scaling_factor", torch.tensor(1.0))
 
-    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        # Subtract decoder bias before encoding
+    def encode(self, x: torch.Tensor) -> torch.Tensor:
+        """Encode normalised activations with the configured sparse nonlinearity."""
         x_centered = x - self.decoder_bias
-        z = torch.relu(self.encoder(x_centered))
-        # Add decoder bias after decoding
+        positive = torch.relu(self.encoder(x_centered))
+        if self.activation_type == "relu":
+            return positive
+
+        values, indices = torch.topk(positive, k=self.top_k, dim=-1, sorted=False)
+        return torch.zeros_like(positive).scatter(-1, indices, values)
+
+    @torch.no_grad()
+    def normalize_decoder_columns(self) -> None:
+        """Project decoder feature directions to unit norm."""
+        norms = self.decoder.weight.norm(dim=0, keepdim=True).clamp_min(1e-12)
+        self.decoder.weight.div_(norms)
+
+    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        z = self.encode(x)
         x_hat = self.decoder(z) + self.decoder_bias
         return x_hat, z
 
@@ -73,6 +100,9 @@ def train_sae(layer: int, x_train: torch.Tensor, x_val: torch.Tensor, cfg: Dict[
     epochs = int(cfg.get("epochs", 50))
     lr = float(cfg.get("lr", 1e-3))
     l1_lambda = float(cfg.get("l1_lambda", 1e-3))
+    activation_type = str(cfg.get("activation_type", "relu")).lower()
+    top_k = int(cfg["top_k"]) if cfg.get("top_k") is not None else None
+    normalize_decoder = bool(cfg.get("normalize_decoder", False))
 
     # Activation Normalization: scale so mean L2 norm is sqrt(hidden_size)
     raw_mean_l2 = torch.norm(x_train, dim=-1).mean().item()
@@ -84,8 +114,21 @@ def train_sae(layer: int, x_train: torch.Tensor, x_val: torch.Tensor, cfg: Dict[
     x_train_norm = x_train / scaling_factor
     x_val_norm = x_val / scaling_factor
 
-    model = SparseAutoencoder(hidden_size, latent_dim).to(device)
+    model = SparseAutoencoder(
+        hidden_size,
+        latent_dim,
+        activation_type=activation_type,
+        top_k=top_k,
+    ).to(device)
     model.scaling_factor.copy_(torch.tensor(scaling_factor))
+    if normalize_decoder:
+        model.normalize_decoder_columns()
+
+    print(
+        f"SAE activation: {activation_type}"
+        + (f" (k={top_k})" if activation_type == "topk" else "")
+        + f" | decoder unit-norm constraint: {normalize_decoder}"
+    )
 
     # Pre-bias decoder to mean of normalized training activations
     with torch.no_grad():
@@ -110,6 +153,8 @@ def train_sae(layer: int, x_train: torch.Tensor, x_val: torch.Tensor, cfg: Dict[
             opt.zero_grad()
             loss.backward()
             opt.step()
+            if normalize_decoder:
+                model.normalize_decoder_columns()
             total_loss += float(loss.item())
 
         avg_train_loss = total_loss / len(train_loader)
@@ -181,6 +226,9 @@ def save_metadata(layer: int, cfg: Dict[str, Any], history: List[Dict[str, float
         "epochs": int(cfg.get("epochs", 50)),
         "lr": float(cfg.get("lr", 1e-3)),
         "l1_lambda": float(cfg.get("l1_lambda", 1e-3)),
+        "activation_type": str(cfg.get("activation_type", "relu")).lower(),
+        "top_k": int(cfg["top_k"]) if cfg.get("top_k") is not None else None,
+        "normalize_decoder": bool(cfg.get("normalize_decoder", False)),
         "seed": int(cfg.get("seed", 787)),
         "best_val_loss": float(best_val_loss),
         "activation_scaling_factor": float(scaling_factor),

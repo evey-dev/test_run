@@ -87,6 +87,18 @@ Older notebooks are kept for provenance and debugging:
 Do not rename the older notebooks unless there is a specific reason. Keeping
 them stable avoids breaking references in Colab, Drive, or old notes.
 
+Optional targeted follow-up:
+
+- `run_gpu_math_topk_retrain.ipynb`
+  - Trains TopK mathematics SAEs with `k=128,256,512` and unit-normalised
+    decoder columns, using the same deterministic activation corpus and split.
+  - Selects the smallest code meeting predeclared FVE and dictionary-collapse
+    thresholds before constructing any graph or viewing intervention results.
+  - Builds one graph for the selected candidate, reruns the fixed 12-pair
+    graph-held-out benchmark, and adds a matched no-carry specificity control.
+  - Uses separate local and Drive folders under `topk_math_retrain`; it does not
+    overwrite the final ReLU checkpoints or outputs.
+
 ## Standalone Pipeline
 
 ### 1. Generate Prompt Data
@@ -104,7 +116,7 @@ Expected files:
 ### 2. Capture Activations
 
 ```bash
-python src/capture_activations.py --output-dir mechanistic_data --seed 787
+python -m src.capture_activations --output-dir mechanistic_data --seed 787
 ```
 
 Useful options:
@@ -121,15 +133,15 @@ This writes activation arrays, metadata, and train/validation splits under
 General training command:
 
 ```bash
-python src/train.py --config configs/sae_config.yaml
+python -m src.train --config configs/sae_config.yaml
 ```
 
 Final behaviour-specific configs:
 
 ```bash
-python src/train.py --config configs/sae_units_final_train_config.yaml
-python src/train.py --config configs/sae_math_final_train_config.yaml
-python src/train.py --config configs/sae_capitals_final_train_config.yaml
+python -m src.train --config configs/sae_units_final_train_config.yaml
+python -m src.train --config configs/sae_math_final_train_config.yaml
+python -m src.train --config configs/sae_capitals_final_train_config.yaml
 ```
 
 Training saves one checkpoint per layer plus latent arrays and metadata. The
@@ -141,7 +153,7 @@ are not accidentally mixed into final runs.
 Example contrast graph for the arithmetic carry comparison:
 
 ```bash
-python src/attribution_graph.py \
+python -m src.attribution_graph \
   --prompt "Question: What is 58 + 83? Answer: 1" \
   --target "4" \
   --contrast-target "3" \
@@ -160,7 +172,7 @@ tokens, such as correct carry digit `4` versus dropped-carry digit `3`.
 Sparse graph-feature inhibition:
 
 ```bash
-python src/intervention.py \
+python -m src.intervention \
   --mode inhibit \
   --prompt "Question: What is 58 + 83? Answer: 1" \
   --target-token "4, 3, 7" \
@@ -174,7 +186,7 @@ python src/intervention.py \
 Full all-position MLP knockout diagnostic:
 
 ```bash
-python src/intervention.py \
+python -m src.intervention \
   --mode inhibit \
   --prompt "Question: What is 58 + 83? Answer: 1" \
   --target-token "4, 3, 7" \
@@ -190,7 +202,7 @@ python src/intervention.py \
 Full latent swap:
 
 ```bash
-python src/intervention.py \
+python -m src.intervention \
   --mode swap \
   --source-prompt "Question: What is 44 + 83? Answer: 1" \
   --prompt "Question: What is 58 + 83? Answer: 1" \
@@ -218,13 +230,13 @@ The recommended route is to run `run_gpu_final_validation.ipynb` after the
 behaviour notebooks. Its standalone commands are:
 
 ```bash
-python src/sae_diagnostics.py \
+python -m src.sae_diagnostics \
   --config configs/sae_math_final_train_config.yaml \
   --label math \
   --output-json outputs/final_sae_diagnostics_math.json \
   --output-csv outputs/final_sae_diagnostics_math.csv
 
-python src/heldout_validation.py \
+python -m src.heldout_validation \
   --math-cases 12 \
   --unit-cases 12 \
   --output outputs/final_heldout_validation.json
@@ -239,14 +251,14 @@ conditions and saves partial results before moving from arithmetic to units.
 Generate the report figures after these outputs exist:
 
 ```bash
-python src/plot_validation.py \
+python -m src.plot_validation \
   --diagnostics outputs/final_sae_diagnostics_math.csv \
                 outputs/final_sae_diagnostics_units.csv \
                 outputs/final_sae_diagnostics_capitals.csv \
   --heldout outputs/final_heldout_validation.json \
   --output-dir outputs/report_figures
 
-python src/plot_attribution_graph.py \
+python -m src.plot_attribution_graph \
   --graph outputs/math_final_carry_58_83_4v3_graph.json \
   --output-dir outputs/report_figures
 ```
@@ -254,6 +266,45 @@ python src/plot_attribution_graph.py \
 The static graph figure is a labelled visual subset selected from the complete
 JSON. The JSON and interactive HTML remain the authoritative full graph
 artifacts.
+
+### 7. Optional TopK Mathematics Follow-up
+
+The complete guarded workflow is in `run_gpu_math_topk_retrain.ipynb`. The
+candidate configurations are:
+
+```text
+configs/sae_math_topk128_config.yaml
+configs/sae_math_topk256_config.yaml
+configs/sae_math_topk512_config.yaml
+```
+
+The shared `SparseAutoencoder` remains backward-compatible with existing ReLU
+checkpoints. TopK checkpoints record their activation type and `k` in metadata,
+which attribution and intervention loaders use automatically.
+
+Candidate selection is performed by `src/select_sae_candidate.py` without access
+to intervention results. A candidate must have mean validation FVE at least
+0.90, minimum layer FVE at least 0.85, and mean dead-feature fraction at most
+0.80. The sparsest eligible candidate is selected. If none qualifies, the
+notebook saves the diagnostics to Drive and stops before graph construction.
+
+The selected candidate is evaluated with:
+
+```bash
+python -m src.heldout_validation \
+  --math-sae-config configs/sae_math_topk256_config.yaml \
+  --math-graph outputs/topk_math_retrain/math_topk256_carry_58_83_4v3_graph.json \
+  --math-cases 12 \
+  --skip-units \
+  --math-specificity-control \
+  --output outputs/topk_math_retrain/math_topk256_heldout_specificity.json
+```
+
+The `k=256` paths above are illustrative; use the configuration recorded in
+`math_topk_selection.json`. The specificity control applies the same positive
+carry-graph features to each matched no-carry source. A negative paired
+carry-minus-control effect supports carry selectivity; a similar effect in both
+conditions instead suggests generic arithmetic-answer support.
 
 ## Current Scientific Bottom Line
 

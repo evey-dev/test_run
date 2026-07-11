@@ -35,12 +35,21 @@ def load_sae_models(
             raise FileNotFoundError(f"SAE checkpoint not found: {checkpoint_path}")
         
         scaling_factor = 1.0
+        activation_type = "relu"
+        top_k = None
         if metadata_path.exists():
             with open(metadata_path, "r", encoding="utf-8") as fh:
                 meta = json.load(fh)
                 scaling_factor = float(meta.get("activation_scaling_factor", 1.0))
+                activation_type = str(meta.get("activation_type", "relu"))
+                top_k = meta.get("top_k")
         
-        sae = SparseAutoencoder(hidden_size, latent_dim)
+        sae = SparseAutoencoder(
+            hidden_size,
+            latent_dim,
+            activation_type=activation_type,
+            top_k=top_k,
+        )
         state_dict = torch.load(checkpoint_path, map_location="cpu")
         sae.load_state_dict(state_dict)
         sae.to(device=device, dtype=dtype)
@@ -149,8 +158,7 @@ def run_inhibition_intervention(
             flat_act = selected_act.reshape(-1, selected_act.shape[-1])
             flat_norm = flat_act / scaling_factor
 
-            x_centered = flat_norm - sae_model.decoder_bias
-            z = torch.relu(sae_model.encoder(x_centered))
+            z = sae_model.encode(flat_norm)
 
             if not f_list:
                 return output_t  # No edit at this layer: leave the true activation untouched.
@@ -286,8 +294,7 @@ def run_swap_in_intervention(
             if raw_mlp_swap:
                 return output_t
             flat = sel_act.reshape(-1, sel_act.shape[-1]) / scaling_factor
-            x_centered = flat - sae_model.decoder_bias
-            z = torch.relu(sae_model.encoder(x_centered))
+            z = sae_model.encode(flat)
             source_z[layer_idx] = z.detach()
             return output_t
         return hook_fn
@@ -315,8 +322,7 @@ def run_swap_in_intervention(
             flat = sel_act.reshape(-1, sel_act.shape[-1])
             flat_norm = flat / scaling_factor
 
-            x_centered = flat_norm - sae_model.decoder_bias
-            z = torch.relu(sae_model.encoder(x_centered))
+            z = sae_model.encode(flat_norm)
 
             # Align src_z device/dtype
             device_src_z = src_z.to(device=z.device, dtype=z.dtype)

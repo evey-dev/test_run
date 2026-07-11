@@ -138,7 +138,15 @@ def evaluate_layer(
 
     hidden_size = int(cfg.get("hidden_size", activations.shape[-1]))
     latent_dim = int(cfg.get("latent_dim", 8192))
-    model = SparseAutoencoder(hidden_size, latent_dim)
+    activation_type = str(metadata.get("activation_type", cfg.get("activation_type", "relu")))
+    top_k_value = metadata.get("top_k", cfg.get("top_k"))
+    top_k = int(top_k_value) if top_k_value is not None else None
+    model = SparseAutoencoder(
+        hidden_size,
+        latent_dim,
+        activation_type=activation_type,
+        top_k=top_k,
+    )
     state_dict = torch.load(checkpoint_path, map_location="cpu")
     model.load_state_dict(state_dict)
     model.to(device=device, dtype=torch.float32)
@@ -180,6 +188,11 @@ def evaluate_layer(
         "layer": layer,
         "hidden_size": hidden_size,
         "latent_dim": latent_dim,
+        "activation_type": activation_type,
+        "top_k": top_k,
+        "normalize_decoder": bool(
+            metadata.get("normalize_decoder", cfg.get("normalize_decoder", False))
+        ),
         "parameter_count": int(sum(parameter.numel() for parameter in model.parameters())),
         "activity_epsilon": activity_epsilon,
         "activation_scaling_factor": scaling_factor,

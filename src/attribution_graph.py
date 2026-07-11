@@ -36,19 +36,32 @@ def load_sae_models(
         
         # Load scaling factor from metadata if available, else default to 1.0
         scaling_factor = 1.0
+        activation_type = "relu"
+        top_k = None
         if metadata_path.exists():
             with open(metadata_path, "r", encoding="utf-8") as fh:
                 meta = json.load(fh)
                 scaling_factor = float(meta.get("activation_scaling_factor", 1.0))
+                activation_type = str(meta.get("activation_type", "relu"))
+                top_k = meta.get("top_k")
         
-        sae = SparseAutoencoder(hidden_size, latent_dim)
+        sae = SparseAutoencoder(
+            hidden_size,
+            latent_dim,
+            activation_type=activation_type,
+            top_k=top_k,
+        )
         state_dict = torch.load(checkpoint_path, map_location="cpu")
         sae.load_state_dict(state_dict)
         sae.to(device=device, dtype=dtype)
         sae.eval()
         
         saes[layer] = (sae, scaling_factor)
-        print(f"Loaded SAE for layer {layer} (scaling factor: {scaling_factor:.4f})")
+        activation_label = activation_type + (f" k={top_k}" if activation_type == "topk" else "")
+        print(
+            f"Loaded SAE for layer {layer} (scaling factor: {scaling_factor:.4f}, "
+            f"activation: {activation_label})"
+        )
         
     return saes
 
@@ -369,8 +382,7 @@ def main() -> None:
             last_token_norm = last_token_act / scaling_factor
             
             # SAE Encode
-            x_centered = last_token_norm - sae_model.decoder_bias
-            z = torch.relu(sae_model.encoder(x_centered))
+            z = sae_model.encode(last_token_norm)
             z.retain_grad()
             captured_z[layer_idx] = z
             
