@@ -483,6 +483,20 @@ deliberate: the mass prompt supplies a non-force activation control and is not
 the causal target whose baseline competence is required for interpreting the
 newtons-minus-joules effect.
 
+The first baseline-only execution of this screen tested 32 systems under four
+variants of an indirect prompt of the form "the force associated with [long
+context]". It produced 85 expected energy predictions but only 29 expected
+force predictions, leaving 27 eligible prompt variants across fourteen systems.
+This was insufficient for the fixed 8-system discovery and 16-system
+confirmation design. No feature intervention had been executed at this point.
+The prompt pool was therefore repaired before causal results were observed: it
+was expanded to 64 unseen systems and the matched prompt was rewritten to place
+the measured quantity directly before the requested SI unit. This change
+addresses clean-task competence while retaining exact-prompt absence, disjoint
+system groups, and the original discovery/confirmation sample sizes. It must be
+reported as a baseline-driven protocol amendment, not concealed as the original
+predeclared wording.
+
 For every feature panel, the same energy target receives either a force-source
 swap or a matched mass-source swap. The primary specificity estimand is:
 

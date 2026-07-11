@@ -4,6 +4,8 @@ from pathlib import Path
 import numpy as np
 
 from src.units_feature_screen import (
+    OPERATING_CONTEXTS,
+    SYSTEMS,
     baseline_qualification,
     build_confirmation_panels,
     generated_context_cases,
@@ -23,8 +25,8 @@ def test_generated_context_cases_are_unique_and_absent_from_sae_corpus() -> None
     with Path("data/units_data.csv").open("r", encoding="utf-8", newline="") as handle:
         corpus = {row["sentence"] for row in csv.DictReader(handle)}
 
-    assert len(cases) == 128
-    assert len({case["system"] for case in cases}) == 32
+    assert len(cases) == len(SYSTEMS) * len(OPERATING_CONTEXTS)
+    assert len({case["system"] for case in cases}) == len(SYSTEMS) == 64
     assert len(prompts) == 3 * len(cases)
     assert not prompts.intersection(corpus)
 

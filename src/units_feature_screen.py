@@ -35,8 +35,8 @@ from src.model_loader import load_model_and_tokenizer
 
 
 Feature = Tuple[int, int]
-CONTEXT_POOL_VERSION = 3
-PROTOCOL_VERSION = 2
+CONTEXT_POOL_VERSION = 4
+PROTOCOL_VERSION = 3
 
 SYSTEMS = [
     "bridge suspension cable",
@@ -71,6 +71,38 @@ SYSTEMS = [
     "factory press ram",
     "parachute suspension line",
     "pipeline valve stem",
+    "traction winch",
+    "load-cell test stand",
+    "aircraft control linkage",
+    "robotic gripper",
+    "suspension damper",
+    "cargo lift",
+    "cable-stayed mast",
+    "pressure-vessel latch",
+    "industrial gearbox",
+    "steering rack",
+    "turbine shaft coupling",
+    "climbing safety rope",
+    "machine-tool spindle",
+    "gantry crane trolley",
+    "shock absorber",
+    "electric actuator",
+    "dockside mooring line",
+    "antenna positioning drive",
+    "mining hoist",
+    "freight elevator cable",
+    "retaining-wall anchor",
+    "rotating flywheel mount",
+    "warehouse conveyor roller",
+    "laboratory test frame",
+    "aircraft flap actuator",
+    "marine winch",
+    "railway brake linkage",
+    "telescopic boom",
+    "structural tie rod",
+    "automated press fixture",
+    "vibration isolation mount",
+    "rescue harness line",
 ]
 
 OPERATING_CONTEXTS = [
@@ -138,8 +170,8 @@ def load_graph_feature_records(
 
 def prompt_for(quantity: str, context: str) -> str:
     return (
-        "Fact: The standard scientific unit used to measure the "
-        f"{quantity} associated with a {context} is named \""
+        f"Fact: In an experiment involving a {context}, the official SI unit used to measure "
+        f"{quantity} is named \""
     )
 
 
@@ -697,6 +729,11 @@ def main() -> None:
     print("Baseline qualification summary:")
     for key, value in qualification_summary.items():
         print(f"  {key}: {value}")
+    payload["baseline_audit"] = {
+        "summary": qualification_summary,
+        "completed_before_any_feature_intervention": True,
+    }
+    checkpoint_payload(payload, output_path)
     system_order = list(SYSTEMS)
     np.random.default_rng(args.seed + 1).shuffle(system_order)
     eligible_system_order = [system for system in system_order if system in eligible_by_system]

@@ -392,7 +392,11 @@ python -m src.units_feature_screen \
 The `k=256` paths are illustrative; use `units_topk_selection.json`. Exact
 force, mass and energy prompts are absent from the SAE corpus. Discovery uses
 eight systems and confirmation uses sixteen different systems, with one prompt
-per system. The clean energy target and force source must predict the expected
+per system, selected from a 64-system baseline pool. An initial baseline-only
+pilot used more indirect prompt wording and yielded only fourteen qualified
+systems; it was replaced before any feature intervention was run. The revised
+prompts place the measured quantity immediately before the requested unit. The
+clean energy target and force source must predict the expected
 unit prefixes. Mass-control correctness is recorded and preferred among prompt
 variants, but is not an eligibility condition because it is a negative-control
 source rather than the causal target. The primary Top-10
