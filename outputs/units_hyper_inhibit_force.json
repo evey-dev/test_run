@@ -1,0 +1,1005 @@
+{
+  "experiment_mode": "inhibit",
+  "prompt": "Fact: The official SI unit for the force of a moving engine thrust is named \"",
+  "clean_baseline": {
+    "top_token": "new",
+    "top_logit": 20.625,
+    "top_prob": 0.81640625,
+    "targets": {
+      "j": {
+        "logit": 10.0625,
+        "prob": 2.110004425048828e-05
+      },
+      " jou": {
+        "logit": 5.34375,
+        "prob": 1.8905848264694214e-07
+      },
+      " new": {
+        "logit": 12.0,
+        "prob": 0.0001468658447265625
+      },
+      "new": {
+        "logit": 20.625,
+        "prob": 0.81640625
+      },
+      "Newton": {
+        "logit": 18.625,
+        "prob": 0.11083984375
+      },
+      "p": {
+        "logit": 17.25,
+        "prob": 0.0279541015625
+      },
+      "vol": {
+        "logit": 7.09375,
+        "prob": 1.087784767150879e-06
+      },
+      " volts": {
+        "logit": -0.345703125,
+        "prob": 6.366462912410498e-10
+      }
+    }
+  },
+  "reconstruction_baseline": {
+    "top_token": "new",
+    "top_logit": 20.625,
+    "top_prob": 0.81640625,
+    "targets": {
+      "j": {
+        "logit": 10.0625,
+        "prob": 2.110004425048828e-05
+      },
+      " jou": {
+        "logit": 5.34375,
+        "prob": 1.8905848264694214e-07
+      },
+      " new": {
+        "logit": 12.0,
+        "prob": 0.0001468658447265625
+      },
+      "new": {
+        "logit": 20.625,
+        "prob": 0.81640625
+      },
+      "Newton": {
+        "logit": 18.625,
+        "prob": 0.11083984375
+      },
+      "p": {
+        "logit": 17.25,
+        "prob": 0.0279541015625
+      },
+      "vol": {
+        "logit": 7.09375,
+        "prob": 1.087784767150879e-06
+      },
+      " volts": {
+        "logit": -0.345703125,
+        "prob": 6.366462912410498e-10
+      }
+    },
+    "feature_activations": {},
+    "positions": [
+      16
+    ],
+    "position_tokens": [
+      {
+        "position": 16,
+        "token_id": 330,
+        "token": " \""
+      }
+    ]
+  },
+  "intervention": {
+    "top_token": "new",
+    "top_logit": 20.375,
+    "top_prob": 0.80078125,
+    "targets": {
+      "j": {
+        "logit": 10.375,
+        "prob": 3.62396240234375e-05
+      },
+      " jou": {
+        "logit": 5.75,
+        "prob": 3.557652235031128e-07
+      },
+      " new": {
+        "logit": 12.0,
+        "prob": 0.00018405914306640625
+      },
+      "new": {
+        "logit": 20.375,
+        "prob": 0.80078125
+      },
+      "Newton": {
+        "logit": 18.5,
+        "prob": 0.12255859375
+      },
+      "p": {
+        "logit": 17.125,
+        "prob": 0.031005859375
+      },
+      "vol": {
+        "logit": 7.40625,
+        "prob": 1.8700957298278809e-06
+      },
+      " volts": {
+        "logit": 0.255859375,
+        "prob": 1.4624674804508686e-09
+      }
+    },
+    "feature_activations": {
+      "4": {
+        "6414": {
+          "max": 3.21875,
+          "mean": 3.21875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.21875
+            }
+          ]
+        },
+        "3649": {
+          "max": 2.015625,
+          "mean": 2.015625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.015625
+            }
+          ]
+        },
+        "7604": {
+          "max": 4.875,
+          "mean": 4.875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 4.875
+            }
+          ]
+        },
+        "4319": {
+          "max": 4.8125,
+          "mean": 4.8125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 4.8125
+            }
+          ]
+        },
+        "240": {
+          "max": 2.0625,
+          "mean": 2.0625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.0625
+            }
+          ]
+        },
+        "2179": {
+          "max": 0.8359375,
+          "mean": 0.8359375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.8359375
+            }
+          ]
+        },
+        "3450": {
+          "max": 1.234375,
+          "mean": 1.234375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.234375
+            }
+          ]
+        },
+        "2734": {
+          "max": 0.984375,
+          "mean": 0.984375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.984375
+            }
+          ]
+        },
+        "5797": {
+          "max": 1.765625,
+          "mean": 1.765625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.765625
+            }
+          ]
+        },
+        "949": {
+          "max": 0.9453125,
+          "mean": 0.9453125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.9453125
+            }
+          ]
+        }
+      },
+      "8": {
+        "6449": {
+          "max": 1.0078125,
+          "mean": 1.0078125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.0078125
+            }
+          ]
+        },
+        "616": {
+          "max": 1.25,
+          "mean": 1.25,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.25
+            }
+          ]
+        },
+        "4926": {
+          "max": 1.15625,
+          "mean": 1.15625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.15625
+            }
+          ]
+        },
+        "7063": {
+          "max": 1.2734375,
+          "mean": 1.2734375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.2734375
+            }
+          ]
+        },
+        "2936": {
+          "max": 0.7421875,
+          "mean": 0.7421875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.7421875
+            }
+          ]
+        },
+        "7699": {
+          "max": 1.234375,
+          "mean": 1.234375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.234375
+            }
+          ]
+        },
+        "6953": {
+          "max": 1.5546875,
+          "mean": 1.5546875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.5546875
+            }
+          ]
+        },
+        "3974": {
+          "max": 1.296875,
+          "mean": 1.296875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.296875
+            }
+          ]
+        },
+        "2167": {
+          "max": 1.28125,
+          "mean": 1.28125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.28125
+            }
+          ]
+        },
+        "1594": {
+          "max": 1.578125,
+          "mean": 1.578125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.578125
+            }
+          ]
+        },
+        "736": {
+          "max": 1.203125,
+          "mean": 1.203125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.203125
+            }
+          ]
+        },
+        "869": {
+          "max": 0.66015625,
+          "mean": 0.66015625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.66015625
+            }
+          ]
+        }
+      },
+      "12": {
+        "5690": {
+          "max": 4.21875,
+          "mean": 4.21875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 4.21875
+            }
+          ]
+        },
+        "2765": {
+          "max": 5.0625,
+          "mean": 5.0625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 5.0625
+            }
+          ]
+        },
+        "5360": {
+          "max": 3.625,
+          "mean": 3.625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.625
+            }
+          ]
+        },
+        "7904": {
+          "max": 2.359375,
+          "mean": 2.359375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.359375
+            }
+          ]
+        },
+        "5202": {
+          "max": 3.71875,
+          "mean": 3.71875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.71875
+            }
+          ]
+        },
+        "3163": {
+          "max": 2.8125,
+          "mean": 2.8125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.8125
+            }
+          ]
+        },
+        "2184": {
+          "max": 3.765625,
+          "mean": 3.765625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.765625
+            }
+          ]
+        },
+        "4063": {
+          "max": 3.375,
+          "mean": 3.375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.375
+            }
+          ]
+        },
+        "7403": {
+          "max": 1.0078125,
+          "mean": 1.0078125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.0078125
+            }
+          ]
+        },
+        "6283": {
+          "max": 3.5625,
+          "mean": 3.5625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.5625
+            }
+          ]
+        },
+        "2402": {
+          "max": 3.3125,
+          "mean": 3.3125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.3125
+            }
+          ]
+        },
+        "2201": {
+          "max": 4.21875,
+          "mean": 4.21875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 4.21875
+            }
+          ]
+        },
+        "1312": {
+          "max": 5.03125,
+          "mean": 5.03125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 5.03125
+            }
+          ]
+        },
+        "3811": {
+          "max": 4.0,
+          "mean": 4.0,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 4.0
+            }
+          ]
+        },
+        "7205": {
+          "max": 1.1953125,
+          "mean": 1.1953125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.1953125
+            }
+          ]
+        }
+      },
+      "16": {
+        "6022": {
+          "max": 2.03125,
+          "mean": 2.03125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.03125
+            }
+          ]
+        },
+        "3668": {
+          "max": 1.0625,
+          "mean": 1.0625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.0625
+            }
+          ]
+        },
+        "1424": {
+          "max": 2.421875,
+          "mean": 2.421875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.421875
+            }
+          ]
+        },
+        "1941": {
+          "max": 2.640625,
+          "mean": 2.640625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.640625
+            }
+          ]
+        },
+        "109": {
+          "max": 0.6796875,
+          "mean": 0.6796875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.6796875
+            }
+          ]
+        },
+        "6514": {
+          "max": 0.97265625,
+          "mean": 0.97265625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.97265625
+            }
+          ]
+        },
+        "1522": {
+          "max": 0.7421875,
+          "mean": 0.7421875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.7421875
+            }
+          ]
+        },
+        "7909": {
+          "max": 1.046875,
+          "mean": 1.046875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.046875
+            }
+          ]
+        },
+        "1589": {
+          "max": 0.83984375,
+          "mean": 0.83984375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.83984375
+            }
+          ]
+        }
+      },
+      "20": {
+        "3245": {
+          "max": 1.1953125,
+          "mean": 1.1953125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.1953125
+            }
+          ]
+        },
+        "3182": {
+          "max": 1.1875,
+          "mean": 1.1875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.1875
+            }
+          ]
+        },
+        "2331": {
+          "max": 1.875,
+          "mean": 1.875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.875
+            }
+          ]
+        },
+        "3027": {
+          "max": 0.9921875,
+          "mean": 0.9921875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.9921875
+            }
+          ]
+        },
+        "8019": {
+          "max": 1.109375,
+          "mean": 1.109375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.109375
+            }
+          ]
+        },
+        "2301": {
+          "max": 0.7578125,
+          "mean": 0.7578125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.7578125
+            }
+          ]
+        },
+        "4143": {
+          "max": 0.83203125,
+          "mean": 0.83203125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.83203125
+            }
+          ]
+        },
+        "5599": {
+          "max": 0.984375,
+          "mean": 0.984375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.984375
+            }
+          ]
+        }
+      },
+      "24": {
+        "6723": {
+          "max": 1.09375,
+          "mean": 1.09375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.09375
+            }
+          ]
+        },
+        "1192": {
+          "max": 0.68359375,
+          "mean": 0.68359375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.68359375
+            }
+          ]
+        },
+        "513": {
+          "max": 0.6484375,
+          "mean": 0.6484375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.6484375
+            }
+          ]
+        },
+        "6335": {
+          "max": 1.6015625,
+          "mean": 1.6015625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.6015625
+            }
+          ]
+        }
+      },
+      "28": {
+        "7389": {
+          "max": 5.625,
+          "mean": 5.625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 5.625
+            }
+          ]
+        },
+        "7761": {
+          "max": 3.890625,
+          "mean": 3.890625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.890625
+            }
+          ]
+        },
+        "7440": {
+          "max": 2.453125,
+          "mean": 2.453125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.453125
+            }
+          ]
+        },
+        "6474": {
+          "max": 1.7109375,
+          "mean": 1.7109375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.7109375
+            }
+          ]
+        },
+        "651": {
+          "max": 1.6640625,
+          "mean": 1.6640625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.6640625
+            }
+          ]
+        },
+        "2199": {
+          "max": 3.09375,
+          "mean": 3.09375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 3.09375
+            }
+          ]
+        },
+        "3520": {
+          "max": 2.484375,
+          "mean": 2.484375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.484375
+            }
+          ]
+        },
+        "5547": {
+          "max": 1.8125,
+          "mean": 1.8125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.8125
+            }
+          ]
+        },
+        "6933": {
+          "max": 2.390625,
+          "mean": 2.390625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.390625
+            }
+          ]
+        },
+        "1796": {
+          "max": 2.3125,
+          "mean": 2.3125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.3125
+            }
+          ]
+        },
+        "6753": {
+          "max": 1.9453125,
+          "mean": 1.9453125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.9453125
+            }
+          ]
+        },
+        "8118": {
+          "max": 1.4140625,
+          "mean": 1.4140625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.4140625
+            }
+          ]
+        },
+        "989": {
+          "max": 1.8515625,
+          "mean": 1.8515625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.8515625
+            }
+          ]
+        },
+        "3802": {
+          "max": 2.734375,
+          "mean": 2.734375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.734375
+            }
+          ]
+        },
+        "4021": {
+          "max": 2.828125,
+          "mean": 2.828125,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.828125
+            }
+          ]
+        },
+        "3611": {
+          "max": 1.390625,
+          "mean": 1.390625,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.390625
+            }
+          ]
+        },
+        "605": {
+          "max": 1.0234375,
+          "mean": 1.0234375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 1.0234375
+            }
+          ]
+        },
+        "4488": {
+          "max": 2.59375,
+          "mean": 2.59375,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 2.59375
+            }
+          ]
+        },
+        "6692": {
+          "max": 0.76171875,
+          "mean": 0.76171875,
+          "by_position": [
+            {
+              "position": 16,
+              "token": " \"",
+              "activation": 0.76171875
+            }
+          ]
+        }
+      }
+    },
+    "positions": [
+      16
+    ],
+    "position_tokens": [
+      {
+        "position": 16,
+        "token_id": 330,
+        "token": " \""
+      }
+    ]
+  }
+}

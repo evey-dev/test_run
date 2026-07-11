@@ -1,0 +1,1306 @@
+{
+  "experiment_mode": "swap",
+  "prompt": "Fact: The official SI unit for the force of a moving engine thrust is named \"",
+  "clean_baseline": {
+    "top_token": "new",
+    "top_logit": 20.625,
+    "top_prob": 0.81640625,
+    "targets": {
+      "j": {
+        "logit": 10.0625,
+        "prob": 2.110004425048828e-05
+      },
+      "J": {
+        "logit": 9.9375,
+        "prob": 1.8715858459472656e-05
+      },
+      " jou": {
+        "logit": 5.34375,
+        "prob": 1.8905848264694214e-07
+      },
+      "new": {
+        "logit": 20.625,
+        "prob": 0.81640625
+      },
+      " new": {
+        "logit": 12.0,
+        "prob": 0.0001468658447265625
+      },
+      "Newton": {
+        "logit": 18.625,
+        "prob": 0.11083984375
+      },
+      "p": {
+        "logit": 17.25,
+        "prob": 0.0279541015625
+      },
+      "vol": {
+        "logit": 7.09375,
+        "prob": 1.087784767150879e-06
+      },
+      " volts": {
+        "logit": -0.345703125,
+        "prob": 6.366462912410498e-10
+      }
+    }
+  },
+  "source_prompt": "Fact: The official SI unit for the energy of a moving engine thrust is named \"",
+  "source_baseline": {
+    "top_token": "j",
+    "top_logit": 19.875,
+    "top_prob": 0.796875,
+    "targets": {
+      "j": {
+        "logit": 19.875,
+        "prob": 0.796875
+      },
+      "J": {
+        "logit": 18.0,
+        "prob": 0.12255859375
+      },
+      " jou": {
+        "logit": 12.5625,
+        "prob": 0.0005340576171875
+      },
+      "new": {
+        "logit": 16.375,
+        "prob": 0.0240478515625
+      },
+      " new": {
+        "logit": 8.0,
+        "prob": 5.543231964111328e-06
+      },
+      "Newton": {
+        "logit": 15.4375,
+        "prob": 0.00946044921875
+      },
+      "p": {
+        "logit": 14.75,
+        "prob": 0.0047607421875
+      },
+      "vol": {
+        "logit": 8.1875,
+        "prob": 6.705522537231445e-06
+      },
+      " volts": {
+        "logit": 1.171875,
+        "prob": 6.024492904543877e-09
+      }
+    }
+  },
+  "intervention": {
+    "top_token": "new",
+    "top_logit": 20.125,
+    "top_prob": 0.6875,
+    "targets": {
+      "j": {
+        "logit": 15.25,
+        "prob": 0.0052490234375
+      },
+      "J": {
+        "logit": 14.8125,
+        "prob": 0.0033721923828125
+      },
+      " jou": {
+        "logit": 9.875,
+        "prob": 2.4199485778808594e-05
+      },
+      "new": {
+        "logit": 20.125,
+        "prob": 0.6875
+      },
+      " new": {
+        "logit": 11.4375,
+        "prob": 0.00011587142944335938
+      },
+      "Newton": {
+        "logit": 18.625,
+        "prob": 0.1533203125
+      },
+      "p": {
+        "logit": 18.125,
+        "prob": 0.0927734375
+      },
+      "vol": {
+        "logit": 7.71875,
+        "prob": 2.8014183044433594e-06
+      },
+      " volts": {
+        "logit": 0.609375,
+        "prob": 2.2992026060819626e-09
+      }
+    },
+    "positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "position_tokens": [
+      {
+        "position": 0,
+        "token_id": 17417,
+        "token": "Fact"
+      },
+      {
+        "position": 1,
+        "token_id": 25,
+        "token": ":"
+      },
+      {
+        "position": 2,
+        "token_id": 576,
+        "token": " The"
+      },
+      {
+        "position": 3,
+        "token_id": 3946,
+        "token": " official"
+      },
+      {
+        "position": 4,
+        "token_id": 30548,
+        "token": " SI"
+      },
+      {
+        "position": 5,
+        "token_id": 4982,
+        "token": " unit"
+      },
+      {
+        "position": 6,
+        "token_id": 369,
+        "token": " for"
+      },
+      {
+        "position": 7,
+        "token_id": 279,
+        "token": " the"
+      },
+      {
+        "position": 8,
+        "token_id": 5344,
+        "token": " force"
+      },
+      {
+        "position": 9,
+        "token_id": 315,
+        "token": " of"
+      },
+      {
+        "position": 10,
+        "token_id": 264,
+        "token": " a"
+      },
+      {
+        "position": 11,
+        "token_id": 7218,
+        "token": " moving"
+      },
+      {
+        "position": 12,
+        "token_id": 4712,
+        "token": " engine"
+      },
+      {
+        "position": 13,
+        "token_id": 29885,
+        "token": " thrust"
+      },
+      {
+        "position": 14,
+        "token_id": 374,
+        "token": " is"
+      },
+      {
+        "position": 15,
+        "token_id": 6941,
+        "token": " named"
+      },
+      {
+        "position": 16,
+        "token_id": 330,
+        "token": " \""
+      }
+    ]
+  },
+  "layer_scan": [
+    {
+      "layer": 4,
+      "result": {
+        "top_token": "new",
+        "top_logit": 20.75,
+        "top_prob": 0.8359375,
+        "targets": {
+          "j": {
+            "logit": 10.0625,
+            "prob": 1.9073486328125e-05
+          },
+          "J": {
+            "logit": 10.0,
+            "prob": 1.7881393432617188e-05
+          },
+          " jou": {
+            "logit": 5.4375,
+            "prob": 1.8719583749771118e-07
+          },
+          "new": {
+            "logit": 20.75,
+            "prob": 0.8359375
+          },
+          " new": {
+            "logit": 12.0,
+            "prob": 0.00013256072998046875
+          },
+          "Newton": {
+            "logit": 18.625,
+            "prob": 0.099609375
+          },
+          "p": {
+            "logit": 17.25,
+            "prob": 0.0252685546875
+          },
+          "vol": {
+            "logit": 7.09375,
+            "prob": 9.834766387939453e-07
+          },
+          " volts": {
+            "logit": -0.3671875,
+            "prob": 5.638867150992155e-10
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 3946,
+            "token": " official"
+          },
+          {
+            "position": 4,
+            "token_id": 30548,
+            "token": " SI"
+          },
+          {
+            "position": 5,
+            "token_id": 4982,
+            "token": " unit"
+          },
+          {
+            "position": 6,
+            "token_id": 369,
+            "token": " for"
+          },
+          {
+            "position": 7,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 8,
+            "token_id": 5344,
+            "token": " force"
+          },
+          {
+            "position": 9,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 10,
+            "token_id": 264,
+            "token": " a"
+          },
+          {
+            "position": 11,
+            "token_id": 7218,
+            "token": " moving"
+          },
+          {
+            "position": 12,
+            "token_id": 4712,
+            "token": " engine"
+          },
+          {
+            "position": 13,
+            "token_id": 29885,
+            "token": " thrust"
+          },
+          {
+            "position": 14,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 15,
+            "token_id": 6941,
+            "token": " named"
+          },
+          {
+            "position": 16,
+            "token_id": 330,
+            "token": " \""
+          }
+        ]
+      }
+    },
+    {
+      "layer": 8,
+      "result": {
+        "top_token": "new",
+        "top_logit": 20.5,
+        "top_prob": 0.81640625,
+        "targets": {
+          "j": {
+            "logit": 10.0,
+            "prob": 2.2411346435546875e-05
+          },
+          "J": {
+            "logit": 9.9375,
+            "prob": 2.110004425048828e-05
+          },
+          " jou": {
+            "logit": 5.46875,
+            "prob": 2.421438694000244e-07
+          },
+          "new": {
+            "logit": 20.5,
+            "prob": 0.81640625
+          },
+          " new": {
+            "logit": 12.125,
+            "prob": 0.00018787384033203125
+          },
+          "Newton": {
+            "logit": 18.5,
+            "prob": 0.1103515625
+          },
+          "p": {
+            "logit": 17.25,
+            "prob": 0.03173828125
+          },
+          "vol": {
+            "logit": 6.9375,
+            "prob": 1.0505318641662598e-06
+          },
+          " volts": {
+            "logit": -0.39453125,
+            "prob": 6.875779945403337e-10
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 3946,
+            "token": " official"
+          },
+          {
+            "position": 4,
+            "token_id": 30548,
+            "token": " SI"
+          },
+          {
+            "position": 5,
+            "token_id": 4982,
+            "token": " unit"
+          },
+          {
+            "position": 6,
+            "token_id": 369,
+            "token": " for"
+          },
+          {
+            "position": 7,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 8,
+            "token_id": 5344,
+            "token": " force"
+          },
+          {
+            "position": 9,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 10,
+            "token_id": 264,
+            "token": " a"
+          },
+          {
+            "position": 11,
+            "token_id": 7218,
+            "token": " moving"
+          },
+          {
+            "position": 12,
+            "token_id": 4712,
+            "token": " engine"
+          },
+          {
+            "position": 13,
+            "token_id": 29885,
+            "token": " thrust"
+          },
+          {
+            "position": 14,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 15,
+            "token_id": 6941,
+            "token": " named"
+          },
+          {
+            "position": 16,
+            "token_id": 330,
+            "token": " \""
+          }
+        ]
+      }
+    },
+    {
+      "layer": 12,
+      "result": {
+        "top_token": "new",
+        "top_logit": 20.75,
+        "top_prob": 0.828125,
+        "targets": {
+          "j": {
+            "logit": 10.0625,
+            "prob": 1.8835067749023438e-05
+          },
+          "J": {
+            "logit": 9.875,
+            "prob": 1.5616416931152344e-05
+          },
+          " jou": {
+            "logit": 5.40625,
+            "prob": 1.7974525690078735e-07
+          },
+          "new": {
+            "logit": 20.75,
+            "prob": 0.828125
+          },
+          " new": {
+            "logit": 12.0,
+            "prob": 0.00013065338134765625
+          },
+          "Newton": {
+            "logit": 18.75,
+            "prob": 0.11181640625
+          },
+          "p": {
+            "logit": 17.125,
+            "prob": 0.0220947265625
+          },
+          "vol": {
+            "logit": 6.96875,
+            "prob": 8.568167686462402e-07
+          },
+          " volts": {
+            "logit": -0.43359375,
+            "prob": 5.238689482212067e-10
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 3946,
+            "token": " official"
+          },
+          {
+            "position": 4,
+            "token_id": 30548,
+            "token": " SI"
+          },
+          {
+            "position": 5,
+            "token_id": 4982,
+            "token": " unit"
+          },
+          {
+            "position": 6,
+            "token_id": 369,
+            "token": " for"
+          },
+          {
+            "position": 7,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 8,
+            "token_id": 5344,
+            "token": " force"
+          },
+          {
+            "position": 9,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 10,
+            "token_id": 264,
+            "token": " a"
+          },
+          {
+            "position": 11,
+            "token_id": 7218,
+            "token": " moving"
+          },
+          {
+            "position": 12,
+            "token_id": 4712,
+            "token": " engine"
+          },
+          {
+            "position": 13,
+            "token_id": 29885,
+            "token": " thrust"
+          },
+          {
+            "position": 14,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 15,
+            "token_id": 6941,
+            "token": " named"
+          },
+          {
+            "position": 16,
+            "token_id": 330,
+            "token": " \""
+          }
+        ]
+      }
+    },
+    {
+      "layer": 16,
+      "result": {
+        "top_token": "new",
+        "top_logit": 20.75,
+        "top_prob": 0.8203125,
+        "targets": {
+          "j": {
+            "logit": 10.1875,
+            "prob": 2.1219253540039062e-05
+          },
+          "J": {
+            "logit": 10.0625,
+            "prob": 1.8715858459472656e-05
+          },
+          " jou": {
+            "logit": 5.53125,
+            "prob": 2.0209699869155884e-07
+          },
+          "new": {
+            "logit": 20.75,
+            "prob": 0.8203125
+          },
+          " new": {
+            "logit": 12.0625,
+            "prob": 0.00013828277587890625
+          },
+          "Newton": {
+            "logit": 18.75,
+            "prob": 0.111328125
+          },
+          "p": {
+            "logit": 17.375,
+            "prob": 0.028076171875
+          },
+          "vol": {
+            "logit": 7.0625,
+            "prob": 9.313225746154785e-07
+          },
+          " volts": {
+            "logit": -0.333984375,
+            "prob": 5.711626727133989e-10
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 3946,
+            "token": " official"
+          },
+          {
+            "position": 4,
+            "token_id": 30548,
+            "token": " SI"
+          },
+          {
+            "position": 5,
+            "token_id": 4982,
+            "token": " unit"
+          },
+          {
+            "position": 6,
+            "token_id": 369,
+            "token": " for"
+          },
+          {
+            "position": 7,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 8,
+            "token_id": 5344,
+            "token": " force"
+          },
+          {
+            "position": 9,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 10,
+            "token_id": 264,
+            "token": " a"
+          },
+          {
+            "position": 11,
+            "token_id": 7218,
+            "token": " moving"
+          },
+          {
+            "position": 12,
+            "token_id": 4712,
+            "token": " engine"
+          },
+          {
+            "position": 13,
+            "token_id": 29885,
+            "token": " thrust"
+          },
+          {
+            "position": 14,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 15,
+            "token_id": 6941,
+            "token": " named"
+          },
+          {
+            "position": 16,
+            "token_id": 330,
+            "token": " \""
+          }
+        ]
+      }
+    },
+    {
+      "layer": 20,
+      "result": {
+        "top_token": "new",
+        "top_logit": 20.75,
+        "top_prob": 0.82421875,
+        "targets": {
+          "j": {
+            "logit": 10.0625,
+            "prob": 1.8835067749023438e-05
+          },
+          "J": {
+            "logit": 10.0,
+            "prob": 1.7642974853515625e-05
+          },
+          " jou": {
+            "logit": 5.46875,
+            "prob": 1.8998980522155762e-07
+          },
+          "new": {
+            "logit": 20.75,
+            "prob": 0.82421875
+          },
+          " new": {
+            "logit": 12.0625,
+            "prob": 0.0001392364501953125
+          },
+          "Newton": {
+            "logit": 18.75,
+            "prob": 0.111328125
+          },
+          "p": {
+            "logit": 17.25,
+            "prob": 0.02490234375
+          },
+          "vol": {
+            "logit": 7.125,
+            "prob": 9.98377799987793e-07
+          },
+          " volts": {
+            "logit": -0.3828125,
+            "prob": 5.456968210637569e-10
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 3946,
+            "token": " official"
+          },
+          {
+            "position": 4,
+            "token_id": 30548,
+            "token": " SI"
+          },
+          {
+            "position": 5,
+            "token_id": 4982,
+            "token": " unit"
+          },
+          {
+            "position": 6,
+            "token_id": 369,
+            "token": " for"
+          },
+          {
+            "position": 7,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 8,
+            "token_id": 5344,
+            "token": " force"
+          },
+          {
+            "position": 9,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 10,
+            "token_id": 264,
+            "token": " a"
+          },
+          {
+            "position": 11,
+            "token_id": 7218,
+            "token": " moving"
+          },
+          {
+            "position": 12,
+            "token_id": 4712,
+            "token": " engine"
+          },
+          {
+            "position": 13,
+            "token_id": 29885,
+            "token": " thrust"
+          },
+          {
+            "position": 14,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 15,
+            "token_id": 6941,
+            "token": " named"
+          },
+          {
+            "position": 16,
+            "token_id": 330,
+            "token": " \""
+          }
+        ]
+      }
+    },
+    {
+      "layer": 24,
+      "result": {
+        "top_token": "new",
+        "top_logit": 20.625,
+        "top_prob": 0.80078125,
+        "targets": {
+          "j": {
+            "logit": 13.6875,
+            "prob": 0.0007781982421875
+          },
+          "J": {
+            "logit": 13.5625,
+            "prob": 0.0006866455078125
+          },
+          " jou": {
+            "logit": 8.625,
+            "prob": 4.9173831939697266e-06
+          },
+          "new": {
+            "logit": 20.625,
+            "prob": 0.80078125
+          },
+          " new": {
+            "logit": 11.875,
+            "prob": 0.00012683868408203125
+          },
+          "Newton": {
+            "logit": 18.75,
+            "prob": 0.12255859375
+          },
+          "p": {
+            "logit": 17.375,
+            "prob": 0.031005859375
+          },
+          "vol": {
+            "logit": 7.59375,
+            "prob": 1.7508864402770996e-06
+          },
+          " volts": {
+            "logit": 0.20703125,
+            "prob": 1.0841176845133305e-09
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 3946,
+            "token": " official"
+          },
+          {
+            "position": 4,
+            "token_id": 30548,
+            "token": " SI"
+          },
+          {
+            "position": 5,
+            "token_id": 4982,
+            "token": " unit"
+          },
+          {
+            "position": 6,
+            "token_id": 369,
+            "token": " for"
+          },
+          {
+            "position": 7,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 8,
+            "token_id": 5344,
+            "token": " force"
+          },
+          {
+            "position": 9,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 10,
+            "token_id": 264,
+            "token": " a"
+          },
+          {
+            "position": 11,
+            "token_id": 7218,
+            "token": " moving"
+          },
+          {
+            "position": 12,
+            "token_id": 4712,
+            "token": " engine"
+          },
+          {
+            "position": 13,
+            "token_id": 29885,
+            "token": " thrust"
+          },
+          {
+            "position": 14,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 15,
+            "token_id": 6941,
+            "token": " named"
+          },
+          {
+            "position": 16,
+            "token_id": 330,
+            "token": " \""
+          }
+        ]
+      }
+    },
+    {
+      "layer": 28,
+      "result": {
+        "top_token": "new",
+        "top_logit": 20.5,
+        "top_prob": 0.72265625,
+        "targets": {
+          "j": {
+            "logit": 10.9375,
+            "prob": 5.078315734863281e-05
+          },
+          "J": {
+            "logit": 10.9375,
+            "prob": 5.078315734863281e-05
+          },
+          " jou": {
+            "logit": 6.3125,
+            "prob": 4.954636096954346e-07
+          },
+          "new": {
+            "logit": 20.5,
+            "prob": 0.72265625
+          },
+          " new": {
+            "logit": 11.8125,
+            "prob": 0.00012159347534179688
+          },
+          "Newton": {
+            "logit": 18.875,
+            "prob": 0.1416015625
+          },
+          "p": {
+            "logit": 18.25,
+            "prob": 0.076171875
+          },
+          "vol": {
+            "logit": 7.4375,
+            "prob": 1.5273690223693848e-06
+          },
+          " volts": {
+            "logit": 0.283203125,
+            "prob": 1.1932570487260818e-09
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 3946,
+            "token": " official"
+          },
+          {
+            "position": 4,
+            "token_id": 30548,
+            "token": " SI"
+          },
+          {
+            "position": 5,
+            "token_id": 4982,
+            "token": " unit"
+          },
+          {
+            "position": 6,
+            "token_id": 369,
+            "token": " for"
+          },
+          {
+            "position": 7,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 8,
+            "token_id": 5344,
+            "token": " force"
+          },
+          {
+            "position": 9,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 10,
+            "token_id": 264,
+            "token": " a"
+          },
+          {
+            "position": 11,
+            "token_id": 7218,
+            "token": " moving"
+          },
+          {
+            "position": 12,
+            "token_id": 4712,
+            "token": " engine"
+          },
+          {
+            "position": 13,
+            "token_id": 29885,
+            "token": " thrust"
+          },
+          {
+            "position": 14,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 15,
+            "token_id": 6941,
+            "token": " named"
+          },
+          {
+            "position": 16,
+            "token_id": 330,
+            "token": " \""
+          }
+        ]
+      }
+    }
+  ]
+}

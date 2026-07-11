@@ -1,0 +1,186 @@
+{
+  "experiment_mode": "swap",
+  "prompt": "Fact: The capital of the country containing Basra is named",
+  "clean_baseline": {
+    "top_token": " Baghdad",
+    "top_logit": 19.375,
+    "top_prob": 0.96484375,
+    "targets": {
+      " A": {
+        "logit": 6.34375,
+        "prob": 2.115964889526367e-06
+      },
+      " after": {
+        "logit": 14.4375,
+        "prob": 0.00689697265625
+      },
+      " Am": {
+        "logit": 9.625,
+        "prob": 5.626678466796875e-05
+      },
+      "Am": {
+        "logit": 1.3828125,
+        "prob": 1.4784745872020721e-08
+      },
+      " as": {
+        "logit": 14.625,
+        "prob": 0.00836181640625
+      },
+      "Bag": {
+        "logit": 6.71875,
+        "prob": 3.069639205932617e-06
+      },
+      " Baghdad": {
+        "logit": 19.375,
+        "prob": 0.96484375
+      }
+    }
+  },
+  "source_prompt": "Fact: The capital of the country containing Zarqa is named",
+  "source_baseline": {
+    "top_token": " Am",
+    "top_logit": 21.25,
+    "top_prob": 0.984375,
+    "targets": {
+      " A": {
+        "logit": 15.5625,
+        "prob": 0.003326416015625
+      },
+      " after": {
+        "logit": 13.8125,
+        "prob": 0.000579833984375
+      },
+      " Am": {
+        "logit": 21.25,
+        "prob": 0.984375
+      },
+      "Am": {
+        "logit": 11.0625,
+        "prob": 3.695487976074219e-05
+      },
+      " as": {
+        "logit": 15.25,
+        "prob": 0.00244140625
+      },
+      "Bag": {
+        "logit": -3.734375,
+        "prob": 1.3869794202037156e-11
+      },
+      " Baghdad": {
+        "logit": 6.96875,
+        "prob": 6.183981895446777e-07
+      }
+    }
+  },
+  "intervention": {
+    "top_token": " Baghdad",
+    "top_logit": 19.25,
+    "top_prob": 0.95703125,
+    "targets": {
+      " A": {
+        "logit": 6.375,
+        "prob": 2.4586915969848633e-06
+      },
+      " after": {
+        "logit": 14.5,
+        "prob": 0.00830078125
+      },
+      " Am": {
+        "logit": 9.8125,
+        "prob": 7.62939453125e-05
+      },
+      "Am": {
+        "logit": 1.5078125,
+        "prob": 1.885928213596344e-08
+      },
+      " as": {
+        "logit": 14.625,
+        "prob": 0.0093994140625
+      },
+      "Bag": {
+        "logit": 6.59375,
+        "prob": 3.0547380447387695e-06
+      },
+      " Baghdad": {
+        "logit": 19.25,
+        "prob": 0.95703125
+      }
+    },
+    "positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "position_tokens": [
+      {
+        "position": 0,
+        "token_id": 17417,
+        "token": "Fact"
+      },
+      {
+        "position": 1,
+        "token_id": 25,
+        "token": ":"
+      },
+      {
+        "position": 2,
+        "token_id": 576,
+        "token": " The"
+      },
+      {
+        "position": 3,
+        "token_id": 6722,
+        "token": " capital"
+      },
+      {
+        "position": 4,
+        "token_id": 315,
+        "token": " of"
+      },
+      {
+        "position": 5,
+        "token_id": 279,
+        "token": " the"
+      },
+      {
+        "position": 6,
+        "token_id": 3146,
+        "token": " country"
+      },
+      {
+        "position": 7,
+        "token_id": 8482,
+        "token": " containing"
+      },
+      {
+        "position": 8,
+        "token_id": 14662,
+        "token": " Bas"
+      },
+      {
+        "position": 9,
+        "token_id": 956,
+        "token": "ra"
+      },
+      {
+        "position": 10,
+        "token_id": 374,
+        "token": " is"
+      },
+      {
+        "position": 11,
+        "token_id": 6941,
+        "token": " named"
+      }
+    ]
+  }
+}

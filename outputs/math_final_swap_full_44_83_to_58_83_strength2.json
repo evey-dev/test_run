@@ -1,0 +1,198 @@
+{
+  "experiment_mode": "swap",
+  "prompt": "Question: What is 58 + 83? Answer: 1",
+  "clean_baseline": {
+    "top_token": "4",
+    "top_logit": 30.625,
+    "top_prob": 1.0,
+    "targets": {
+      " ": {
+        "logit": 14.3125,
+        "prob": 8.242204785346985e-08
+      },
+      "1": {
+        "logit": 21.75,
+        "prob": 0.0001392364501953125
+      },
+      "2": {
+        "logit": 22.375,
+        "prob": 0.0002613067626953125
+      },
+      "3": {
+        "logit": 23.5,
+        "prob": 0.000804901123046875
+      },
+      "4": {
+        "logit": 30.625,
+        "prob": 1.0
+      },
+      "7": {
+        "logit": 19.5,
+        "prob": 1.4722347259521484e-05
+      }
+    }
+  },
+  "source_prompt": "Question: What is 44 + 83? Answer: 1",
+  "source_baseline": {
+    "top_token": "2",
+    "top_logit": 28.75,
+    "top_prob": 1.0,
+    "targets": {
+      " ": {
+        "logit": 14.625,
+        "prob": 7.338821887969971e-07
+      },
+      "1": {
+        "logit": 20.5,
+        "prob": 0.0002613067626953125
+      },
+      "2": {
+        "logit": 28.75,
+        "prob": 1.0
+      },
+      "3": {
+        "logit": 21.625,
+        "prob": 0.000804901123046875
+      },
+      "4": {
+        "logit": 19.375,
+        "prob": 8.487701416015625e-05
+      },
+      "7": {
+        "logit": 18.125,
+        "prob": 2.4318695068359375e-05
+      }
+    }
+  },
+  "intervention": {
+    "top_token": "2",
+    "top_logit": 27.375,
+    "top_prob": 0.65234375,
+    "targets": {
+      " ": {
+        "logit": 13.6875,
+        "prob": 7.413327693939209e-07
+      },
+      "1": {
+        "logit": 20.125,
+        "prob": 0.000461578369140625
+      },
+      "2": {
+        "logit": 27.375,
+        "prob": 0.65234375
+      },
+      "3": {
+        "logit": 26.75,
+        "prob": 0.34765625
+      },
+      "4": {
+        "logit": 18.0,
+        "prob": 5.53131103515625e-05
+      },
+      "7": {
+        "logit": 17.25,
+        "prob": 2.6106834411621094e-05
+      }
+    },
+    "positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "position_tokens": [
+      {
+        "position": 0,
+        "token_id": 14582,
+        "token": "Question"
+      },
+      {
+        "position": 1,
+        "token_id": 25,
+        "token": ":"
+      },
+      {
+        "position": 2,
+        "token_id": 3555,
+        "token": " What"
+      },
+      {
+        "position": 3,
+        "token_id": 374,
+        "token": " is"
+      },
+      {
+        "position": 4,
+        "token_id": 220,
+        "token": " "
+      },
+      {
+        "position": 5,
+        "token_id": 20,
+        "token": "5"
+      },
+      {
+        "position": 6,
+        "token_id": 23,
+        "token": "8"
+      },
+      {
+        "position": 7,
+        "token_id": 488,
+        "token": " +"
+      },
+      {
+        "position": 8,
+        "token_id": 220,
+        "token": " "
+      },
+      {
+        "position": 9,
+        "token_id": 23,
+        "token": "8"
+      },
+      {
+        "position": 10,
+        "token_id": 18,
+        "token": "3"
+      },
+      {
+        "position": 11,
+        "token_id": 30,
+        "token": "?"
+      },
+      {
+        "position": 12,
+        "token_id": 21806,
+        "token": " Answer"
+      },
+      {
+        "position": 13,
+        "token_id": 25,
+        "token": ":"
+      },
+      {
+        "position": 14,
+        "token_id": 220,
+        "token": " "
+      },
+      {
+        "position": 15,
+        "token_id": 16,
+        "token": "1"
+      }
+    ]
+  }
+}

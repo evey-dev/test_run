@@ -1,0 +1,2009 @@
+{
+  "experiment_mode": "inhibit",
+  "prompt": "Fact: The capital of the state containing Dallas is named",
+  "clean_baseline": {
+    "top_token": " Austin",
+    "top_logit": 16.5,
+    "top_prob": 0.27734375,
+    "targets": {
+      " after": {
+        "logit": 15.6875,
+        "prob": 0.123046875
+      },
+      "Austin": {
+        "logit": 7.5625,
+        "prob": 3.647804260253906e-05
+      },
+      " Austin": {
+        "logit": 16.5,
+        "prob": 0.27734375
+      },
+      " Dallas": {
+        "logit": 16.25,
+        "prob": 0.2158203125
+      },
+      "Sac": {
+        "logit": -6.375,
+        "prob": 3.228706191293895e-11
+      },
+      " Sacramento": {
+        "logit": 2.671875,
+        "prob": 2.738088369369507e-07
+      }
+    }
+  },
+  "reconstruction_baseline": {
+    "top_token": " Austin",
+    "top_logit": 16.5,
+    "top_prob": 0.27734375,
+    "targets": {
+      " after": {
+        "logit": 15.6875,
+        "prob": 0.123046875
+      },
+      "Austin": {
+        "logit": 7.5625,
+        "prob": 3.647804260253906e-05
+      },
+      " Austin": {
+        "logit": 16.5,
+        "prob": 0.27734375
+      },
+      " Dallas": {
+        "logit": 16.25,
+        "prob": 0.2158203125
+      },
+      "Sac": {
+        "logit": -6.375,
+        "prob": 3.228706191293895e-11
+      },
+      " Sacramento": {
+        "logit": 2.671875,
+        "prob": 2.738088369369507e-07
+      }
+    },
+    "feature_activations": {},
+    "positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "position_tokens": [
+      {
+        "position": 0,
+        "token_id": 17417,
+        "token": "Fact"
+      },
+      {
+        "position": 1,
+        "token_id": 25,
+        "token": ":"
+      },
+      {
+        "position": 2,
+        "token_id": 576,
+        "token": " The"
+      },
+      {
+        "position": 3,
+        "token_id": 6722,
+        "token": " capital"
+      },
+      {
+        "position": 4,
+        "token_id": 315,
+        "token": " of"
+      },
+      {
+        "position": 5,
+        "token_id": 279,
+        "token": " the"
+      },
+      {
+        "position": 6,
+        "token_id": 1584,
+        "token": " state"
+      },
+      {
+        "position": 7,
+        "token_id": 8482,
+        "token": " containing"
+      },
+      {
+        "position": 8,
+        "token_id": 18542,
+        "token": " Dallas"
+      },
+      {
+        "position": 9,
+        "token_id": 374,
+        "token": " is"
+      },
+      {
+        "position": 10,
+        "token_id": 6941,
+        "token": " named"
+      }
+    ]
+  },
+  "full_knockout": {
+    "top_token": " the",
+    "top_logit": 13.75,
+    "top_prob": 0.19140625,
+    "knockout_component": "mlp",
+    "layers": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28
+    ],
+    "position_spec": "all",
+    "positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "position_tokens": [
+      {
+        "position": 0,
+        "token_id": 17417,
+        "token": "Fact"
+      },
+      {
+        "position": 1,
+        "token_id": 25,
+        "token": ":"
+      },
+      {
+        "position": 2,
+        "token_id": 576,
+        "token": " The"
+      },
+      {
+        "position": 3,
+        "token_id": 6722,
+        "token": " capital"
+      },
+      {
+        "position": 4,
+        "token_id": 315,
+        "token": " of"
+      },
+      {
+        "position": 5,
+        "token_id": 279,
+        "token": " the"
+      },
+      {
+        "position": 6,
+        "token_id": 1584,
+        "token": " state"
+      },
+      {
+        "position": 7,
+        "token_id": 8482,
+        "token": " containing"
+      },
+      {
+        "position": 8,
+        "token_id": 18542,
+        "token": " Dallas"
+      },
+      {
+        "position": 9,
+        "token_id": 374,
+        "token": " is"
+      },
+      {
+        "position": 10,
+        "token_id": 6941,
+        "token": " named"
+      }
+    ],
+    "component_activation_norms": {
+      "4": [
+        {
+          "position": 0,
+          "token": "Fact",
+          "l2_norm": 18.77370834350586,
+          "mean_abs": 0.2368427813053131
+        },
+        {
+          "position": 1,
+          "token": ":",
+          "l2_norm": 10.471261024475098,
+          "mean_abs": 0.0833994522690773
+        },
+        {
+          "position": 2,
+          "token": " The",
+          "l2_norm": 11.364161491394043,
+          "mean_abs": 0.09114988148212433
+        },
+        {
+          "position": 3,
+          "token": " capital",
+          "l2_norm": 15.460925102233887,
+          "mean_abs": 0.23277683556079865
+        },
+        {
+          "position": 4,
+          "token": " of",
+          "l2_norm": 11.679224014282227,
+          "mean_abs": 0.16992798447608948
+        },
+        {
+          "position": 5,
+          "token": " the",
+          "l2_norm": 5.509833335876465,
+          "mean_abs": 0.03538519889116287
+        },
+        {
+          "position": 6,
+          "token": " state",
+          "l2_norm": 15.088616371154785,
+          "mean_abs": 0.22721348702907562
+        },
+        {
+          "position": 7,
+          "token": " containing",
+          "l2_norm": 8.485452651977539,
+          "mean_abs": 0.11396663635969162
+        },
+        {
+          "position": 8,
+          "token": " Dallas",
+          "l2_norm": 17.844486236572266,
+          "mean_abs": 0.26607784628868103
+        },
+        {
+          "position": 9,
+          "token": " is",
+          "l2_norm": 7.358980655670166,
+          "mean_abs": 0.08139093220233917
+        },
+        {
+          "position": 10,
+          "token": " named",
+          "l2_norm": 8.094158172607422,
+          "mean_abs": 0.10761051625013351
+        }
+      ],
+      "8": [
+        {
+          "position": 0,
+          "token": "Fact",
+          "l2_norm": 4.6990461349487305,
+          "mean_abs": 0.057733990252017975
+        },
+        {
+          "position": 1,
+          "token": ":",
+          "l2_norm": 21.549312591552734,
+          "mean_abs": 0.339128702878952
+        },
+        {
+          "position": 2,
+          "token": " The",
+          "l2_norm": 15.2799654006958,
+          "mean_abs": 0.22753818333148956
+        },
+        {
+          "position": 3,
+          "token": " capital",
+          "l2_norm": 19.177764892578125,
+          "mean_abs": 0.30215948820114136
+        },
+        {
+          "position": 4,
+          "token": " of",
+          "l2_norm": 23.602006912231445,
+          "mean_abs": 0.36884069442749023
+        },
+        {
+          "position": 5,
+          "token": " the",
+          "l2_norm": 19.201904296875,
+          "mean_abs": 0.2929670810699463
+        },
+        {
+          "position": 6,
+          "token": " state",
+          "l2_norm": 19.03182029724121,
+          "mean_abs": 0.2990771234035492
+        },
+        {
+          "position": 7,
+          "token": " containing",
+          "l2_norm": 21.29906463623047,
+          "mean_abs": 0.3343822658061981
+        },
+        {
+          "position": 8,
+          "token": " Dallas",
+          "l2_norm": 15.192298889160156,
+          "mean_abs": 0.237985759973526
+        },
+        {
+          "position": 9,
+          "token": " is",
+          "l2_norm": 18.224252700805664,
+          "mean_abs": 0.2865698039531708
+        },
+        {
+          "position": 10,
+          "token": " named",
+          "l2_norm": 19.213029861450195,
+          "mean_abs": 0.30096566677093506
+        }
+      ],
+      "12": [
+        {
+          "position": 0,
+          "token": "Fact",
+          "l2_norm": 6.077949047088623,
+          "mean_abs": 0.0755908414721489
+        },
+        {
+          "position": 1,
+          "token": ":",
+          "l2_norm": 18.465713500976562,
+          "mean_abs": 0.27949008345603943
+        },
+        {
+          "position": 2,
+          "token": " The",
+          "l2_norm": 57.37432098388672,
+          "mean_abs": 0.8647368550300598
+        },
+        {
+          "position": 3,
+          "token": " capital",
+          "l2_norm": 14.97701644897461,
+          "mean_abs": 0.22206850349903107
+        },
+        {
+          "position": 4,
+          "token": " of",
+          "l2_norm": 18.096412658691406,
+          "mean_abs": 0.2608594596385956
+        },
+        {
+          "position": 5,
+          "token": " the",
+          "l2_norm": 18.95060157775879,
+          "mean_abs": 0.27680703997612
+        },
+        {
+          "position": 6,
+          "token": " state",
+          "l2_norm": 18.08914566040039,
+          "mean_abs": 0.27723583579063416
+        },
+        {
+          "position": 7,
+          "token": " containing",
+          "l2_norm": 15.596966743469238,
+          "mean_abs": 0.2415856420993805
+        },
+        {
+          "position": 8,
+          "token": " Dallas",
+          "l2_norm": 16.704256057739258,
+          "mean_abs": 0.2578202188014984
+        },
+        {
+          "position": 9,
+          "token": " is",
+          "l2_norm": 15.407096862792969,
+          "mean_abs": 0.23545511066913605
+        },
+        {
+          "position": 10,
+          "token": " named",
+          "l2_norm": 15.161869049072266,
+          "mean_abs": 0.2354058474302292
+        }
+      ],
+      "16": [
+        {
+          "position": 0,
+          "token": "Fact",
+          "l2_norm": 226.60226440429688,
+          "mean_abs": 0.36962810158729553
+        },
+        {
+          "position": 1,
+          "token": ":",
+          "l2_norm": 18.166643142700195,
+          "mean_abs": 0.2572968602180481
+        },
+        {
+          "position": 2,
+          "token": " The",
+          "l2_norm": 14.083649635314941,
+          "mean_abs": 0.2125653773546219
+        },
+        {
+          "position": 3,
+          "token": " capital",
+          "l2_norm": 14.481316566467285,
+          "mean_abs": 0.19426622986793518
+        },
+        {
+          "position": 4,
+          "token": " of",
+          "l2_norm": 15.554375648498535,
+          "mean_abs": 0.21916113793849945
+        },
+        {
+          "position": 5,
+          "token": " the",
+          "l2_norm": 13.33448314666748,
+          "mean_abs": 0.20180940628051758
+        },
+        {
+          "position": 6,
+          "token": " state",
+          "l2_norm": 14.737403869628906,
+          "mean_abs": 0.2261156141757965
+        },
+        {
+          "position": 7,
+          "token": " containing",
+          "l2_norm": 14.661656379699707,
+          "mean_abs": 0.22543416917324066
+        },
+        {
+          "position": 8,
+          "token": " Dallas",
+          "l2_norm": 15.294855117797852,
+          "mean_abs": 0.2265154868364334
+        },
+        {
+          "position": 9,
+          "token": " is",
+          "l2_norm": 14.220816612243652,
+          "mean_abs": 0.22098028659820557
+        },
+        {
+          "position": 10,
+          "token": " named",
+          "l2_norm": 15.916542053222656,
+          "mean_abs": 0.24780535697937012
+        }
+      ],
+      "20": [
+        {
+          "position": 0,
+          "token": "Fact",
+          "l2_norm": 6.088019371032715,
+          "mean_abs": 0.07854572683572769
+        },
+        {
+          "position": 1,
+          "token": ":",
+          "l2_norm": 20.109376907348633,
+          "mean_abs": 0.3110145032405853
+        },
+        {
+          "position": 2,
+          "token": " The",
+          "l2_norm": 16.09600830078125,
+          "mean_abs": 0.24643805623054504
+        },
+        {
+          "position": 3,
+          "token": " capital",
+          "l2_norm": 15.428118705749512,
+          "mean_abs": 0.24027188122272491
+        },
+        {
+          "position": 4,
+          "token": " of",
+          "l2_norm": 18.55626106262207,
+          "mean_abs": 0.2900635898113251
+        },
+        {
+          "position": 5,
+          "token": " the",
+          "l2_norm": 16.15004539489746,
+          "mean_abs": 0.2523499131202698
+        },
+        {
+          "position": 6,
+          "token": " state",
+          "l2_norm": 18.693252563476562,
+          "mean_abs": 0.28778693079948425
+        },
+        {
+          "position": 7,
+          "token": " containing",
+          "l2_norm": 18.373531341552734,
+          "mean_abs": 0.28755661845207214
+        },
+        {
+          "position": 8,
+          "token": " Dallas",
+          "l2_norm": 17.052526473999023,
+          "mean_abs": 0.2591128647327423
+        },
+        {
+          "position": 9,
+          "token": " is",
+          "l2_norm": 17.190998077392578,
+          "mean_abs": 0.26921162009239197
+        },
+        {
+          "position": 10,
+          "token": " named",
+          "l2_norm": 19.38817024230957,
+          "mean_abs": 0.30187803506851196
+        }
+      ],
+      "24": [
+        {
+          "position": 0,
+          "token": "Fact",
+          "l2_norm": 5.741667747497559,
+          "mean_abs": 0.07649191468954086
+        },
+        {
+          "position": 1,
+          "token": ":",
+          "l2_norm": 40.44274139404297,
+          "mean_abs": 0.6112779974937439
+        },
+        {
+          "position": 2,
+          "token": " The",
+          "l2_norm": 34.39039611816406,
+          "mean_abs": 0.44899383187294006
+        },
+        {
+          "position": 3,
+          "token": " capital",
+          "l2_norm": 30.467113494873047,
+          "mean_abs": 0.45841532945632935
+        },
+        {
+          "position": 4,
+          "token": " of",
+          "l2_norm": 30.39434242248535,
+          "mean_abs": 0.4269828498363495
+        },
+        {
+          "position": 5,
+          "token": " the",
+          "l2_norm": 29.052934646606445,
+          "mean_abs": 0.41103339195251465
+        },
+        {
+          "position": 6,
+          "token": " state",
+          "l2_norm": 45.00864028930664,
+          "mean_abs": 0.698745846748352
+        },
+        {
+          "position": 7,
+          "token": " containing",
+          "l2_norm": 37.778228759765625,
+          "mean_abs": 0.5287351012229919
+        },
+        {
+          "position": 8,
+          "token": " Dallas",
+          "l2_norm": 32.757049560546875,
+          "mean_abs": 0.48903775215148926
+        },
+        {
+          "position": 9,
+          "token": " is",
+          "l2_norm": 31.41553497314453,
+          "mean_abs": 0.46186694502830505
+        },
+        {
+          "position": 10,
+          "token": " named",
+          "l2_norm": 31.033571243286133,
+          "mean_abs": 0.4453257620334625
+        }
+      ],
+      "28": [
+        {
+          "position": 0,
+          "token": "Fact",
+          "l2_norm": 6.622732639312744,
+          "mean_abs": 0.09180106967687607
+        },
+        {
+          "position": 1,
+          "token": ":",
+          "l2_norm": 44.921077728271484,
+          "mean_abs": 0.6474313139915466
+        },
+        {
+          "position": 2,
+          "token": " The",
+          "l2_norm": 56.74151611328125,
+          "mean_abs": 0.6793506145477295
+        },
+        {
+          "position": 3,
+          "token": " capital",
+          "l2_norm": 60.645050048828125,
+          "mean_abs": 0.920604407787323
+        },
+        {
+          "position": 4,
+          "token": " of",
+          "l2_norm": 48.270206451416016,
+          "mean_abs": 0.6993252038955688
+        },
+        {
+          "position": 5,
+          "token": " the",
+          "l2_norm": 52.83172607421875,
+          "mean_abs": 0.782789409160614
+        },
+        {
+          "position": 6,
+          "token": " state",
+          "l2_norm": 65.06194305419922,
+          "mean_abs": 0.9723135828971863
+        },
+        {
+          "position": 7,
+          "token": " containing",
+          "l2_norm": 57.926490783691406,
+          "mean_abs": 0.8002821207046509
+        },
+        {
+          "position": 8,
+          "token": " Dallas",
+          "l2_norm": 46.88813400268555,
+          "mean_abs": 0.6801918148994446
+        },
+        {
+          "position": 9,
+          "token": " is",
+          "l2_norm": 45.61088562011719,
+          "mean_abs": 0.7074602246284485
+        },
+        {
+          "position": 10,
+          "token": " named",
+          "l2_norm": 48.65892791748047,
+          "mean_abs": 0.7338401079177856
+        }
+      ]
+    },
+    "targets": {
+      " after": {
+        "logit": 12.6875,
+        "prob": 0.06640625,
+        "delta_logit": -3.0
+      },
+      "Austin": {
+        "logit": 6.15625,
+        "prob": 9.632110595703125e-05,
+        "delta_logit": -1.40625
+      },
+      " Austin": {
+        "logit": 13.3125,
+        "prob": 0.12353515625,
+        "delta_logit": -3.1875
+      },
+      " Dallas": {
+        "logit": 12.25,
+        "prob": 0.042724609375,
+        "delta_logit": -4.0
+      },
+      "Sac": {
+        "logit": -2.703125,
+        "prob": 1.3737007975578308e-08,
+        "delta_logit": 3.671875
+      },
+      " Sacramento": {
+        "logit": 6.90625,
+        "prob": 0.0002040863037109375,
+        "delta_logit": 4.234375
+      }
+    }
+  },
+  "layer_scan": [
+    {
+      "top_token": " after",
+      "top_logit": 16.125,
+      "top_prob": 0.296875,
+      "knockout_component": "mlp",
+      "layers": [
+        4
+      ],
+      "position_spec": "all",
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "position_tokens": [
+        {
+          "position": 0,
+          "token_id": 17417,
+          "token": "Fact"
+        },
+        {
+          "position": 1,
+          "token_id": 25,
+          "token": ":"
+        },
+        {
+          "position": 2,
+          "token_id": 576,
+          "token": " The"
+        },
+        {
+          "position": 3,
+          "token_id": 6722,
+          "token": " capital"
+        },
+        {
+          "position": 4,
+          "token_id": 315,
+          "token": " of"
+        },
+        {
+          "position": 5,
+          "token_id": 279,
+          "token": " the"
+        },
+        {
+          "position": 6,
+          "token_id": 1584,
+          "token": " state"
+        },
+        {
+          "position": 7,
+          "token_id": 8482,
+          "token": " containing"
+        },
+        {
+          "position": 8,
+          "token_id": 18542,
+          "token": " Dallas"
+        },
+        {
+          "position": 9,
+          "token_id": 374,
+          "token": " is"
+        },
+        {
+          "position": 10,
+          "token_id": 6941,
+          "token": " named"
+        }
+      ],
+      "component_activation_norms": {
+        "4": [
+          {
+            "position": 0,
+            "token": "Fact",
+            "l2_norm": 18.77370834350586,
+            "mean_abs": 0.2368427813053131
+          },
+          {
+            "position": 1,
+            "token": ":",
+            "l2_norm": 10.471261024475098,
+            "mean_abs": 0.0833994522690773
+          },
+          {
+            "position": 2,
+            "token": " The",
+            "l2_norm": 11.364161491394043,
+            "mean_abs": 0.09114988148212433
+          },
+          {
+            "position": 3,
+            "token": " capital",
+            "l2_norm": 15.460925102233887,
+            "mean_abs": 0.23277683556079865
+          },
+          {
+            "position": 4,
+            "token": " of",
+            "l2_norm": 11.679224014282227,
+            "mean_abs": 0.16992798447608948
+          },
+          {
+            "position": 5,
+            "token": " the",
+            "l2_norm": 5.509833335876465,
+            "mean_abs": 0.03538519889116287
+          },
+          {
+            "position": 6,
+            "token": " state",
+            "l2_norm": 15.088616371154785,
+            "mean_abs": 0.22721348702907562
+          },
+          {
+            "position": 7,
+            "token": " containing",
+            "l2_norm": 8.485452651977539,
+            "mean_abs": 0.11396663635969162
+          },
+          {
+            "position": 8,
+            "token": " Dallas",
+            "l2_norm": 17.844486236572266,
+            "mean_abs": 0.26607784628868103
+          },
+          {
+            "position": 9,
+            "token": " is",
+            "l2_norm": 7.358980655670166,
+            "mean_abs": 0.08139093220233917
+          },
+          {
+            "position": 10,
+            "token": " named",
+            "l2_norm": 8.094158172607422,
+            "mean_abs": 0.10761051625013351
+          }
+        ]
+      },
+      "targets": {
+        " after": {
+          "logit": 16.125,
+          "prob": 0.296875,
+          "delta_logit": 0.4375
+        },
+        "Austin": {
+          "logit": 7.1875,
+          "prob": 3.910064697265625e-05,
+          "delta_logit": -0.375
+        },
+        " Austin": {
+          "logit": 15.6875,
+          "prob": 0.19140625,
+          "delta_logit": -0.8125
+        },
+        " Dallas": {
+          "logit": 15.6875,
+          "prob": 0.19140625,
+          "delta_logit": -0.5625
+        },
+        "Sac": {
+          "logit": -6.28125,
+          "prob": 5.525180313270539e-11,
+          "delta_logit": 0.09375
+        },
+        " Sacramento": {
+          "logit": 3.109375,
+          "prob": 6.593763828277588e-07,
+          "delta_logit": 0.4375
+        }
+      }
+    },
+    {
+      "top_token": " after",
+      "top_logit": 15.4375,
+      "top_prob": 0.3046875,
+      "knockout_component": "mlp",
+      "layers": [
+        8
+      ],
+      "position_spec": "all",
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "position_tokens": [
+        {
+          "position": 0,
+          "token_id": 17417,
+          "token": "Fact"
+        },
+        {
+          "position": 1,
+          "token_id": 25,
+          "token": ":"
+        },
+        {
+          "position": 2,
+          "token_id": 576,
+          "token": " The"
+        },
+        {
+          "position": 3,
+          "token_id": 6722,
+          "token": " capital"
+        },
+        {
+          "position": 4,
+          "token_id": 315,
+          "token": " of"
+        },
+        {
+          "position": 5,
+          "token_id": 279,
+          "token": " the"
+        },
+        {
+          "position": 6,
+          "token_id": 1584,
+          "token": " state"
+        },
+        {
+          "position": 7,
+          "token_id": 8482,
+          "token": " containing"
+        },
+        {
+          "position": 8,
+          "token_id": 18542,
+          "token": " Dallas"
+        },
+        {
+          "position": 9,
+          "token_id": 374,
+          "token": " is"
+        },
+        {
+          "position": 10,
+          "token_id": 6941,
+          "token": " named"
+        }
+      ],
+      "component_activation_norms": {
+        "8": [
+          {
+            "position": 0,
+            "token": "Fact",
+            "l2_norm": 4.671835899353027,
+            "mean_abs": 0.057267963886260986
+          },
+          {
+            "position": 1,
+            "token": ":",
+            "l2_norm": 22.88589096069336,
+            "mean_abs": 0.35844001173973083
+          },
+          {
+            "position": 2,
+            "token": " The",
+            "l2_norm": 14.152572631835938,
+            "mean_abs": 0.21170012652873993
+          },
+          {
+            "position": 3,
+            "token": " capital",
+            "l2_norm": 20.682689666748047,
+            "mean_abs": 0.3224940598011017
+          },
+          {
+            "position": 4,
+            "token": " of",
+            "l2_norm": 26.043445587158203,
+            "mean_abs": 0.4093110263347626
+          },
+          {
+            "position": 5,
+            "token": " the",
+            "l2_norm": 17.74336814880371,
+            "mean_abs": 0.2756260335445404
+          },
+          {
+            "position": 6,
+            "token": " state",
+            "l2_norm": 22.949705123901367,
+            "mean_abs": 0.35207661986351013
+          },
+          {
+            "position": 7,
+            "token": " containing",
+            "l2_norm": 20.411558151245117,
+            "mean_abs": 0.3183334171772003
+          },
+          {
+            "position": 8,
+            "token": " Dallas",
+            "l2_norm": 16.85530662536621,
+            "mean_abs": 0.2652047574520111
+          },
+          {
+            "position": 9,
+            "token": " is",
+            "l2_norm": 17.054349899291992,
+            "mean_abs": 0.2689739167690277
+          },
+          {
+            "position": 10,
+            "token": " named",
+            "l2_norm": 18.95986557006836,
+            "mean_abs": 0.2958477735519409
+          }
+        ]
+      },
+      "targets": {
+        " after": {
+          "logit": 15.4375,
+          "prob": 0.3046875,
+          "delta_logit": -0.25
+        },
+        "Austin": {
+          "logit": 6.5,
+          "prob": 4.00543212890625e-05,
+          "delta_logit": -1.0625
+        },
+        " Austin": {
+          "logit": 14.875,
+          "prob": 0.173828125,
+          "delta_logit": -1.625
+        },
+        " Dallas": {
+          "logit": 14.375,
+          "prob": 0.10546875,
+          "delta_logit": -1.875
+        },
+        "Sac": {
+          "logit": -6.125,
+          "prob": 1.318767317570746e-10,
+          "delta_logit": 0.25
+        },
+        " Sacramento": {
+          "logit": 2.375,
+          "prob": 6.48200511932373e-07,
+          "delta_logit": -0.296875
+        }
+      }
+    },
+    {
+      "top_token": " Fort",
+      "top_logit": 17.125,
+      "top_prob": 0.328125,
+      "knockout_component": "mlp",
+      "layers": [
+        12
+      ],
+      "position_spec": "all",
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "position_tokens": [
+        {
+          "position": 0,
+          "token_id": 17417,
+          "token": "Fact"
+        },
+        {
+          "position": 1,
+          "token_id": 25,
+          "token": ":"
+        },
+        {
+          "position": 2,
+          "token_id": 576,
+          "token": " The"
+        },
+        {
+          "position": 3,
+          "token_id": 6722,
+          "token": " capital"
+        },
+        {
+          "position": 4,
+          "token_id": 315,
+          "token": " of"
+        },
+        {
+          "position": 5,
+          "token_id": 279,
+          "token": " the"
+        },
+        {
+          "position": 6,
+          "token_id": 1584,
+          "token": " state"
+        },
+        {
+          "position": 7,
+          "token_id": 8482,
+          "token": " containing"
+        },
+        {
+          "position": 8,
+          "token_id": 18542,
+          "token": " Dallas"
+        },
+        {
+          "position": 9,
+          "token_id": 374,
+          "token": " is"
+        },
+        {
+          "position": 10,
+          "token_id": 6941,
+          "token": " named"
+        }
+      ],
+      "component_activation_norms": {
+        "12": [
+          {
+            "position": 0,
+            "token": "Fact",
+            "l2_norm": 6.047299385070801,
+            "mean_abs": 0.07525524497032166
+          },
+          {
+            "position": 1,
+            "token": ":",
+            "l2_norm": 19.123159408569336,
+            "mean_abs": 0.2972922623157501
+          },
+          {
+            "position": 2,
+            "token": " The",
+            "l2_norm": 23.102325439453125,
+            "mean_abs": 0.35486239194869995
+          },
+          {
+            "position": 3,
+            "token": " capital",
+            "l2_norm": 19.782926559448242,
+            "mean_abs": 0.3086782693862915
+          },
+          {
+            "position": 4,
+            "token": " of",
+            "l2_norm": 20.218399047851562,
+            "mean_abs": 0.3200380504131317
+          },
+          {
+            "position": 5,
+            "token": " the",
+            "l2_norm": 37.892860412597656,
+            "mean_abs": 0.5837581753730774
+          },
+          {
+            "position": 6,
+            "token": " state",
+            "l2_norm": 23.187959671020508,
+            "mean_abs": 0.36356624960899353
+          },
+          {
+            "position": 7,
+            "token": " containing",
+            "l2_norm": 17.342430114746094,
+            "mean_abs": 0.26890018582344055
+          },
+          {
+            "position": 8,
+            "token": " Dallas",
+            "l2_norm": 17.676185607910156,
+            "mean_abs": 0.2759285569190979
+          },
+          {
+            "position": 9,
+            "token": " is",
+            "l2_norm": 14.940500259399414,
+            "mean_abs": 0.23156940937042236
+          },
+          {
+            "position": 10,
+            "token": " named",
+            "l2_norm": 15.441582679748535,
+            "mean_abs": 0.24105826020240784
+          }
+        ]
+      },
+      "targets": {
+        " after": {
+          "logit": 14.8125,
+          "prob": 0.032470703125,
+          "delta_logit": -0.875
+        },
+        "Austin": {
+          "logit": 7.53125,
+          "prob": 2.2292137145996094e-05,
+          "delta_logit": -0.03125
+        },
+        " Austin": {
+          "logit": 16.625,
+          "prob": 0.1982421875,
+          "delta_logit": 0.125
+        },
+        " Dallas": {
+          "logit": 17.125,
+          "prob": 0.328125,
+          "delta_logit": 0.875
+        },
+        "Sac": {
+          "logit": -6.9375,
+          "prob": 1.1596057447604835e-11,
+          "delta_logit": -0.5625
+        },
+        " Sacramento": {
+          "logit": 1.53125,
+          "prob": 5.541369318962097e-08,
+          "delta_logit": -1.140625
+        }
+      }
+    },
+    {
+      "top_token": " Austin",
+      "top_logit": 17.5,
+      "top_prob": 0.609375,
+      "knockout_component": "mlp",
+      "layers": [
+        16
+      ],
+      "position_spec": "all",
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "position_tokens": [
+        {
+          "position": 0,
+          "token_id": 17417,
+          "token": "Fact"
+        },
+        {
+          "position": 1,
+          "token_id": 25,
+          "token": ":"
+        },
+        {
+          "position": 2,
+          "token_id": 576,
+          "token": " The"
+        },
+        {
+          "position": 3,
+          "token_id": 6722,
+          "token": " capital"
+        },
+        {
+          "position": 4,
+          "token_id": 315,
+          "token": " of"
+        },
+        {
+          "position": 5,
+          "token_id": 279,
+          "token": " the"
+        },
+        {
+          "position": 6,
+          "token_id": 1584,
+          "token": " state"
+        },
+        {
+          "position": 7,
+          "token_id": 8482,
+          "token": " containing"
+        },
+        {
+          "position": 8,
+          "token_id": 18542,
+          "token": " Dallas"
+        },
+        {
+          "position": 9,
+          "token_id": 374,
+          "token": " is"
+        },
+        {
+          "position": 10,
+          "token_id": 6941,
+          "token": " named"
+        }
+      ],
+      "component_activation_norms": {
+        "16": [
+          {
+            "position": 0,
+            "token": "Fact",
+            "l2_norm": 224.5753173828125,
+            "mean_abs": 0.3655264675617218
+          },
+          {
+            "position": 1,
+            "token": ":",
+            "l2_norm": 18.873788833618164,
+            "mean_abs": 0.2729150950908661
+          },
+          {
+            "position": 2,
+            "token": " The",
+            "l2_norm": 12.938803672790527,
+            "mean_abs": 0.1926194727420807
+          },
+          {
+            "position": 3,
+            "token": " capital",
+            "l2_norm": 15.482558250427246,
+            "mean_abs": 0.22179284691810608
+          },
+          {
+            "position": 4,
+            "token": " of",
+            "l2_norm": 15.1251859664917,
+            "mean_abs": 0.2249153107404709
+          },
+          {
+            "position": 5,
+            "token": " the",
+            "l2_norm": 14.950063705444336,
+            "mean_abs": 0.21930809319019318
+          },
+          {
+            "position": 6,
+            "token": " state",
+            "l2_norm": 17.248353958129883,
+            "mean_abs": 0.2455066442489624
+          },
+          {
+            "position": 7,
+            "token": " containing",
+            "l2_norm": 16.906557083129883,
+            "mean_abs": 0.26171746850013733
+          },
+          {
+            "position": 8,
+            "token": " Dallas",
+            "l2_norm": 15.719995498657227,
+            "mean_abs": 0.2384837120771408
+          },
+          {
+            "position": 9,
+            "token": " is",
+            "l2_norm": 13.10435962677002,
+            "mean_abs": 0.20485596358776093
+          },
+          {
+            "position": 10,
+            "token": " named",
+            "l2_norm": 14.702715873718262,
+            "mean_abs": 0.23015224933624268
+          }
+        ]
+      },
+      "targets": {
+        " after": {
+          "logit": 15.25,
+          "prob": 0.064453125,
+          "delta_logit": -0.4375
+        },
+        "Austin": {
+          "logit": 8.875,
+          "prob": 0.00010967254638671875,
+          "delta_logit": 1.3125
+        },
+        " Austin": {
+          "logit": 17.5,
+          "prob": 0.609375,
+          "delta_logit": 1.0
+        },
+        " Dallas": {
+          "logit": 15.375,
+          "prob": 0.07275390625,
+          "delta_logit": -0.875
+        },
+        "Sac": {
+          "logit": -5.0,
+          "prob": 1.0322764865122736e-10,
+          "delta_logit": 1.375
+        },
+        " Sacramento": {
+          "logit": 5.4375,
+          "prob": 3.516674041748047e-06,
+          "delta_logit": 2.765625
+        }
+      }
+    },
+    {
+      "top_token": " Austin",
+      "top_logit": 15.625,
+      "top_prob": 0.21484375,
+      "knockout_component": "mlp",
+      "layers": [
+        20
+      ],
+      "position_spec": "all",
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "position_tokens": [
+        {
+          "position": 0,
+          "token_id": 17417,
+          "token": "Fact"
+        },
+        {
+          "position": 1,
+          "token_id": 25,
+          "token": ":"
+        },
+        {
+          "position": 2,
+          "token_id": 576,
+          "token": " The"
+        },
+        {
+          "position": 3,
+          "token_id": 6722,
+          "token": " capital"
+        },
+        {
+          "position": 4,
+          "token_id": 315,
+          "token": " of"
+        },
+        {
+          "position": 5,
+          "token_id": 279,
+          "token": " the"
+        },
+        {
+          "position": 6,
+          "token_id": 1584,
+          "token": " state"
+        },
+        {
+          "position": 7,
+          "token_id": 8482,
+          "token": " containing"
+        },
+        {
+          "position": 8,
+          "token_id": 18542,
+          "token": " Dallas"
+        },
+        {
+          "position": 9,
+          "token_id": 374,
+          "token": " is"
+        },
+        {
+          "position": 10,
+          "token_id": 6941,
+          "token": " named"
+        }
+      ],
+      "component_activation_norms": {
+        "20": [
+          {
+            "position": 0,
+            "token": "Fact",
+            "l2_norm": 5.702433109283447,
+            "mean_abs": 0.07371264696121216
+          },
+          {
+            "position": 1,
+            "token": ":",
+            "l2_norm": 20.248023986816406,
+            "mean_abs": 0.31450706720352173
+          },
+          {
+            "position": 2,
+            "token": " The",
+            "l2_norm": 15.101428031921387,
+            "mean_abs": 0.22879450023174286
+          },
+          {
+            "position": 3,
+            "token": " capital",
+            "l2_norm": 16.097095489501953,
+            "mean_abs": 0.23944030702114105
+          },
+          {
+            "position": 4,
+            "token": " of",
+            "l2_norm": 18.688039779663086,
+            "mean_abs": 0.2812064588069916
+          },
+          {
+            "position": 5,
+            "token": " the",
+            "l2_norm": 15.889673233032227,
+            "mean_abs": 0.24074728786945343
+          },
+          {
+            "position": 6,
+            "token": " state",
+            "l2_norm": 19.28540802001953,
+            "mean_abs": 0.2777276039123535
+          },
+          {
+            "position": 7,
+            "token": " containing",
+            "l2_norm": 19.687761306762695,
+            "mean_abs": 0.30715638399124146
+          },
+          {
+            "position": 8,
+            "token": " Dallas",
+            "l2_norm": 17.254150390625,
+            "mean_abs": 0.2500658929347992
+          },
+          {
+            "position": 9,
+            "token": " is",
+            "l2_norm": 16.9276180267334,
+            "mean_abs": 0.2636632025241852
+          },
+          {
+            "position": 10,
+            "token": " named",
+            "l2_norm": 17.796783447265625,
+            "mean_abs": 0.2731421887874603
+          }
+        ]
+      },
+      "targets": {
+        " after": {
+          "logit": 14.75,
+          "prob": 0.08935546875,
+          "delta_logit": -0.9375
+        },
+        "Austin": {
+          "logit": 7.0625,
+          "prob": 4.100799560546875e-05,
+          "delta_logit": -0.5
+        },
+        " Austin": {
+          "logit": 15.625,
+          "prob": 0.21484375,
+          "delta_logit": -0.875
+        },
+        " Dallas": {
+          "logit": 15.0625,
+          "prob": 0.1220703125,
+          "delta_logit": -1.1875
+        },
+        "Sac": {
+          "logit": -6.3125,
+          "prob": 6.366462912410498e-11,
+          "delta_logit": 0.0625
+        },
+        " Sacramento": {
+          "logit": 1.6328125,
+          "prob": 1.7974525690078735e-07,
+          "delta_logit": -1.0390625
+        }
+      }
+    },
+    {
+      "top_token": " after",
+      "top_logit": 17.0,
+      "top_prob": 0.314453125,
+      "knockout_component": "mlp",
+      "layers": [
+        24
+      ],
+      "position_spec": "all",
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "position_tokens": [
+        {
+          "position": 0,
+          "token_id": 17417,
+          "token": "Fact"
+        },
+        {
+          "position": 1,
+          "token_id": 25,
+          "token": ":"
+        },
+        {
+          "position": 2,
+          "token_id": 576,
+          "token": " The"
+        },
+        {
+          "position": 3,
+          "token_id": 6722,
+          "token": " capital"
+        },
+        {
+          "position": 4,
+          "token_id": 315,
+          "token": " of"
+        },
+        {
+          "position": 5,
+          "token_id": 279,
+          "token": " the"
+        },
+        {
+          "position": 6,
+          "token_id": 1584,
+          "token": " state"
+        },
+        {
+          "position": 7,
+          "token_id": 8482,
+          "token": " containing"
+        },
+        {
+          "position": 8,
+          "token_id": 18542,
+          "token": " Dallas"
+        },
+        {
+          "position": 9,
+          "token_id": 374,
+          "token": " is"
+        },
+        {
+          "position": 10,
+          "token_id": 6941,
+          "token": " named"
+        }
+      ],
+      "component_activation_norms": {
+        "24": [
+          {
+            "position": 0,
+            "token": "Fact",
+            "l2_norm": 5.361992835998535,
+            "mean_abs": 0.07145791500806808
+          },
+          {
+            "position": 1,
+            "token": ":",
+            "l2_norm": 38.455928802490234,
+            "mean_abs": 0.5714242458343506
+          },
+          {
+            "position": 2,
+            "token": " The",
+            "l2_norm": 33.8801383972168,
+            "mean_abs": 0.4488774240016937
+          },
+          {
+            "position": 3,
+            "token": " capital",
+            "l2_norm": 28.70996856689453,
+            "mean_abs": 0.418018639087677
+          },
+          {
+            "position": 4,
+            "token": " of",
+            "l2_norm": 30.70747947692871,
+            "mean_abs": 0.42389851808547974
+          },
+          {
+            "position": 5,
+            "token": " the",
+            "l2_norm": 27.94142723083496,
+            "mean_abs": 0.38787075877189636
+          },
+          {
+            "position": 6,
+            "token": " state",
+            "l2_norm": 40.24937057495117,
+            "mean_abs": 0.617915153503418
+          },
+          {
+            "position": 7,
+            "token": " containing",
+            "l2_norm": 37.742393493652344,
+            "mean_abs": 0.5418837666511536
+          },
+          {
+            "position": 8,
+            "token": " Dallas",
+            "l2_norm": 30.763080596923828,
+            "mean_abs": 0.4529099464416504
+          },
+          {
+            "position": 9,
+            "token": " is",
+            "l2_norm": 29.382295608520508,
+            "mean_abs": 0.43940311670303345
+          },
+          {
+            "position": 10,
+            "token": " named",
+            "l2_norm": 28.847036361694336,
+            "mean_abs": 0.4219878315925598
+          }
+        ]
+      },
+      "targets": {
+        " after": {
+          "logit": 17.0,
+          "prob": 0.314453125,
+          "delta_logit": 1.3125
+        },
+        "Austin": {
+          "logit": 8.0,
+          "prob": 3.886222839355469e-05,
+          "delta_logit": 0.4375
+        },
+        " Austin": {
+          "logit": 17.0,
+          "prob": 0.314453125,
+          "delta_logit": 0.5
+        },
+        " Dallas": {
+          "logit": 16.25,
+          "prob": 0.1484375,
+          "delta_logit": 0.0
+        },
+        "Sac": {
+          "logit": -6.40625,
+          "prob": 2.148681232938543e-11,
+          "delta_logit": -0.03125
+        },
+        " Sacramento": {
+          "logit": 2.96875,
+          "prob": 2.5331974029541016e-07,
+          "delta_logit": 0.296875
+        }
+      }
+    },
+    {
+      "top_token": " Dallas",
+      "top_logit": 17.25,
+      "top_prob": 0.279296875,
+      "knockout_component": "mlp",
+      "layers": [
+        28
+      ],
+      "position_spec": "all",
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "position_tokens": [
+        {
+          "position": 0,
+          "token_id": 17417,
+          "token": "Fact"
+        },
+        {
+          "position": 1,
+          "token_id": 25,
+          "token": ":"
+        },
+        {
+          "position": 2,
+          "token_id": 576,
+          "token": " The"
+        },
+        {
+          "position": 3,
+          "token_id": 6722,
+          "token": " capital"
+        },
+        {
+          "position": 4,
+          "token_id": 315,
+          "token": " of"
+        },
+        {
+          "position": 5,
+          "token_id": 279,
+          "token": " the"
+        },
+        {
+          "position": 6,
+          "token_id": 1584,
+          "token": " state"
+        },
+        {
+          "position": 7,
+          "token_id": 8482,
+          "token": " containing"
+        },
+        {
+          "position": 8,
+          "token_id": 18542,
+          "token": " Dallas"
+        },
+        {
+          "position": 9,
+          "token_id": 374,
+          "token": " is"
+        },
+        {
+          "position": 10,
+          "token_id": 6941,
+          "token": " named"
+        }
+      ],
+      "component_activation_norms": {
+        "28": [
+          {
+            "position": 0,
+            "token": "Fact",
+            "l2_norm": 6.163078308105469,
+            "mean_abs": 0.08537983149290085
+          },
+          {
+            "position": 1,
+            "token": ":",
+            "l2_norm": 60.356056213378906,
+            "mean_abs": 0.8620622754096985
+          },
+          {
+            "position": 2,
+            "token": " The",
+            "l2_norm": 60.53509521484375,
+            "mean_abs": 0.7697962522506714
+          },
+          {
+            "position": 3,
+            "token": " capital",
+            "l2_norm": 50.484886169433594,
+            "mean_abs": 0.7407249212265015
+          },
+          {
+            "position": 4,
+            "token": " of",
+            "l2_norm": 52.01947784423828,
+            "mean_abs": 0.7721514105796814
+          },
+          {
+            "position": 5,
+            "token": " the",
+            "l2_norm": 59.45030975341797,
+            "mean_abs": 0.8908470273017883
+          },
+          {
+            "position": 6,
+            "token": " state",
+            "l2_norm": 57.72193145751953,
+            "mean_abs": 0.8765422701835632
+          },
+          {
+            "position": 7,
+            "token": " containing",
+            "l2_norm": 57.123390197753906,
+            "mean_abs": 0.8440786600112915
+          },
+          {
+            "position": 8,
+            "token": " Dallas",
+            "l2_norm": 40.79058074951172,
+            "mean_abs": 0.6176224946975708
+          },
+          {
+            "position": 9,
+            "token": " is",
+            "l2_norm": 49.8739013671875,
+            "mean_abs": 0.7939205765724182
+          },
+          {
+            "position": 10,
+            "token": " named",
+            "l2_norm": 48.603973388671875,
+            "mean_abs": 0.7583105564117432
+          }
+        ]
+      },
+      "targets": {
+        " after": {
+          "logit": 16.625,
+          "prob": 0.1494140625,
+          "delta_logit": 0.9375
+        },
+        "Austin": {
+          "logit": 8.75,
+          "prob": 5.698204040527344e-05,
+          "delta_logit": 1.1875
+        },
+        " Austin": {
+          "logit": 17.25,
+          "prob": 0.279296875,
+          "delta_logit": 0.75
+        },
+        " Dallas": {
+          "logit": 17.25,
+          "prob": 0.279296875,
+          "delta_logit": 1.0
+        },
+        "Sac": {
+          "logit": -5.03125,
+          "prob": 5.866240826435387e-11,
+          "delta_logit": 1.34375
+        },
+        " Sacramento": {
+          "logit": 2.765625,
+          "prob": 1.434236764907837e-07,
+          "delta_logit": 0.09375
+        }
+      }
+    }
+  ]
+}

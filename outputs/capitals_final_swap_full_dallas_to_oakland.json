@@ -1,0 +1,938 @@
+{
+  "experiment_mode": "swap",
+  "prompt": "Fact: The capital of the state containing Oakland is named",
+  "clean_baseline": {
+    "top_token": " after",
+    "top_logit": 18.5,
+    "top_prob": 0.4140625,
+    "targets": {
+      " after": {
+        "logit": 18.5,
+        "prob": 0.4140625
+      },
+      "Austin": {
+        "logit": -0.84375,
+        "prob": 1.6443664208054543e-09
+      },
+      " Austin": {
+        "logit": 7.34375,
+        "prob": 5.930662155151367e-06
+      },
+      " Dallas": {
+        "logit": 5.875,
+        "prob": 1.3634562492370605e-06
+      },
+      "Sac": {
+        "logit": 7.1875,
+        "prob": 5.066394805908203e-06
+      },
+      " Sacramento": {
+        "logit": 17.875,
+        "prob": 0.2216796875
+      },
+      " San": {
+        "logit": 17.375,
+        "prob": 0.134765625
+      }
+    }
+  },
+  "source_prompt": "Fact: The capital of the state containing Dallas is named",
+  "source_baseline": {
+    "top_token": " Austin",
+    "top_logit": 16.5,
+    "top_prob": 0.27734375,
+    "targets": {
+      " after": {
+        "logit": 15.6875,
+        "prob": 0.123046875
+      },
+      "Austin": {
+        "logit": 7.5625,
+        "prob": 3.647804260253906e-05
+      },
+      " Austin": {
+        "logit": 16.5,
+        "prob": 0.27734375
+      },
+      " Dallas": {
+        "logit": 16.25,
+        "prob": 0.2158203125
+      },
+      "Sac": {
+        "logit": -6.375,
+        "prob": 3.228706191293895e-11
+      },
+      " Sacramento": {
+        "logit": 2.671875,
+        "prob": 2.738088369369507e-07
+      },
+      " San": {
+        "logit": 7.6875,
+        "prob": 4.124641418457031e-05
+      }
+    }
+  },
+  "intervention": {
+    "top_token": " after",
+    "top_logit": 18.875,
+    "top_prob": 0.380859375,
+    "targets": {
+      " after": {
+        "logit": 18.875,
+        "prob": 0.380859375
+      },
+      "Austin": {
+        "logit": -1.203125,
+        "prob": 7.275957614183426e-10
+      },
+      " Austin": {
+        "logit": 7.28125,
+        "prob": 3.516674041748047e-06
+      },
+      " Dallas": {
+        "logit": 6.125,
+        "prob": 1.1101365089416504e-06
+      },
+      "Sac": {
+        "logit": 8.375,
+        "prob": 1.049041748046875e-05
+      },
+      " Sacramento": {
+        "logit": 18.75,
+        "prob": 0.3359375
+      },
+      " San": {
+        "logit": 17.0,
+        "prob": 0.05859375
+      }
+    },
+    "positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "position_tokens": [
+      {
+        "position": 0,
+        "token_id": 17417,
+        "token": "Fact"
+      },
+      {
+        "position": 1,
+        "token_id": 25,
+        "token": ":"
+      },
+      {
+        "position": 2,
+        "token_id": 576,
+        "token": " The"
+      },
+      {
+        "position": 3,
+        "token_id": 6722,
+        "token": " capital"
+      },
+      {
+        "position": 4,
+        "token_id": 315,
+        "token": " of"
+      },
+      {
+        "position": 5,
+        "token_id": 279,
+        "token": " the"
+      },
+      {
+        "position": 6,
+        "token_id": 1584,
+        "token": " state"
+      },
+      {
+        "position": 7,
+        "token_id": 8482,
+        "token": " containing"
+      },
+      {
+        "position": 8,
+        "token_id": 29681,
+        "token": " Oakland"
+      },
+      {
+        "position": 9,
+        "token_id": 374,
+        "token": " is"
+      },
+      {
+        "position": 10,
+        "token_id": 6941,
+        "token": " named"
+      }
+    ]
+  },
+  "layer_scan": [
+    {
+      "layer": 4,
+      "result": {
+        "top_token": " after",
+        "top_logit": 18.625,
+        "top_prob": 0.412109375,
+        "targets": {
+          " after": {
+            "logit": 18.625,
+            "prob": 0.412109375
+          },
+          "Austin": {
+            "logit": -1.03125,
+            "prob": 1.2005330063402653e-09
+          },
+          " Austin": {
+            "logit": 7.125,
+            "prob": 4.172325134277344e-06
+          },
+          " Dallas": {
+            "logit": 5.8125,
+            "prob": 1.125037670135498e-06
+          },
+          "Sac": {
+            "logit": 7.34375,
+            "prob": 5.21540641784668e-06
+          },
+          " Sacramento": {
+            "logit": 18.0,
+            "prob": 0.220703125
+          },
+          " San": {
+            "logit": 17.25,
+            "prob": 0.1044921875
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 1584,
+            "token": " state"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 29681,
+            "token": " Oakland"
+          },
+          {
+            "position": 9,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 10,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 8,
+      "result": {
+        "top_token": " after",
+        "top_logit": 18.5,
+        "top_prob": 0.412109375,
+        "targets": {
+          " after": {
+            "logit": 18.5,
+            "prob": 0.412109375
+          },
+          "Austin": {
+            "logit": -0.82421875,
+            "prob": 1.6661942936480045e-09
+          },
+          " Austin": {
+            "logit": 7.34375,
+            "prob": 5.8710575103759766e-06
+          },
+          " Dallas": {
+            "logit": 5.96875,
+            "prob": 1.4901161193847656e-06
+          },
+          "Sac": {
+            "logit": 7.1875,
+            "prob": 5.036592483520508e-06
+          },
+          " Sacramento": {
+            "logit": 17.75,
+            "prob": 0.1943359375
+          },
+          " San": {
+            "logit": 17.125,
+            "prob": 0.10400390625
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 1584,
+            "token": " state"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 29681,
+            "token": " Oakland"
+          },
+          {
+            "position": 9,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 10,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 12,
+      "result": {
+        "top_token": " after",
+        "top_logit": 18.625,
+        "top_prob": 0.458984375,
+        "targets": {
+          " after": {
+            "logit": 18.625,
+            "prob": 0.458984375
+          },
+          "Austin": {
+            "logit": -0.78515625,
+            "prob": 1.709850039333105e-09
+          },
+          " Austin": {
+            "logit": 7.375,
+            "prob": 5.990266799926758e-06
+          },
+          " Dallas": {
+            "logit": 5.9375,
+            "prob": 1.4230608940124512e-06
+          },
+          "Sac": {
+            "logit": 7.03125,
+            "prob": 4.231929779052734e-06
+          },
+          " Sacramento": {
+            "logit": 17.625,
+            "prob": 0.1689453125
+          },
+          " San": {
+            "logit": 17.5,
+            "prob": 0.1494140625
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 1584,
+            "token": " state"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 29681,
+            "token": " Oakland"
+          },
+          {
+            "position": 9,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 10,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 16,
+      "result": {
+        "top_token": " after",
+        "top_logit": 18.875,
+        "top_prob": 0.462890625,
+        "targets": {
+          " after": {
+            "logit": 18.875,
+            "prob": 0.462890625
+          },
+          "Austin": {
+            "logit": -1.015625,
+            "prob": 1.0622898116707802e-09
+          },
+          " Austin": {
+            "logit": 7.21875,
+            "prob": 3.993511199951172e-06
+          },
+          " Dallas": {
+            "logit": 5.6875,
+            "prob": 8.642673492431641e-07
+          },
+          "Sac": {
+            "logit": 7.46875,
+            "prob": 5.155801773071289e-06
+          },
+          " Sacramento": {
+            "logit": 18.125,
+            "prob": 0.21875
+          },
+          " San": {
+            "logit": 17.5,
+            "prob": 0.11669921875
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 1584,
+            "token": " state"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 29681,
+            "token": " Oakland"
+          },
+          {
+            "position": 9,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 10,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 20,
+      "result": {
+        "top_token": " after",
+        "top_logit": 18.625,
+        "top_prob": 0.400390625,
+        "targets": {
+          " after": {
+            "logit": 18.625,
+            "prob": 0.400390625
+          },
+          "Austin": {
+            "logit": -1.015625,
+            "prob": 1.178705133497715e-09
+          },
+          " Austin": {
+            "logit": 7.25,
+            "prob": 4.589557647705078e-06
+          },
+          " Dallas": {
+            "logit": 5.96875,
+            "prob": 1.2740492820739746e-06
+          },
+          "Sac": {
+            "logit": 7.3125,
+            "prob": 4.887580871582031e-06
+          },
+          " Sacramento": {
+            "logit": 18.0,
+            "prob": 0.2138671875
+          },
+          " San": {
+            "logit": 17.5,
+            "prob": 0.1298828125
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 1584,
+            "token": " state"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 29681,
+            "token": " Oakland"
+          },
+          {
+            "position": 9,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 10,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 24,
+      "result": {
+        "top_token": " after",
+        "top_logit": 18.875,
+        "top_prob": 0.486328125,
+        "targets": {
+          " after": {
+            "logit": 18.875,
+            "prob": 0.486328125
+          },
+          "Austin": {
+            "logit": -1.3359375,
+            "prob": 8.11269273981452e-10
+          },
+          " Austin": {
+            "logit": 6.9375,
+            "prob": 3.1739473342895508e-06
+          },
+          " Dallas": {
+            "logit": 5.6875,
+            "prob": 9.08970832824707e-07
+          },
+          "Sac": {
+            "logit": 7.3125,
+            "prob": 4.6193599700927734e-06
+          },
+          " Sacramento": {
+            "logit": 17.75,
+            "prob": 0.1572265625
+          },
+          " San": {
+            "logit": 17.375,
+            "prob": 0.1083984375
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 1584,
+            "token": " state"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 29681,
+            "token": " Oakland"
+          },
+          {
+            "position": 9,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 10,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 28,
+      "result": {
+        "top_token": " Sacramento",
+        "top_logit": 18.625,
+        "top_prob": 0.404296875,
+        "targets": {
+          " after": {
+            "logit": 18.5,
+            "prob": 0.357421875
+          },
+          "Austin": {
+            "logit": -0.76953125,
+            "prob": 1.5279510989785194e-09
+          },
+          " Austin": {
+            "logit": 7.59375,
+            "prob": 6.556510925292969e-06
+          },
+          " Dallas": {
+            "logit": 6.125,
+            "prob": 1.5124678611755371e-06
+          },
+          "Sac": {
+            "logit": 8.25,
+            "prob": 1.2636184692382812e-05
+          },
+          " Sacramento": {
+            "logit": 18.625,
+            "prob": 0.404296875
+          },
+          " San": {
+            "logit": 17.0,
+            "prob": 0.07958984375
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 1584,
+            "token": " state"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 29681,
+            "token": " Oakland"
+          },
+          {
+            "position": 9,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 10,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    }
+  ]
+}

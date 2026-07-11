@@ -1,0 +1,986 @@
+{
+  "experiment_mode": "swap",
+  "prompt": "Fact: The capital of the country containing Basra is named",
+  "clean_baseline": {
+    "top_token": " Baghdad",
+    "top_logit": 19.375,
+    "top_prob": 0.96484375,
+    "targets": {
+      " A": {
+        "logit": 6.34375,
+        "prob": 2.115964889526367e-06
+      },
+      " after": {
+        "logit": 14.4375,
+        "prob": 0.00689697265625
+      },
+      " Am": {
+        "logit": 9.625,
+        "prob": 5.626678466796875e-05
+      },
+      "Am": {
+        "logit": 1.3828125,
+        "prob": 1.4784745872020721e-08
+      },
+      " as": {
+        "logit": 14.625,
+        "prob": 0.00836181640625
+      },
+      "Bag": {
+        "logit": 6.71875,
+        "prob": 3.069639205932617e-06
+      },
+      " Baghdad": {
+        "logit": 19.375,
+        "prob": 0.96484375
+      }
+    }
+  },
+  "source_prompt": "Fact: The capital of the country containing Zarqa is named",
+  "source_baseline": {
+    "top_token": " Am",
+    "top_logit": 21.25,
+    "top_prob": 0.984375,
+    "targets": {
+      " A": {
+        "logit": 15.5625,
+        "prob": 0.003326416015625
+      },
+      " after": {
+        "logit": 13.8125,
+        "prob": 0.000579833984375
+      },
+      " Am": {
+        "logit": 21.25,
+        "prob": 0.984375
+      },
+      "Am": {
+        "logit": 11.0625,
+        "prob": 3.695487976074219e-05
+      },
+      " as": {
+        "logit": 15.25,
+        "prob": 0.00244140625
+      },
+      "Bag": {
+        "logit": -3.734375,
+        "prob": 1.3869794202037156e-11
+      },
+      " Baghdad": {
+        "logit": 6.96875,
+        "prob": 6.183981895446777e-07
+      }
+    }
+  },
+  "intervention": {
+    "top_token": " Baghdad",
+    "top_logit": 18.5,
+    "top_prob": 0.87109375,
+    "targets": {
+      " A": {
+        "logit": 6.84375,
+        "prob": 7.539987564086914e-06
+      },
+      " after": {
+        "logit": 15.4375,
+        "prob": 0.040771484375
+      },
+      " Am": {
+        "logit": 10.0,
+        "prob": 0.0001773834228515625
+      },
+      "Am": {
+        "logit": 1.375,
+        "prob": 3.189779818058014e-08
+      },
+      " as": {
+        "logit": 14.6875,
+        "prob": 0.019287109375
+      },
+      "Bag": {
+        "logit": 4.96875,
+        "prob": 1.1548399925231934e-06
+      },
+      " Baghdad": {
+        "logit": 18.5,
+        "prob": 0.87109375
+      }
+    },
+    "positions": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "position_tokens": [
+      {
+        "position": 0,
+        "token_id": 17417,
+        "token": "Fact"
+      },
+      {
+        "position": 1,
+        "token_id": 25,
+        "token": ":"
+      },
+      {
+        "position": 2,
+        "token_id": 576,
+        "token": " The"
+      },
+      {
+        "position": 3,
+        "token_id": 6722,
+        "token": " capital"
+      },
+      {
+        "position": 4,
+        "token_id": 315,
+        "token": " of"
+      },
+      {
+        "position": 5,
+        "token_id": 279,
+        "token": " the"
+      },
+      {
+        "position": 6,
+        "token_id": 3146,
+        "token": " country"
+      },
+      {
+        "position": 7,
+        "token_id": 8482,
+        "token": " containing"
+      },
+      {
+        "position": 8,
+        "token_id": 14662,
+        "token": " Bas"
+      },
+      {
+        "position": 9,
+        "token_id": 956,
+        "token": "ra"
+      },
+      {
+        "position": 10,
+        "token_id": 374,
+        "token": " is"
+      },
+      {
+        "position": 11,
+        "token_id": 6941,
+        "token": " named"
+      }
+    ]
+  },
+  "layer_scan": [
+    {
+      "layer": 4,
+      "result": {
+        "top_token": " Baghdad",
+        "top_logit": 19.375,
+        "top_prob": 0.96875,
+        "targets": {
+          " A": {
+            "logit": 6.46875,
+            "prob": 2.3990869522094727e-06
+          },
+          " after": {
+            "logit": 14.3125,
+            "prob": 0.006134033203125
+          },
+          " Am": {
+            "logit": 9.5625,
+            "prob": 5.316734313964844e-05
+          },
+          "Am": {
+            "logit": 1.4140625,
+            "prob": 1.5366822481155396e-08
+          },
+          " as": {
+            "logit": 14.1875,
+            "prob": 0.005401611328125
+          },
+          "Bag": {
+            "logit": 6.65625,
+            "prob": 2.905726432800293e-06
+          },
+          " Baghdad": {
+            "logit": 19.375,
+            "prob": 0.96875
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 3146,
+            "token": " country"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 14662,
+            "token": " Bas"
+          },
+          {
+            "position": 9,
+            "token_id": 956,
+            "token": "ra"
+          },
+          {
+            "position": 10,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 11,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 8,
+      "result": {
+        "top_token": " Baghdad",
+        "top_logit": 19.0,
+        "top_prob": 0.953125,
+        "targets": {
+          " A": {
+            "logit": 6.3125,
+            "prob": 2.950429916381836e-06
+          },
+          " after": {
+            "logit": 14.125,
+            "prob": 0.007293701171875
+          },
+          " Am": {
+            "logit": 9.6875,
+            "prob": 8.630752563476562e-05
+          },
+          "Am": {
+            "logit": 1.359375,
+            "prob": 2.0838342607021332e-08
+          },
+          " as": {
+            "logit": 14.5625,
+            "prob": 0.01129150390625
+          },
+          "Bag": {
+            "logit": 6.34375,
+            "prob": 3.039836883544922e-06
+          },
+          " Baghdad": {
+            "logit": 19.0,
+            "prob": 0.953125
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 3146,
+            "token": " country"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 14662,
+            "token": " Bas"
+          },
+          {
+            "position": 9,
+            "token_id": 956,
+            "token": "ra"
+          },
+          {
+            "position": 10,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 11,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 12,
+      "result": {
+        "top_token": " Baghdad",
+        "top_logit": 19.125,
+        "top_prob": 0.953125,
+        "targets": {
+          " A": {
+            "logit": 6.4375,
+            "prob": 2.950429916381836e-06
+          },
+          " after": {
+            "logit": 14.1875,
+            "prob": 0.0068359375
+          },
+          " Am": {
+            "logit": 9.875,
+            "prob": 9.1552734375e-05
+          },
+          "Am": {
+            "logit": 1.59375,
+            "prob": 2.3166649043560028e-08
+          },
+          " as": {
+            "logit": 14.625,
+            "prob": 0.01055908203125
+          },
+          "Bag": {
+            "logit": 6.375,
+            "prob": 2.771615982055664e-06
+          },
+          " Baghdad": {
+            "logit": 19.125,
+            "prob": 0.953125
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 3146,
+            "token": " country"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 14662,
+            "token": " Bas"
+          },
+          {
+            "position": 9,
+            "token_id": 956,
+            "token": "ra"
+          },
+          {
+            "position": 10,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 11,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 16,
+      "result": {
+        "top_token": " Baghdad",
+        "top_logit": 19.375,
+        "top_prob": 0.96875,
+        "targets": {
+          " A": {
+            "logit": 6.21875,
+            "prob": 1.8700957298278809e-06
+          },
+          " after": {
+            "logit": 14.25,
+            "prob": 0.0057373046875
+          },
+          " Am": {
+            "logit": 9.5625,
+            "prob": 5.2928924560546875e-05
+          },
+          "Am": {
+            "logit": 1.3828125,
+            "prob": 1.4842953532934189e-08
+          },
+          " as": {
+            "logit": 14.4375,
+            "prob": 0.006927490234375
+          },
+          "Bag": {
+            "logit": 6.90625,
+            "prob": 3.725290298461914e-06
+          },
+          " Baghdad": {
+            "logit": 19.375,
+            "prob": 0.96875
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 3146,
+            "token": " country"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 14662,
+            "token": " Bas"
+          },
+          {
+            "position": 9,
+            "token_id": 956,
+            "token": "ra"
+          },
+          {
+            "position": 10,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 11,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 20,
+      "result": {
+        "top_token": " Baghdad",
+        "top_logit": 18.875,
+        "top_prob": 0.94140625,
+        "targets": {
+          " A": {
+            "logit": 6.34375,
+            "prob": 3.4123659133911133e-06
+          },
+          " after": {
+            "logit": 14.4375,
+            "prob": 0.01116943359375
+          },
+          " Am": {
+            "logit": 9.4375,
+            "prob": 7.534027099609375e-05
+          },
+          "Am": {
+            "logit": 1.1875,
+            "prob": 1.9674189388751984e-08
+          },
+          " as": {
+            "logit": 14.625,
+            "prob": 0.013427734375
+          },
+          "Bag": {
+            "logit": 6.3125,
+            "prob": 3.3080577850341797e-06
+          },
+          " Baghdad": {
+            "logit": 18.875,
+            "prob": 0.94140625
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 3146,
+            "token": " country"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 14662,
+            "token": " Bas"
+          },
+          {
+            "position": 9,
+            "token_id": 956,
+            "token": "ra"
+          },
+          {
+            "position": 10,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 11,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 24,
+      "result": {
+        "top_token": " Baghdad",
+        "top_logit": 19.125,
+        "top_prob": 0.95703125,
+        "targets": {
+          " A": {
+            "logit": 6.5625,
+            "prob": 3.3527612686157227e-06
+          },
+          " after": {
+            "logit": 14.1875,
+            "prob": 0.006866455078125
+          },
+          " Am": {
+            "logit": 10.1875,
+            "prob": 0.000125885009765625
+          },
+          "Am": {
+            "logit": 2.046875,
+            "prob": 3.655441105365753e-08
+          },
+          " as": {
+            "logit": 14.25,
+            "prob": 0.007293701171875
+          },
+          "Bag": {
+            "logit": 6.8125,
+            "prob": 4.291534423828125e-06
+          },
+          " Baghdad": {
+            "logit": 19.125,
+            "prob": 0.95703125
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 3146,
+            "token": " country"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 14662,
+            "token": " Bas"
+          },
+          {
+            "position": 9,
+            "token_id": 956,
+            "token": "ra"
+          },
+          {
+            "position": 10,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 11,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    },
+    {
+      "layer": 28,
+      "result": {
+        "top_token": " Baghdad",
+        "top_logit": 18.625,
+        "top_prob": 0.828125,
+        "targets": {
+          " A": {
+            "logit": 6.53125,
+            "prob": 4.649162292480469e-06
+          },
+          " after": {
+            "logit": 16.125,
+            "prob": 0.06787109375
+          },
+          " Am": {
+            "logit": 10.0625,
+            "prob": 0.0001583099365234375
+          },
+          "Am": {
+            "logit": 1.0078125,
+            "prob": 1.8510036170482635e-08
+          },
+          " as": {
+            "logit": 15.5,
+            "prob": 0.036376953125
+          },
+          "Bag": {
+            "logit": 4.5,
+            "prob": 6.07222318649292e-07
+          },
+          " Baghdad": {
+            "logit": 18.625,
+            "prob": 0.828125
+          }
+        },
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "position_tokens": [
+          {
+            "position": 0,
+            "token_id": 17417,
+            "token": "Fact"
+          },
+          {
+            "position": 1,
+            "token_id": 25,
+            "token": ":"
+          },
+          {
+            "position": 2,
+            "token_id": 576,
+            "token": " The"
+          },
+          {
+            "position": 3,
+            "token_id": 6722,
+            "token": " capital"
+          },
+          {
+            "position": 4,
+            "token_id": 315,
+            "token": " of"
+          },
+          {
+            "position": 5,
+            "token_id": 279,
+            "token": " the"
+          },
+          {
+            "position": 6,
+            "token_id": 3146,
+            "token": " country"
+          },
+          {
+            "position": 7,
+            "token_id": 8482,
+            "token": " containing"
+          },
+          {
+            "position": 8,
+            "token_id": 14662,
+            "token": " Bas"
+          },
+          {
+            "position": 9,
+            "token_id": 956,
+            "token": "ra"
+          },
+          {
+            "position": 10,
+            "token_id": 374,
+            "token": " is"
+          },
+          {
+            "position": 11,
+            "token_id": 6941,
+            "token": " named"
+          }
+        ]
+      }
+    }
+  ]
+}
