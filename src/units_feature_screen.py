@@ -36,6 +36,7 @@ from src.model_loader import load_model_and_tokenizer
 
 Feature = Tuple[int, int]
 CONTEXT_POOL_VERSION = 3
+PROTOCOL_VERSION = 2
 
 SYSTEMS = [
     "bridge suspension cable",
@@ -162,6 +163,47 @@ def generated_context_cases(seed: int) -> List[Dict[str, Any]]:
     return cases
 
 
+def baseline_qualification(
+    target_clean: Dict[str, Any],
+    force_clean: Dict[str, Any],
+    mass_top_id: int,
+    mass_expected_ids: Iterable[int],
+) -> Dict[str, Any]:
+    """Qualify the causal target/source while retaining mass as a diagnostic control."""
+    energy_target_correct = bool(target_clean["top_is_second"])
+    force_source_correct = bool(force_clean["top_is_first"])
+    mass_control_correct = int(mass_top_id) in {int(value) for value in mass_expected_ids}
+    reasons = []
+    if not energy_target_correct:
+        reasons.append("energy target did not predict the joules prefix")
+    if not force_source_correct:
+        reasons.append("force source did not predict the newtons prefix")
+    return {
+        "eligible": energy_target_correct and force_source_correct,
+        "energy_target_top_is_expected": energy_target_correct,
+        "force_source_top_is_expected": force_source_correct,
+        "mass_control_top_is_expected": mass_control_correct,
+        "ineligible_reason": "; ".join(reasons) if reasons else None,
+    }
+
+
+def select_eligible_cases_by_system(
+    prepared: Sequence[Dict[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    """Choose one eligible variant per system, preferring a competent mass control."""
+    selected: Dict[str, Dict[str, Any]] = {}
+    for row in prepared:
+        if not row.get("eligible"):
+            continue
+        existing = selected.get(row["system"])
+        if existing is None or (
+            row.get("mass_control_top_is_expected", False)
+            and not existing.get("mass_control_top_is_expected", False)
+        ):
+            selected[row["system"]] = row
+    return selected
+
+
 def prepare_case(model, tokenizer, case: Dict[str, Any]) -> Dict[str, Any]:
     row = dict(case)
     newton_id = first_token_id(tokenizer, "newtons")
@@ -199,6 +241,12 @@ def prepare_case(model, tokenizer, case: Dict[str, Any]) -> Dict[str, Any]:
         kilogram_id,
         newton_id,
     )
+    qualification = baseline_qualification(
+        target_clean,
+        force_clean,
+        mass_top_id,
+        mass_expected_ids,
+    )
     row.update(
         {
             "newton_id": newton_id,
@@ -211,17 +259,9 @@ def prepare_case(model, tokenizer, case: Dict[str, Any]) -> Dict[str, Any]:
             "force_clean": force_clean,
             "mass_clean": mass_clean,
             "mass_expected_token_ids": sorted(mass_expected_ids),
-            "eligible": bool(
-                target_clean["top_is_second"]
-                and force_clean["top_is_first"]
-                and mass_top_id in mass_expected_ids
-            ),
+            **qualification,
         }
     )
-    if not row["eligible"]:
-        row["ineligible_reason"] = (
-            "energy, force, or mass clean baseline did not have the expected first-token prediction"
-        )
     return row
 
 
@@ -235,6 +275,9 @@ def public_case_record(case: Dict[str, Any]) -> Dict[str, Any]:
         "energy_prompt",
         "exact_prompts_absent_from_sae_corpus",
         "eligible",
+        "energy_target_top_is_expected",
+        "force_source_top_is_expected",
+        "mass_control_top_is_expected",
         "ineligible_reason",
         "target_clean",
         "force_clean",
@@ -507,9 +550,10 @@ def serialise_panel(panel: Dict[str, Any]) -> Dict[str, Any]:
 
 def protocol_signature(args: argparse.Namespace) -> Dict[str, Any]:
     return {
-        "protocol_version": 1,
+        "protocol_version": PROTOCOL_VERSION,
         "context_pool_version": CONTEXT_POOL_VERSION,
         "one_prompt_per_physical_system": True,
+        "eligibility_rule": "correct energy target and force source; mass correctness diagnostic only",
         "model_config": str(args.model_config),
         "sae_config": str(args.sae_config),
         "graph": str(args.graph),
@@ -555,16 +599,30 @@ def main() -> None:
     signature = protocol_signature(args)
     started = time.time()
 
+    payload = None
     if output_path.exists() and not args.overwrite:
         with output_path.open("r", encoding="utf-8") as handle:
-            payload = json.load(handle)
-        if payload.get("protocol_signature") != signature:
-            raise ValueError(
-                f"Existing partial output {output_path} uses a different protocol. "
-                "Use --overwrite or a new output path."
+            existing_payload = json.load(handle)
+        if existing_payload.get("protocol_signature") != signature:
+            has_intervention_results = bool(
+                existing_payload.get("discovery", {}).get("feature_results")
+                or existing_payload.get("confirmation", {}).get("panels")
+                or existing_payload.get("confirmation", {}).get("broad_controls")
             )
-        print(f"Resuming partial output: {output_path}")
-    else:
+            if not has_intervention_results:
+                print(
+                    "Replacing a pre-intervention checkpoint from an earlier screen protocol: "
+                    f"{output_path}"
+                )
+            else:
+                raise ValueError(
+                    f"Existing partial output {output_path} uses a different protocol. "
+                    "Use --overwrite or a new output path."
+                )
+        else:
+            payload = existing_payload
+            print(f"Resuming partial output: {output_path}")
+    if payload is None:
         payload = {
             "status": "initialising",
             "protocol_signature": signature,
@@ -579,6 +637,11 @@ def main() -> None:
                 "primary_success_rule": (
                     "force-source mean and force-minus-mass mean are positive, with both bootstrap "
                     "95% confidence intervals wholly above zero"
+                ),
+                "baseline_eligibility": (
+                    "The clean energy target must predict the joules prefix and the clean force "
+                    "source must predict the newtons prefix. Mass-source correctness is reported "
+                    "and preferred during prompt-variant selection, but does not gate eligibility."
                 ),
                 "scope": "final-token, error-preserving SAE feature swaps",
             },
@@ -612,18 +675,37 @@ def main() -> None:
     for index, case in enumerate(case_pool, start=1):
         print(f"[baseline {index:02d}/{len(case_pool)}] {case['context']}")
         prepared.append(prepare_case(model, tokenizer, case))
-    eligible_by_system: Dict[str, Dict[str, Any]] = {}
-    for row in prepared:
-        if row.get("eligible"):
-            eligible_by_system.setdefault(row["system"], row)
+    eligible_by_system = select_eligible_cases_by_system(prepared)
+    qualification_summary = {
+        "screened_prompt_variants": len(prepared),
+        "physical_systems_in_pool": len(SYSTEMS),
+        "variants_with_expected_energy_target": sum(
+            bool(row["energy_target_top_is_expected"]) for row in prepared
+        ),
+        "variants_with_expected_force_source": sum(
+            bool(row["force_source_top_is_expected"]) for row in prepared
+        ),
+        "variants_with_expected_mass_control": sum(
+            bool(row["mass_control_top_is_expected"]) for row in prepared
+        ),
+        "eligible_variants": sum(bool(row["eligible"]) for row in prepared),
+        "systems_with_eligible_variant": len(eligible_by_system),
+        "selected_system_variants_with_expected_mass_control": sum(
+            bool(row["mass_control_top_is_expected"]) for row in eligible_by_system.values()
+        ),
+    }
+    print("Baseline qualification summary:")
+    for key, value in qualification_summary.items():
+        print(f"  {key}: {value}")
     system_order = list(SYSTEMS)
     np.random.default_rng(args.seed + 1).shuffle(system_order)
     eligible_system_order = [system for system in system_order if system in eligible_by_system]
     required_systems = args.discovery_cases + args.confirmation_cases
     if len(eligible_system_order) < required_systems:
         raise ValueError(
-            f"Only {len(eligible_system_order)} physical systems supplied a qualified prompt; "
-            f"{required_systems} are required"
+            f"Only {len(eligible_system_order)} physical systems supplied a prompt with both a "
+            f"correct clean energy target and force source; {required_systems} are required. "
+            f"Qualification counts: {qualification_summary}"
         )
     discovery_systems = eligible_system_order[: args.discovery_cases]
     confirmation_systems = eligible_system_order[
@@ -632,6 +714,7 @@ def main() -> None:
     discovery_cases = [eligible_by_system[system] for system in discovery_systems]
     confirmation_cases = [eligible_by_system[system] for system in confirmation_systems]
     payload["case_selection"] = {
+        "baseline_qualification_summary": qualification_summary,
         "baseline_screened_cases": [public_case_record(row) for row in prepared],
         "discovery_systems": discovery_systems,
         "confirmation_systems": confirmation_systems,

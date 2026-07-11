@@ -114,7 +114,7 @@ Optional targeted follow-up:
   - Final guarded units follow-up; run only after the completed ReLU units work.
   - Trains TopK `k=128,256,512` on the same final-token units corpus and selects
     one candidate from reconstruction/sparsity diagnostics before intervention.
-  - Builds one selected force graph, reruns a 20-context final-token benchmark,
+  - Builds one selected force graph, reruns a 16-context final-token benchmark,
     and freezes a Top-10 feature panel using separate discovery contexts.
   - Confirmation uses exact-prompt SAE-absent contexts and compares force-source
     swaps against matched mass-source swaps into the same energy targets.
@@ -392,7 +392,10 @@ python -m src.units_feature_screen \
 The `k=256` paths are illustrative; use `units_topk_selection.json`. Exact
 force, mass and energy prompts are absent from the SAE corpus. Discovery uses
 eight systems and confirmation uses sixteen different systems, with one prompt
-per system. The primary Top-10
+per system. The clean energy target and force source must predict the expected
+unit prefixes. Mass-control correctness is recorded and preferred among prompt
+variants, but is not an eligibility condition because it is a negative-control
+source rather than the causal target. The primary Top-10
 panel succeeds only when both the force-source effect and its advantage over the
 matched mass-source control have bootstrap 95% intervals wholly above zero.
 Confirmation panel sizes must not be selected post hoc.

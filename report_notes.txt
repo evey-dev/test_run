@@ -468,11 +468,20 @@ uses the same latent width, seed, epochs, learning rate, decoder normalisation,
 selection thresholds and metric-only selection rule as the mathematics sweep.
 Only the selected candidate receives a force-versus-energy graph.
 
-The selected model is first evaluated on 20 existing validation-context pairs
-at the final token. A separate feature screen then uses new force, mass and
+The selected model is first evaluated on sixteen of the seventeen available
+validation-context pairs at the final token, leaving one reserve. A separate
+feature screen then uses new force, mass and
 energy prompts whose exact strings are absent from the SAE corpus. Physical
 systems are assigned wholly to discovery or confirmation, preventing related
 prompt variants from crossing the split.
+
+The baseline gate requires the clean energy target to predict the joules prefix
+and the clean force source to predict the newtons prefix. Whether the mass
+control predicts a kilogram prefix is retained as a diagnostic and a
+prompt-variant preference, but it does not determine eligibility. This is
+deliberate: the mass prompt supplies a non-force activation control and is not
+the causal target whose baseline competence is required for interpreting the
+newtons-minus-joules effect.
 
 For every feature panel, the same energy target receives either a force-source
 swap or a matched mass-source swap. The primary specificity estimand is:
