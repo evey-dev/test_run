@@ -65,12 +65,6 @@ models/
 wandb/
 lightning_logs/
 
-# Superseded local workspaces and data copies
-mechanistic_dataold/
-outputsold/
-data/*_old.*
-environment-condaforge.yml
-
 # Duplicate generated output visuals. Machine-readable JSON/CSV results and
 # interactive graph HTML remain included; final report figures live below.
 outputs/report_figures/
