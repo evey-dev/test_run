@@ -475,9 +475,27 @@ panel succeeds only when both the force-source effect and its advantage over the
 matched mass-source control have bootstrap 95% intervals wholly above zero.
 Confirmation panel sizes must not be selected post hoc.
 
-The report-ready Anthropic-style circuit summary is generated entirely from the
-completed graph and feature-screen JSON files; it does not load the model, SAE
-weights or activation matrices:
+The report-ready graph view highlights the frozen force panel in the graph from
+which its candidates were selected. It is generated entirely from the completed
+graph and feature-screen JSON files; it does not load the model, SAE weights or
+activation matrices:
+
+```bash
+python -m src.plot_attribution_graph \
+  --graph outputs/topk_units_retrain/units_topk128_force_graph.json \
+  --highlight-screen outputs/topk_units_retrain/units_topk128_feature_screen.json \
+  --highlight-panel top_10_primary \
+  --title "Force attribution graph with frozen feature panel highlighted" \
+  --output-dir report/figures \
+  --stem fig_units_attribution_panel
+```
+
+This writes `fig_units_attribution_panel.pdf` and `.png`. All ten panel nodes
+are displayed; the unhighlighted nodes and edges are a backward-connected
+visual subset of the complete graph.
+
+The complementary Anthropic-style causal summary is generated from the same
+two JSON files:
 
 ```bash
 python -m src.plot_units_compact_circuit

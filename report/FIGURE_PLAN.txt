@@ -203,7 +203,38 @@ Interpretation rules:
   a monosemantic carry bit, basis-stable representation, or complete circuit.
 
 
-Figure 8: units TopK selection and confirmation
+Figure 8: units attribution graph with frozen force panel
+----------------------------------------------------------
+
+Report file:
+  report/figures/fig_units_attribution_panel.pdf
+
+Generator:
+  src/plot_attribution_graph.py
+
+Sources:
+  outputs/topk_units_retrain/units_topk128_force_graph.json
+  outputs/topk_units_retrain/units_topk128_feature_screen.json
+
+Build:
+  python -m src.plot_attribution_graph \
+    --graph outputs/topk_units_retrain/units_topk128_force_graph.json \
+    --highlight-screen outputs/topk_units_retrain/units_topk128_feature_screen.json \
+    --highlight-panel top_10_primary \
+    --title "Force attribution graph with frozen feature panel highlighted" \
+    --output-dir report/figures \
+    --stem fig_units_attribution_panel
+
+Interpretation:
+  This is the units counterpart to the arithmetic graph figure. All ten frozen
+  panel coordinates are highlighted in yellow; eight selected layer-28 nodes
+  have retained direct edges to the output contrast. The remaining red and blue
+  nodes are pruned context, and the complete JSON/HTML remains authoritative.
+  The figure establishes graph provenance, while the next figure reports the
+  separately measured intervention.
+
+
+Figure 9: units TopK selection and confirmation
 -----------------------------------------------
 
 Report file:
@@ -237,8 +268,8 @@ Interpretation:
   The top-10 panel is the sole primary panel.
 
 
-Figure 9: compact force-associated causal summary
--------------------------------------------------
+Figure 10: compact force-associated causal summary
+--------------------------------------------------
 
 Report file:
   report/figures/fig_units_compact_causal_circuit.pdf

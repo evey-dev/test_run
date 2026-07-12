@@ -251,10 +251,11 @@ CPU-only figure scripts:
 
 Report-ready vector figures are under `report/figures/`. The final arithmetic
 figure records the failed Top-10 primary, exact frozen Top-20 IDs, exploratory
-effect and untouched-case replication. The units figure shows exact feature
-IDs, layer assignments, retained graph edges, donor controls and confirmation
-statistics. Both state that their effects are selective logit shifts rather
-than answer flips or complete circuits.
+effect and untouched-case replication. The units figures include a matching
+attribution-graph view with all ten frozen force-panel coordinates highlighted,
+plus a causal summary showing exact feature IDs, layer assignments, donor
+controls and confirmation statistics. They state that the measured effects are
+selective logit shifts rather than answer flips or complete circuits.
 
 The report was fully rewritten to incorporate the final TopK experiments:
 
@@ -280,7 +281,7 @@ Drive; existing `!cp` and `!rm` lines requested by the user were retained.
 Colab was used because CSD3 became unavailable during a late-June cooling
 incident associated with hot weather. The project lost unbacked activation and
 checkpoint artifacts and regenerated them. Final recorded runtime hardware
-includes NVIDIA T4 and A100-SXM4-80GB.
+includes NVIDIA T4, A100 and H100 GPUs.
 
 Do not state a fixed Colab compute-unit rate. Google's FAQ says resource limits,
 GPU availability and usage conditions vary and are not published as fixed

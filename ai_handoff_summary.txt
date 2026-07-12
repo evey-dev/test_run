@@ -342,24 +342,27 @@ Report figures now present
   report/figures/fig_math_topk_tradeoff_specificity.pdf
   report/figures/fig_math_carry_feature_screen.pdf
   report/figures/fig_math_balanced_carry_replication.pdf
+  report/figures/fig_units_attribution_panel.pdf
   report/figures/fig_units_topk_selection_confirmation.pdf
   report/figures/fig_units_compact_causal_circuit.pdf
 
-The compact units figure has been visually inspected. It is an evidence summary,
-not a literal complete graph, and the main report places it on a dedicated page.
-The balanced arithmetic figure now lists the exact frozen Top-20 panel and shows
-the final-token inhibition operation next to its untouched-case replication.
+The units attribution figure is the graph-style counterpart to the arithmetic
+graph: all ten frozen force-panel coordinates are highlighted, while the other
+nodes are pruned context. The compact units figure remains the complementary
+causal summary rather than a literal complete graph. The balanced arithmetic
+figure lists the exact frozen Top-20 panel and shows the final-token inhibition
+operation next to its untouched-case replication.
 
 
 Verification completed
 ----------------------
 
-- `report/report.pdf` builds successfully: 24 pages and 6,877 words by
+- `report/report.pdf` builds successfully: 24 pages and 6,958 words by
   `texcount`.
 - `report/executive_summary.pdf` builds successfully: 2 pages and 849 words.
 - No unresolved references, missing files, LaTeX errors or overfull boxes.
-- The balanced arithmetic replication figure and compact units diagram have
-  been visually inspected at report size.
+- The balanced arithmetic replication figure, highlighted units graph and
+  compact units diagram have been visually inspected at report size.
 - The complete CPU test suite passes: 18 tests.
 - README and the figure inventory use flags verified against the live CLI
   parsers.
