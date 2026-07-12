@@ -141,17 +141,25 @@ Interpretation:
   The feature group influences arithmetic answer confidence but is not shown to
   encode carry specifically.
 
-Pending balanced-carry extension:
+Completed balanced-carry extension:
   run_gpu_math_carry_balanced_localization.ipynb
   src/math_carry_balanced_localization.py
 
 This experiment uses the existing TopK-256 checkpoints. It excludes the 44
 previously inspected arithmetic pairs, ranks all 57,344 latents on 32 discovery
 pairs after conditioning on the predicted tens digit, and freezes a Top-10
-panel for 32-pair causal confirmation. It also evaluates conditional carry
-decodability in raw final-token MLP outputs. Do not update the report until the
-predeclared primary result has completed, and do not substitute a secondary
-panel if the Top-10 result fails.
+panel for 32-pair causal confirmation. It found strong held-out activation
+separation (conditioned AUC 1.0; mean difference +1.1297, CI
+[+1.0106, +1.2531]) but no Top-10 causal specificity (+0.0156, CI
+[-0.0352, +0.0625]). The predeclared primary therefore failed.
+
+One final replication section has been appended to that notebook. It uses
+`src/math_carry_top20_replication.py` to freeze the exact exploratory Top-20
+panel, which had paired specificity -0.1016, CI [-0.1484, -0.0508], and test it
+on 32 baseline-qualified cases untouched by the first intervention run. It does
+not rerank features. This is the only justified follow-up; stop after it passes
+or fails. A pass supports a distributed carry-associated panel, not a single
+carry bit or a complete addition circuit.
 
 Compact arithmetic evidence summary:
   report/figures/fig_math_compact_carry_test.pdf

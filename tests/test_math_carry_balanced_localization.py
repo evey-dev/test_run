@@ -7,6 +7,10 @@ from src.math_carry_balanced_localization import (
     fit_conditional_direction,
     rank_carry_features,
 )
+from src.math_carry_top20_replication import (
+    choose_balanced_subset,
+    replication_success,
+)
 
 
 def synthetic_records(repetitions: int = 8):
@@ -116,3 +120,41 @@ def test_raw_direction_generalises_when_carry_is_not_the_digit_offset() -> None:
 
     assert summary["output_digit_conditioned_auc"] == 1.0
     assert summary["mean_within_digit_carry_minus_no_carry"] > 0
+
+
+def test_replication_subset_uses_shared_output_digit_strata() -> None:
+    cases = []
+    for index in range(50):
+        dropped = str(1 + index % 6)
+        correct = str(2 + index % 6)
+        cases.append(
+            {
+                "case_key": f"replication-{index}",
+                "dropped_carry_digit": dropped,
+                "correct_digit": correct,
+            }
+        )
+
+    selected, selection = choose_balanced_subset(cases, count=32, seed=9787, trials=200)
+
+    assert len(selected) == 32
+    assert len({case["case_key"] for case in selected}) == 32
+    assert selection["balance"]["common_digit_count"] >= 5
+    assert selection["selection_used_only_output_digits_and_prior_baseline_eligibility"]
+
+
+def test_replication_rule_requires_target_direction_and_negative_paired_interval() -> None:
+    passing = {
+        "mean_carry_target_delta": -0.1,
+        "mean_paired_difference": -0.08,
+        "bootstrap_95_ci_mean_paired_difference": [-0.12, -0.03],
+    }
+    wrong_target = dict(passing, mean_carry_target_delta=0.01)
+    crossing_zero = dict(
+        passing,
+        bootstrap_95_ci_mean_paired_difference=[-0.12, 0.01],
+    )
+
+    assert replication_success(passing)
+    assert not replication_success(wrong_target)
+    assert not replication_success(crossing_zero)

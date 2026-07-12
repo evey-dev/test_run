@@ -176,6 +176,20 @@ The final-position feature screen:
 The primary paired interval crossed zero. This is a predeclared negative result
 and is retained in the report.
 
+An output-digit-balanced extension was then completed in
+`run_gpu_math_carry_balanced_localization.ipynb`. It ranked all 57,344
+TopK-256 latents on 32 discovery pairs while conditioning on the tens digit,
+then tested frozen panels on 32 disjoint confirmation pairs. The Top-10 panel
+was perfectly decodable on confirmation activations but failed causal
+specificity. A secondary Top-20 panel produced a negative paired interval.
+
+Because Top-20 was secondary, `src/math_carry_top20_replication.py` and a final
+notebook section now perform one independent replication of those exact 20
+feature IDs on intervention-untouched eligible cases. They do not rerank or
+search another panel. The stopping rule is explicit so that this follow-up can
+upgrade a hypothesis-generating result without silently replacing the failed
+primary analysis.
+
 
 7. Units TopK specificity screen
 -------------------------------
@@ -276,7 +290,7 @@ Recommended final workflows:
 
   run_gpu_math_topk_retrain.ipynb
   run_gpu_math_carry_feature_followup.ipynb
-  run_gpu_math_carry_balanced_localization.ipynb  (pending final extension)
+  run_gpu_math_carry_balanced_localization.ipynb
   run_gpu_units_topk_retrain.ipynb
   run_gpu_capitals_final.ipynb
 

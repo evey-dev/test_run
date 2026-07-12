@@ -64,13 +64,15 @@ apply:
   - The frozen top-10 panel failed its predeclared carry-specificity criterion.
 
 - `run_gpu_math_carry_balanced_localization.ipynb`
-  - Optional final extension using the already selected TopK-256 checkpoints.
+  - Final output-digit-balanced extension using the already selected TopK-256
+    checkpoints.
   - Screens every SAE latent after conditioning on the predicted tens digit,
     then freezes a Top-10 panel before causal confirmation on 32 disjoint pairs.
   - Also evaluates output-digit-conditioned carry decodability in the raw MLP
     output at each selected layer.
-  - Excludes all pairs in the completed benchmark and graph-feature screen. Do
-    not tune or replace its primary panel after confirmation results are shown.
+  - The Top-10 primary failed. A secondary Top-20 effect is therefore treated
+    as hypothesis generation and the final notebook section freezes those exact
+    IDs for one independent test on intervention-untouched cases.
 
 - `run_gpu_units_topk_retrain.ipynb`
   - Trains and diagnostically selects fixed units TopK candidates.
@@ -388,6 +390,32 @@ not affect that ordering. The primary result passes only if the frozen Top-10
 retains a positive conditioned activation interval and inhibition has a
 carry-minus-control interval wholly below zero. The notebook writes resumable
 JSON and activation checkpoints directly to Drive.
+
+The completed primary run found strong held-out activation separation for the
+Top-10 panel but no selective causal effect. Its secondary Top-20 panel had a
+paired effect of `-0.1016` with a bootstrap 95% interval of
+`[-0.1484, -0.0508]`. That result was not the predeclared primary outcome. The
+notebook therefore contains exactly one follow-up: an independent replication
+of the unchanged Top-20 IDs on 32 eligible pairs that received baselines but no
+feature intervention in the first run.
+
+The same replication can be run standalone after the completed source JSON is
+available:
+
+```bash
+python -m src.math_carry_top20_replication \
+  --sae-config configs/sae_math_topk256_config.yaml \
+  --source-result outputs/math_carry_localization/math_topk256_balanced_carry_localization.json \
+  --replication-pairs 32 \
+  --seed 9787 \
+  --output outputs/math_carry_localization/math_topk256_balanced_top20_replication.json
+```
+
+No reranking occurs in this command. If the carry-target mean is negative and
+the carry-minus-control bootstrap interval is wholly below zero, the secondary
+finding has replicated; otherwise panel search stops. Even a pass supports a
+distributed carry-associated panel, not a monosemantic carry feature or a
+complete arithmetic circuit.
 
 The report-ready arithmetic circuit-style summary is generated from the
 completed graph and feature-screen JSON files and therefore requires neither a
