@@ -346,13 +346,15 @@ Report figures now present
   report/figures/fig_units_compact_causal_circuit.pdf
 
 The compact units figure has been visually inspected. It is an evidence summary,
-not a literal complete graph. The main report places it on a landscape page.
+not a literal complete graph, and the main report places it on a dedicated page.
+The balanced arithmetic figure now lists the exact frozen Top-20 panel and shows
+the final-token inhibition operation next to its untouched-case replication.
 
 
 Verification completed
 ----------------------
 
-- `report/report.pdf` builds successfully: 23 pages and 6,380 words by
+- `report/report.pdf` builds successfully: 24 pages and 6,877 words by
   `texcount`.
 - `report/executive_summary.pdf` builds successfully: 2 pages and 849 words.
 - No unresolved references, missing files, LaTeX errors or overfull boxes.

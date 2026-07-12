@@ -1,0 +1,694 @@
+{
+  "status": "complete",
+  "protocol_signature": {
+    "protocol_version": 1,
+    "model_config": "configs/model_config.yaml",
+    "sae_config": "configs/sae_math_topk256_config.yaml",
+    "source_result_sha256": "f8eaa5ce5f24a4d7cc78ccaceb011cdc2e32e2dbe06c4b394d1a9afceb55cc17",
+    "frozen_feature_keys": [
+      "L24F579",
+      "L28F374",
+      "L28F531",
+      "L28F7669",
+      "L28F2205",
+      "L24F5667",
+      "L24F2180",
+      "L28F7718",
+      "L28F325",
+      "L24F2273",
+      "L24F4429",
+      "L24F1593",
+      "L24F3509",
+      "L28F4529",
+      "L28F5890",
+      "L24F1307",
+      "L24F7659",
+      "L24F3846",
+      "L28F7485",
+      "L24F6989"
+    ],
+    "replication_pairs": 32,
+    "replication_case_keys": [
+      "24+85->27+85",
+      "24+85->28+85",
+      "42+67->46+67",
+      "44+65->48+65",
+      "52+67->56+67",
+      "54+65->58+65",
+      "54+75->57+75",
+      "54+85->58+85",
+      "56+73->58+73",
+      "57+52->59+52",
+      "57+62->59+62",
+      "57+72->59+72",
+      "57+92->59+92",
+      "64+75->67+75",
+      "64+95->67+95",
+      "65+64->69+64",
+      "66+73->68+73",
+      "67+42->69+42",
+      "67+52->69+52",
+      "72+57->76+57",
+      "76+43->78+43",
+      "76+93->78+93",
+      "77+32->79+32",
+      "82+37->86+37",
+      "85+24->89+24",
+      "85+44->89+44",
+      "85+74->89+74",
+      "86+43->88+43",
+      "86+93->88+93",
+      "92+27->96+27",
+      "94+35->97+35",
+      "97+22->99+22"
+    ],
+    "seed": 9787,
+    "success_rule": "negative mean carry-target delta and carry-minus-control bootstrap 95% CI wholly below zero"
+  },
+  "method": {
+    "status_of_source_top20": "secondary hypothesis-generating result",
+    "feature_selection": "exact source Top-20 frozen without reranking",
+    "case_selection": "intervention-untouched source baseline cases; balanced using output labels only",
+    "intervention": "final-token error-preserving inhibition",
+    "primary_outcome": "carry-target gap delta minus matched no-carry gap delta",
+    "confirmation_data_used_for_feature_or_panel_selection": false,
+    "stopping_rule": "one panel, one replication; no further panel search"
+  },
+  "source_result": {
+    "path": "/content/drive/MyDrive/mphil-project/outputs/math_carry_localization/math_topk256_balanced_carry_localization.json",
+    "sha256": "f8eaa5ce5f24a4d7cc78ccaceb011cdc2e32e2dbe06c4b394d1a9afceb55cc17",
+    "source_primary_top10_passed": false,
+    "exploratory_top20_causal_summary": {
+      "eligible_pairs": 32,
+      "mean_carry_target_delta": -0.078125,
+      "bootstrap_95_ci_mean_carry_target_delta": [
+        -0.11328125,
+        -0.0390625
+      ],
+      "mean_no_carry_control_delta": 0.0234375,
+      "bootstrap_95_ci_mean_no_carry_control_delta": [
+        -0.0078125,
+        0.0546875
+      ],
+      "mean_paired_difference": -0.1015625,
+      "bootstrap_95_ci_mean_paired_difference": [
+        -0.1484375,
+        -0.05078125
+      ],
+      "fraction_carry_more_negative_than_control": 0.65625,
+      "fraction_carry_delta_negative": 0.59375,
+      "carry_top_prediction_transfer_fraction": 0.0,
+      "control_top_prediction_transfer_fraction": 0.0
+    }
+  },
+  "frozen_panel": [
+    {
+      "rank": 1,
+      "layer": 24,
+      "feature": 579,
+      "key": "L24F579"
+    },
+    {
+      "rank": 2,
+      "layer": 28,
+      "feature": 374,
+      "key": "L28F374"
+    },
+    {
+      "rank": 3,
+      "layer": 28,
+      "feature": 531,
+      "key": "L28F531"
+    },
+    {
+      "rank": 4,
+      "layer": 28,
+      "feature": 7669,
+      "key": "L28F7669"
+    },
+    {
+      "rank": 5,
+      "layer": 28,
+      "feature": 2205,
+      "key": "L28F2205"
+    },
+    {
+      "rank": 6,
+      "layer": 24,
+      "feature": 5667,
+      "key": "L24F5667"
+    },
+    {
+      "rank": 7,
+      "layer": 24,
+      "feature": 2180,
+      "key": "L24F2180"
+    },
+    {
+      "rank": 8,
+      "layer": 28,
+      "feature": 7718,
+      "key": "L28F7718"
+    },
+    {
+      "rank": 9,
+      "layer": 28,
+      "feature": 325,
+      "key": "L28F325"
+    },
+    {
+      "rank": 10,
+      "layer": 24,
+      "feature": 2273,
+      "key": "L24F2273"
+    },
+    {
+      "rank": 11,
+      "layer": 24,
+      "feature": 4429,
+      "key": "L24F4429"
+    },
+    {
+      "rank": 12,
+      "layer": 24,
+      "feature": 1593,
+      "key": "L24F1593"
+    },
+    {
+      "rank": 13,
+      "layer": 24,
+      "feature": 3509,
+      "key": "L24F3509"
+    },
+    {
+      "rank": 14,
+      "layer": 28,
+      "feature": 4529,
+      "key": "L28F4529"
+    },
+    {
+      "rank": 15,
+      "layer": 28,
+      "feature": 5890,
+      "key": "L28F5890"
+    },
+    {
+      "rank": 16,
+      "layer": 24,
+      "feature": 1307,
+      "key": "L24F1307"
+    },
+    {
+      "rank": 17,
+      "layer": 24,
+      "feature": 7659,
+      "key": "L24F7659"
+    },
+    {
+      "rank": 18,
+      "layer": 24,
+      "feature": 3846,
+      "key": "L24F3846"
+    },
+    {
+      "rank": 19,
+      "layer": 28,
+      "feature": 7485,
+      "key": "L28F7485"
+    },
+    {
+      "rank": 20,
+      "layer": 24,
+      "feature": 6989,
+      "key": "L24F6989"
+    }
+  ],
+  "case_selection": {
+    "source_eligible_pairs": 105,
+    "previously_intervened_pair_count": 64,
+    "intervention_untouched_eligible_pair_count": 41,
+    "selected_replication_pair_count": 32,
+    "selected_case_keys": [
+      "24+85->27+85",
+      "24+85->28+85",
+      "42+67->46+67",
+      "44+65->48+65",
+      "52+67->56+67",
+      "54+65->58+65",
+      "54+75->57+75",
+      "54+85->58+85",
+      "56+73->58+73",
+      "57+52->59+52",
+      "57+62->59+62",
+      "57+72->59+72",
+      "57+92->59+92",
+      "64+75->67+75",
+      "64+95->67+95",
+      "65+64->69+64",
+      "66+73->68+73",
+      "67+42->69+42",
+      "67+52->69+52",
+      "72+57->76+57",
+      "76+43->78+43",
+      "76+93->78+93",
+      "77+32->79+32",
+      "82+37->86+37",
+      "85+24->89+24",
+      "85+44->89+44",
+      "85+74->89+74",
+      "86+43->88+43",
+      "86+93->88+93",
+      "92+27->96+27",
+      "94+35->97+35",
+      "97+22->99+22"
+    ],
+    "selection": {
+      "optimisation_trials": 4000,
+      "selection_used_only_output_digits_and_prior_baseline_eligibility": true,
+      "balance": {
+        "common_output_digits": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "common_digit_count": 7,
+        "matched_observations_per_class": 23,
+        "counts": {
+          "0": {
+            "carry": 0,
+            "no_carry": 8
+          },
+          "1": {
+            "carry": 8,
+            "no_carry": 8
+          },
+          "2": {
+            "carry": 8,
+            "no_carry": 8
+          },
+          "3": {
+            "carry": 8,
+            "no_carry": 3
+          },
+          "4": {
+            "carry": 3,
+            "no_carry": 1
+          },
+          "5": {
+            "carry": 1,
+            "no_carry": 2
+          },
+          "6": {
+            "carry": 2,
+            "no_carry": 1
+          },
+          "7": {
+            "carry": 1,
+            "no_carry": 1
+          },
+          "8": {
+            "carry": 1,
+            "no_carry": 0
+          }
+        }
+      }
+    }
+  },
+  "replication": {
+    "causal_summary": {
+      "eligible_pairs": 32,
+      "mean_carry_target_delta": -0.05859375,
+      "bootstrap_95_ci_mean_carry_target_delta": [
+        -0.08984375,
+        -0.0234375
+      ],
+      "mean_no_carry_control_delta": 0.02734375,
+      "bootstrap_95_ci_mean_no_carry_control_delta": [
+        -0.00390625,
+        0.05859375
+      ],
+      "mean_paired_difference": -0.0859375,
+      "bootstrap_95_ci_mean_paired_difference": [
+        -0.13671875,
+        -0.0390625
+      ],
+      "fraction_carry_more_negative_than_control": 0.625,
+      "fraction_carry_delta_negative": 0.5625,
+      "carry_top_prediction_transfer_fraction": 0.0,
+      "control_top_prediction_transfer_fraction": 0.0
+    },
+    "case_effects": [
+      {
+        "case_key": "24+85->27+85",
+        "carry_output_digit": "1",
+        "no_carry_output_digit": "0",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "24+85->28+85",
+        "carry_output_digit": "1",
+        "no_carry_output_digit": "0",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": -0.25,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "42+67->46+67",
+        "carry_output_digit": "1",
+        "no_carry_output_digit": "0",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": -0.25,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "44+65->48+65",
+        "carry_output_digit": "1",
+        "no_carry_output_digit": "0",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "52+67->56+67",
+        "carry_output_digit": "2",
+        "no_carry_output_digit": "1",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": -0.125,
+        "paired_difference": 0.0,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "54+65->58+65",
+        "carry_output_digit": "2",
+        "no_carry_output_digit": "1",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "54+75->57+75",
+        "carry_output_digit": "3",
+        "no_carry_output_digit": "2",
+        "carry_delta": 0.125,
+        "no_carry_control_delta": -0.125,
+        "paired_difference": 0.25,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "54+85->58+85",
+        "carry_output_digit": "4",
+        "no_carry_output_digit": "3",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": -0.25,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "56+73->58+73",
+        "carry_output_digit": "3",
+        "no_carry_output_digit": "2",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": 0.0,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "57+52->59+52",
+        "carry_output_digit": "1",
+        "no_carry_output_digit": "0",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": -0.125,
+        "paired_difference": 0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "57+62->59+62",
+        "carry_output_digit": "2",
+        "no_carry_output_digit": "1",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "57+72->59+72",
+        "carry_output_digit": "3",
+        "no_carry_output_digit": "2",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": 0.0,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "57+92->59+92",
+        "carry_output_digit": "5",
+        "no_carry_output_digit": "4",
+        "carry_delta": 0.125,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": 0.0,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "64+75->67+75",
+        "carry_output_digit": "4",
+        "no_carry_output_digit": "3",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": -0.25,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "64+95->67+95",
+        "carry_output_digit": "6",
+        "no_carry_output_digit": "5",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "65+64->69+64",
+        "carry_output_digit": "3",
+        "no_carry_output_digit": "2",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "66+73->68+73",
+        "carry_output_digit": "4",
+        "no_carry_output_digit": "3",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": 0.0,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "67+42->69+42",
+        "carry_output_digit": "1",
+        "no_carry_output_digit": "0",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": -0.25,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "67+52->69+52",
+        "carry_output_digit": "2",
+        "no_carry_output_digit": "1",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "72+57->76+57",
+        "carry_output_digit": "3",
+        "no_carry_output_digit": "2",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "76+43->78+43",
+        "carry_output_digit": "2",
+        "no_carry_output_digit": "1",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": 0.0,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "76+93->78+93",
+        "carry_output_digit": "7",
+        "no_carry_output_digit": "6",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": 0.0,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "77+32->79+32",
+        "carry_output_digit": "1",
+        "no_carry_output_digit": "0",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "82+37->86+37",
+        "carry_output_digit": "2",
+        "no_carry_output_digit": "1",
+        "carry_delta": 0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": 0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "85+24->89+24",
+        "carry_output_digit": "1",
+        "no_carry_output_digit": "0",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "85+44->89+44",
+        "carry_output_digit": "3",
+        "no_carry_output_digit": "2",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "85+74->89+74",
+        "carry_output_digit": "6",
+        "no_carry_output_digit": "5",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "86+43->88+43",
+        "carry_output_digit": "3",
+        "no_carry_output_digit": "2",
+        "carry_delta": -0.25,
+        "no_carry_control_delta": 0.25,
+        "paired_difference": -0.5,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "86+93->88+93",
+        "carry_output_digit": "8",
+        "no_carry_output_digit": "7",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": 0.125,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "92+27->96+27",
+        "carry_output_digit": "2",
+        "no_carry_output_digit": "1",
+        "carry_delta": -0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": -0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "94+35->97+35",
+        "carry_output_digit": "3",
+        "no_carry_output_digit": "2",
+        "carry_delta": 0.0,
+        "no_carry_control_delta": -0.125,
+        "paired_difference": 0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      },
+      {
+        "case_key": "97+22->99+22",
+        "carry_output_digit": "2",
+        "no_carry_output_digit": "1",
+        "carry_delta": 0.125,
+        "no_carry_control_delta": 0.0,
+        "paired_difference": 0.125,
+        "carry_top_transferred": false,
+        "control_top_transferred": false
+      }
+    ]
+  },
+  "primary_result": {
+    "replicates_frozen_top20_carry_selectivity": true,
+    "causal_summary": {
+      "eligible_pairs": 32,
+      "mean_carry_target_delta": -0.05859375,
+      "bootstrap_95_ci_mean_carry_target_delta": [
+        -0.08984375,
+        -0.0234375
+      ],
+      "mean_no_carry_control_delta": 0.02734375,
+      "bootstrap_95_ci_mean_no_carry_control_delta": [
+        -0.00390625,
+        0.05859375
+      ],
+      "mean_paired_difference": -0.0859375,
+      "bootstrap_95_ci_mean_paired_difference": [
+        -0.13671875,
+        -0.0390625
+      ],
+      "fraction_carry_more_negative_than_control": 0.625,
+      "fraction_carry_delta_negative": 0.5625,
+      "carry_top_prediction_transfer_fraction": 0.0,
+      "control_top_prediction_transfer_fraction": 0.0
+    },
+    "interpretation_gate": "The previously secondary Top-20 effect replicated on untouched cases."
+  },
+  "runtime_seconds": 14.017839431762695
+}

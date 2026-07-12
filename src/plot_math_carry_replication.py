@@ -300,7 +300,7 @@ def render(data: Dict[str, Any], output_paths: Sequence[Path]) -> None:
     figure.text(
         0.05,
         0.905,
-        "The Top-10 primary failed; the exploratory Top-20 panel was frozen and tested once on intervention-untouched cases",
+        "The Top-10 primary was null; the exploratory Top-20 panel was frozen and tested once on intervention-untouched cases",
         fontsize=10.2,
         color=MUTED,
         va="top",
@@ -325,13 +325,13 @@ def render(data: Dict[str, Any], output_paths: Sequence[Path]) -> None:
     feature_axis.set_xlim(0, 1)
     feature_axis.set_ylim(0, 1)
     feature_axis.axis("off")
-    feature_axis.set_title("Frozen activation-ranked panel", loc="left", fontsize=11.5, weight="bold")
+    feature_axis.set_title("Frozen carry-associated panel (20 latents)", loc="left", fontsize=11.5, weight="bold")
     add_panel_label(feature_axis, "b")
     grouped = {
         24: [key.split("F", maxsplit=1)[1] for key in features if key.startswith("L24F")],
         28: [key.split("F", maxsplit=1)[1] for key in features if key.startswith("L28F")],
     }
-    y_positions = {24: 0.69, 28: 0.36}
+    y_positions = {24: 0.72, 28: 0.39}
     colours = {24: LAYER_24, 28: LAYER_28}
     for layer in (24, 28):
         y = y_positions[layer]
@@ -352,19 +352,39 @@ def render(data: Dict[str, Any], output_paths: Sequence[Path]) -> None:
         feature_axis.text(0.945, y + 0.055, f"{len(grouped[layer])} features", ha="right", color=MUTED, fontsize=8.1)
     feature_axis.text(
         0.02,
-        0.12,
-        "32 discovery pairs  |  output-digit-conditioned ranking\n"
-        f"Held-out activation difference +{data['top20_activation']:.3f} standardised units",
-        fontsize=8.5,
+        0.205,
+        "32 discovery pairs  |  output-digit-conditioned ranking  |  "
+        f"held-out difference +{data['top20_activation']:.3f}",
+        fontsize=7.6,
         color=MUTED,
-        va="top",
-        linespacing=1.45,
+        va="center",
+    )
+    feature_axis.add_patch(
+        FancyBboxPatch(
+            (0.02, 0.015),
+            0.96,
+            0.13,
+            boxstyle="round,pad=0.012,rounding_size=0.02",
+            facecolor="#F9E7EA",
+            edgecolor=TARGET,
+            linewidth=1.3,
+        )
+    )
+    feature_axis.text(0.065, 0.08, "X", color=TARGET, fontsize=14, weight="bold", ha="center", va="center")
+    feature_axis.text(0.115, 0.102, "INHIBIT THE FROZEN PANEL", color=TARGET, fontsize=8.1, weight="bold", va="center")
+    feature_axis.text(
+        0.115,
+        0.055,
+        r"$z_S \leftarrow 0$ at the final token; clean reconstruction residual preserved",
+        color=INK,
+        fontsize=7.7,
+        va="center",
     )
 
     primary = data["primary"]
     exploratory = data["exploratory"]
     replicated = data["replication"]
-    sequence_labels = ["Top-10 primary", "Top-20 exploratory", "Top-20 replication"]
+    sequence_labels = ["Top-10 primary (null)", "Top-20 exploratory", "Top-20 replication"]
     sequence_means = [
         float(primary["mean_paired_difference"]),
         float(exploratory["mean_paired_difference"]),
@@ -399,7 +419,7 @@ def render(data: Dict[str, Any], output_paths: Sequence[Path]) -> None:
     sequence_axis.set_xlim(-0.18, 0.09)
     sequence_axis.set_ylim(-0.6, 2.6)
     sequence_axis.set_xlabel("Carry minus no-carry gap delta (logits; negative is selective)")
-    sequence_axis.set_title("From failed primary to frozen replication", loc="left", fontsize=11.5, weight="bold")
+    sequence_axis.set_title("From null primary to frozen replication", loc="left", fontsize=11.5, weight="bold")
     sequence_axis.grid(axis="x", color=GRID, linewidth=0.7, alpha=0.8)
     sequence_axis.spines[["top", "right", "left"]].set_visible(False)
     sequence_axis.tick_params(axis="y", length=0)
@@ -466,6 +486,12 @@ def render(data: Dict[str, Any], output_paths: Sequence[Path]) -> None:
     for output_path in output_paths:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         figure.savefig(output_path, dpi=220, facecolor=figure.get_facecolor())
+        if output_path.suffix == ".svg":
+            svg = output_path.read_text(encoding="utf-8")
+            output_path.write_text(
+                "\n".join(line.rstrip() for line in svg.splitlines()) + "\n",
+                encoding="utf-8",
+            )
         print(f"Saved {output_path}")
     plt.close(figure)
 
