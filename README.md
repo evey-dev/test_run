@@ -1,49 +1,51 @@
 # Mechanistic Interpretability Reproduction Project
 
-This repository is an independent small-scale reproducibility study inspired by
-Anthropic's *On the Biology of a Large Language Model*. It asks whether similar
-attribution-graph and intervention methods can recover mechanisms in
-`Qwen3-4B-Instruct-2507`.
+An independent small-scale reproducibility study of Anthropic's
+[*On the Biology of a Large Language Model*](https://transformer-circuits.pub/2025/attribution-graphs/biology.html),
+applied to `Qwen3-4B-Instruct-2507`.
 
-The project currently studies three behaviours:
+**Behaviours studied:**
 
-- physics units: compact, force-associated TopK panel; strongest positive result
-- arithmetic carry: initial specificity failures followed by a replicated,
-  output-digit-balanced 20-feature effect
-- capitals/factual recall: weak or negative reproduction
+| Domain | Result |
+|--------|--------|
+| SI units (force/energy/mass) | Compact 10-feature panel; force-specific logit shift on 16 systems |
+| Arithmetic carry | Initial null; replicated 20-feature carry-selective effect |
+| Capital cities | Weak or null reproduction |
 
-The aim is reproducibility analysis, not exact replication. Partial and negative
-results are part of the scientific finding when they are documented carefully.
+## Quick start
 
-## Environment
+There are two ways to reproduce the results:
 
-Create the environment from the repository root:
+### Option A: Google Colab (recommended for GPU work)
+
+Open the recommended notebooks in Colab. Each notebook pulls this repository,
+installs it in editable mode, and runs the full experiment. Large artifacts
+(checkpoints, activations) are persisted to Google Drive between sessions.
+
+### Option B: Local / cluster
 
 ```bash
+# 1. Set up environment
 conda env create -f environment.yml
 conda activate mphil-project
-```
 
-The model path defaults to `models/Qwen3-4B-Instruct` through
-`configs/model_config.yaml`. If the local model is absent, the scripts may fall
-back to Hugging Face Hub where implemented, but the expected reproducible setup
-is to restore or download the model locally.
-
-```bash
+# 2. Download model weights (~8 GB)
 huggingface-cli download Qwen/Qwen3-4B-Instruct-2507 --local-dir models/Qwen3-4B-Instruct
+
+# 3. Run the standalone pipeline (see below)
 ```
 
-## Why Colab Notebooks Exist
+The model path defaults to `models/Qwen3-4B-Instruct` via
+`configs/model_config.yaml`. Scripts fall back to Hugging Face Hub if the
+local copy is absent.
 
-The Colab notebooks were used after a cooling incident during hot weather made
-CSD3 unavailable during the final project period. They are convenience wrappers
-around standalone repository scripts; the core pipeline can be run directly
-from the command line. The project does not assume a fixed Colab compute-unit
-rate because Google documents these limits and hardware availability as dynamic.
+## Colab notebooks
 
-The notebooks now pull code from GitHub first. Google Drive is still used for
-large artifacts such as SAE checkpoints, activation files, graphs, and final JSON
-outputs. Drive zip/copy cells are retained as backup paths.
+The Colab notebooks were used after CSD3 became unavailable during the final
+project period. They are convenience wrappers around the standalone Python
+modules in `src/`; the core pipeline can also be run directly from the command
+line. Google Drive is used for large artifacts (SAE checkpoints, activation
+files, graphs, and JSON outputs).
 
 ## Recommended Notebooks
 

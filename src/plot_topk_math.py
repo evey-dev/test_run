@@ -162,6 +162,9 @@ def main() -> None:
     tradeoff.set_ylabel("Mean validation FVE")
     tradeoff.set_title("(a) Reconstruction-sparsity trade-off")
     tradeoff.grid(color="#dddddd", linewidth=0.6)
+    from matplotlib.ticker import LogLocator, NullFormatter
+    tradeoff.xaxis.set_major_locator(LogLocator(base=10, numticks=6))
+    tradeoff.xaxis.set_minor_formatter(NullFormatter())
 
     specificity = axes[1]
     for target, control in zip(target_deltas, control_deltas):

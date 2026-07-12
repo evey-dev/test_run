@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Sequence
 
 
-BACKGROUND = "#F5F7FA"
+BACKGROUND = "#FFFFFF"
 INK = "#17212B"
 MUTED = "#5F6B76"
 GRID = "#D8DEE6"
