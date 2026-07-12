@@ -15,9 +15,15 @@ Environment:
 
 Important operating constraint:
   Do not run GPU notebooks locally. The local environment is CPU-only. GPU
-  outputs have already been copied into the repository. Preserve user notebook
-  outputs and do not delete existing `!cp` or `!rm` notebook lines unless the
-  user explicitly requests it.
+  results are retained in output artifacts or notebook outputs. Preserve user
+  notebook outputs and do not delete existing `!cp` or `!rm` notebook lines
+  unless the user explicitly requests it.
+
+The two complete balanced-arithmetic JSON files remain on Google Drive and are
+not currently present under the local `outputs/math_carry_localization/`
+directory. Before final submission, copy them from Drive if output size permits.
+The report figure currently verifies and reads the exact aggregates embedded in
+the completed notebook as a fallback.
 
 
 Current task state
@@ -29,18 +35,18 @@ The main scientific report has been rewritten at:
 A separate executive summary has been created at:
   report/executive_summary.tex
 
-The main report compiles and is 5,584 words by `texcount` after the final
-infrastructure citation and landscape adjustment.
-It now presents the final TopK results rather than the obsolete conclusion that
-no compact sparse panel was found.
+The main report has been updated to include the balanced arithmetic Top-20
+replication. Recalculate the exact word count and build status after any further
+edits.
 
 The report's central thesis is:
 
   The requested small-scale attribution-graph workflow was reproduced. A
   frozen ten-feature TopK SAE panel produced a selective force-associated
-  logit shift on 16 disjoint SI-unit systems. Arithmetic TopK interventions
-  affect digit logits but fail a matched carry-specificity test. Capitals are a
-  negative factual-recall control.
+  logit shift on 16 disjoint SI-unit systems. Initial arithmetic panels failed
+  specificity, but an output-digit-balanced 20-feature panel subsequently
+  produced a smaller carry-selective effect under a frozen case-level
+  replication. Capitals are a negative factual-recall control.
 
 The units result must not be described as a complete circuit, uniquely
 necessary features, or a top-token flip. The arithmetic result must not be
@@ -92,14 +98,19 @@ How the project evolved
    <= .80, then choose minimum mean L0.
 
 8. Math selected TopK-256. It made sparse effects larger, but matched no-carry
-   controls moved equally. A frozen top-10 screen on 24 confirmation pairs
-   failed its predeclared specificity interval.
+   controls moved equally. A frozen top-10 graph screen on 24 confirmation
+   pairs failed its predeclared specificity interval.
 
-9. Units selected TopK-128. A final feature screen ranked 73 graph-positive
+9. A separate output-digit-balanced arithmetic screen ranked all 57,344
+   latents on 32 discovery pairs. Its Top-10 primary failed, but an exploratory
+   Top-20 effect was frozen and replicated once on 32 intervention-untouched
+   cases.
+
+10. Units selected TopK-128. A final feature screen ranked 73 graph-positive
    features on 8 discovery physical systems and froze the top 10. It confirmed
    on 16 disjoint systems against a mass-source control.
 
-10. CPU-only figure scripts generated publication-ready plots and a compact
+11. CPU-only figure scripts generated publication-ready plots and compact
     Anthropic-like evidence diagram. No weights are required to regenerate
     these figures from JSON/CSV.
 
@@ -157,18 +168,26 @@ One final replication section has been appended to that notebook. It uses
 `src/math_carry_top20_replication.py` to freeze the exact exploratory Top-20
 panel, which had paired specificity -0.1016, CI [-0.1484, -0.0508], and test it
 on 32 baseline-qualified cases untouched by the first intervention run. It does
-not rerank features. This is the only justified follow-up; stop after it passes
-or fails. A pass supports a distributed carry-associated panel, not a single
-carry bit or a complete addition circuit.
+not rerank features. The replication passed:
+
+  carry target             -0.058594, CI [-0.089844, -0.023438]
+  no-carry control         +0.027344, CI [-0.003906, +0.058594]
+  paired specificity       -0.085938, CI [-0.136719, -0.039062]
+  carry more negative      20/32 (62.5%)
+  top-token flips          0
+
+Stop panel search here. This is a case-level replication under the same SAE
+basis. It supports a distributed carry-associated causal panel, not a single
+carry bit, basis-stable representation, or complete addition circuit.
 
 Compact arithmetic evidence summary:
-  report/figures/fig_math_compact_carry_test.pdf
-  generator: python -m src.plot_math_compact_circuit
+  report/figures/fig_math_balanced_carry_replication.pdf
+  generator: python -m src.plot_math_carry_replication
 
-The diagram uses the exact frozen Top-10 feature IDs and retained graph edges,
-then displays the disjoint matched-control confirmation. It is a deliberately
-rejected candidate circuit, not evidence that the features represent an
-abstract `carry 1` variable. The language in this distinction must be retained.
+The diagram preserves the failed Top-10 primary, distinguishes the exploratory
+Top-20 observation from its untouched-case replication, and displays the exact
+20 layer-24/layer-28 feature IDs. It is an evidence summary, not a literal
+attribution graph.
 
 
 Exact final units result
@@ -292,11 +311,14 @@ Core:
   src/sae_diagnostics.py
   src/heldout_validation.py
   src/math_carry_feature_screen.py
+  src/math_carry_balanced_localization.py
+  src/math_carry_top20_replication.py
   src/units_feature_screen.py
 
 Final GPU orchestration:
   run_gpu_math_topk_retrain.ipynb
   run_gpu_math_carry_feature_followup.ipynb
+  run_gpu_math_carry_balanced_localization.ipynb
   run_gpu_units_topk_retrain.ipynb
   run_gpu_capitals_final.ipynb
 
@@ -305,6 +327,7 @@ CPU figure generation:
   src/plot_attribution_graph.py
   src/plot_topk_math.py
   src/plot_math_carry_screen.py
+  src/plot_math_carry_replication.py
   src/plot_topk_units.py
   src/plot_units_compact_circuit.py
 
@@ -318,7 +341,7 @@ Report figures now present
   report/figures/fig_capitals_interventions.pdf
   report/figures/fig_math_topk_tradeoff_specificity.pdf
   report/figures/fig_math_carry_feature_screen.pdf
-  report/figures/fig_math_compact_carry_test.pdf
+  report/figures/fig_math_balanced_carry_replication.pdf
   report/figures/fig_units_topk_selection_confirmation.pdf
   report/figures/fig_units_compact_causal_circuit.pdf
 
@@ -329,11 +352,13 @@ not a literal complete graph. The main report places it on a landscape page.
 Verification completed
 ----------------------
 
-- `report/report.pdf` builds successfully: 22 pages, mixed portrait/landscape,
-  5,584 words by `texcount`.
-- `report/executive_summary.pdf` builds successfully: 2 pages, 772 words.
+- `report/report.pdf` builds successfully: 23 pages and 6,380 words by
+  `texcount`.
+- `report/executive_summary.pdf` builds successfully: 2 pages and 849 words.
 - No unresolved references, missing files, LaTeX errors or overfull boxes.
-- The compact units diagram is legible on its dedicated landscape page.
+- The balanced arithmetic replication figure and compact units diagram have
+  been visually inspected at report size.
+- The complete CPU test suite passes: 18 tests.
 - README and the figure inventory use flags verified against the live CLI
   parsers.
 - `git diff --check` passes.

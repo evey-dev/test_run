@@ -166,38 +166,41 @@ Interpretation:
   figure because it documents a controlled failed attempt to isolate carry.
 
 
-Figure 7: compact arithmetic candidate-circuit test
----------------------------------------------------
+Figure 7: balanced arithmetic localisation and replication
+-----------------------------------------------------------
 
 Report file:
-  report/figures/fig_math_compact_carry_test.pdf
+  report/figures/fig_math_balanced_carry_replication.pdf
 
 Generator:
-  src/plot_math_compact_circuit.py
+  src/plot_math_carry_replication.py
 
 Sources:
-  outputs/topk_math_retrain/math_topk256_carry_58_83_4v3_graph.json
-  outputs/topk_math_followup/math_topk256_carry_feature_screen.json
+  outputs/math_carry_localization/math_topk256_balanced_carry_localization.json
+  outputs/math_carry_localization/math_topk256_balanced_top20_replication.json
+  run_gpu_math_carry_balanced_localization.ipynb (verified fallback when the
+  Drive JSON files have not been copied into the checkout)
 
 Build:
-  python -m src.plot_math_compact_circuit
+  python -m src.plot_math_carry_replication
 
 Outputs:
-  outputs/topk_math_followup/figures/fig_math_compact_carry_test.png
-  outputs/topk_math_followup/figures/fig_math_compact_carry_test.pdf
-  outputs/topk_math_followup/figures/fig_math_compact_carry_test.svg
-  report/figures/fig_math_compact_carry_test.pdf
+  report/figures/fig_math_balanced_carry_replication.png
+  report/figures/fig_math_balanced_carry_replication.pdf
+  report/figures/fig_math_balanced_carry_replication.svg
 
 Interpretation rules:
 
-- Call it a rejected candidate carry circuit or carry-associated discovery
-  panel, not an identified `carry 1` mechanism.
-- The intervention inhibits ten final-token latents; it is not a donor swap.
-- The carry and no-carry effects are both negative and their paired specificity
-  interval crosses zero.
+- Preserve the failed Top-10 primary and identify the first Top-20 estimate as
+  exploratory.
+- The exact 20 feature IDs are frozen across the case-level replication; 11 are
+  at layer 24 and nine are at layer 28.
+- The replication paired effect is -0.0859 logits with bootstrap 95% interval
+  [-0.1367, -0.0391].
+- The intervention inhibits final-token latents; it is not a donor swap.
 - No top prediction changed.
-- Solid arrows are retained graph edges. Dotted input paths compress displayed
-  token-to-feature edges.
+- Call it a distributed carry-associated causal panel under one SAE basis, not
+  a monosemantic carry bit, basis-stable representation, or complete circuit.
 
 
 Figure 8: units TopK selection and confirmation

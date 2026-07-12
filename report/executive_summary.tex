@@ -60,53 +60,17 @@ before their intervention outcomes were examined.
 \newpage
 \section*{Key findings}
 
-Broad activation patches demonstrated that the selected model components
-contained causally relevant information. In addition, replacing target MLP
-states with those from a matched source could transfer the source answer digit.
-However, a source with a different answer digit transferred that digit as well.
-The intervention therefore moved general answer state rather than isolating an
-abstract carry variable. TopK retraining made sparse arithmetic interventions
-larger and more consistent, but a matched no-carry control changed by the same
-amount. A frozen ten-feature panel consequently failed the predeclared
-carry-specificity test. Capital-city swaps also remained weak after low-confidence
-examples were replaced with high-confidence prompts.
+Broad activation patches demonstrated that the selected model components contained causally relevant information. In addition, replacing target MLP states with those from a matched source could transfer the source answer digit. However, a source with a different answer digit transferred that digit as well, so the broad intervention moved general answer state rather than isolating carry. TopK retraining made sparse arithmetic interventions larger, but graph-derived and predeclared ten-feature panels failed matched no-carry specificity tests. A final analysis controlled explicitly for the output digit and ranked all 57,344 SAE latents on separate discovery cases. Its ten-feature primary still failed, but a secondary 20-feature effect was frozen and tested once on 32 intervention-untouched cases. Inhibition reduced the carry-target logit gap by 0.059 logits while the no-carry control increased by 0.027, giving a paired effect of $-0.086$ (bootstrap 95\% interval $-0.137$ to $-0.039$). This supports a distributed carry-associated panel, although no answer flipped and the same SAE basis was reused. Capital-city swaps remained weak after low-confidence examples were replaced with high-confidence prompts.
 
-The strongest positive result occurred for SI units. The selected TopK model
-retained 93.6\% mean held-out variance while using approximately 100 active
-latents, 35.5 times fewer than the original units autoencoder. Features from one
-force attribution graph were ranked on eight discovery systems. The resulting
-ten-feature panel was frozen and evaluated on 16 different physical systems.
-Swapping force-source values into energy prompts increased the
-newtons-versus-joules logit gap by 1.234 logits (bootstrap 95\% interval
-1.148--1.332). A matched mass-source control changed the gap by $-0.090$
-($-0.129$ to $-0.051$), giving a paired specificity effect of 1.324 logits
-(1.223--1.430). Every confirmation case moved more strongly under the force
-source than under the mass control. Eight of the ten latents were located at
-layer 28, and the panel reproduced 97.5\% of the force-source shift obtained by
-swapping all 73 positive graph features.
+The strongest positive result occurred for SI units. The selected TopK model retained 93.6\% mean held-out variance while using approximately 100 active latents, 35.5 times fewer than the original units autoencoder. Features from one force attribution graph were ranked on eight discovery systems. The resulting ten-feature panel was frozen and evaluated on 16 different physical systems. Swapping force-source values into energy prompts increased the newtons-versus-joules logit gap by 1.234 logits (bootstrap 95\% interval 1.148--1.332). A matched mass-source control changed the gap by $-0.090$ ($-0.129$ to $-0.051$), giving a paired specificity effect of 1.324 logits (1.223--1.430). Every confirmation case moved more strongly under the force source than under the mass control. Eight of the ten latents were located at layer 28, and the panel reproduced 97.5\% of the force-source shift obtained by swapping all 73 positive graph features.
 
-The model nevertheless continued to predict joules in every confirmation case.
-The result is therefore evidence for a compact, force-associated causal panel,
-not a complete factual-recall circuit, a set of uniquely necessary variables,
-or a transferred answer.
+The model nevertheless continued to predict joules in every confirmation case. The result is therefore evidence for a compact, force-associated causal panel, not a complete factual-recall circuit, a set of uniquely necessary variables, or a transferred answer.
 
 \section*{Implications and next steps}
 
-The project provides a partial reproduction with a clear inferential boundary.
-Sparse attribution features can exert compact, concept-selective causal effects
-in a lightweight open-model setting, as demonstrated for force versus mass.
-Reconstruction accuracy and directional logit movement alone are insufficient:
-the arithmetic result became interpretable only after a matched control showed
-that its effect was not specific to carrying.
+The project provides a partial reproduction with a clear inferential boundary. Sparse SAE features can exert compact, concept-selective causal effects in a lightweight open-model setting. The force panel met a predeclared criterion, while the smaller arithmetic effect emerged only after an initial primary failure and therefore required a separate frozen replication. Reconstruction accuracy, decodability and directional logit movement alone were insufficient; both positive claims depend on matched controls and held-out cases.
 
-The highest-priority next step is an independent replication of the units
-selection procedure across autoencoder and graph seeds, using a larger frozen
-confirmation pool and more random feature panels. Arithmetic autoencoders
-should be trained on the same teacher-forced decimal positions used in
-interventions, with carry status and answer digit varied independently. At
-greater computational scale, per-layer or cross-layer transcoders and explicit
-error nodes would provide a closer architectural comparison with Anthropic's
-method.
+The highest-priority next step is replication of both selection procedures across independently trained autoencoder seeds, using larger frozen confirmation pools and more random feature panels. Arithmetic autoencoders should be trained on the same teacher-forced decimal positions used in interventions, with carry status and answer digit varied independently. At greater computational scale, per-layer or cross-layer transcoders and explicit error nodes would provide a closer architectural comparison with Anthropic's method.
 
 All principal code, configurations, notebooks and output formats are documented
 in the public repository at

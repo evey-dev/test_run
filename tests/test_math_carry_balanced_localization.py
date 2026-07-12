@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 
 from src.math_carry_balanced_localization import (
@@ -11,6 +13,7 @@ from src.math_carry_top20_replication import (
     choose_balanced_subset,
     replication_success,
 )
+from src.plot_math_carry_replication import summary_from_notebook
 
 
 def synthetic_records(repetitions: int = 8):
@@ -158,3 +161,15 @@ def test_replication_rule_requires_target_direction_and_negative_paired_interval
     assert replication_success(passing)
     assert not replication_success(wrong_target)
     assert not replication_success(crossing_zero)
+
+
+def test_report_figure_recovers_the_completed_frozen_replication() -> None:
+    notebook = Path(__file__).resolve().parents[1] / "run_gpu_math_carry_balanced_localization.ipynb"
+    summary = summary_from_notebook(notebook)
+
+    assert summary["replication_passed"]
+    assert len(summary["features"]) == 20
+    assert sum(feature.startswith("L24F") for feature in summary["features"]) == 11
+    assert sum(feature.startswith("L28F") for feature in summary["features"]) == 9
+    assert np.isclose(summary["replication"]["mean_paired_difference"], -0.085938)
+    assert summary["replication"]["bootstrap_95_ci_mean_paired_difference"][1] < 0

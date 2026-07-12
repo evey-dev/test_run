@@ -190,6 +190,12 @@ search another panel. The stopping rule is explicit so that this follow-up can
 upgrade a hypothesis-generating result without silently replacing the failed
 primary analysis.
 
+The frozen replication passed on 32 untouched cases: carry target -0.0586,
+no-carry control +0.0273, and paired specificity -0.0859 with bootstrap 95%
+interval [-0.1367, -0.0391]. No top prediction changed. Panel search stops at
+this result. The report describes a distributed carry-associated causal panel
+under one SAE basis, not a single carry feature or complete circuit.
+
 
 7. Units TopK specificity screen
 -------------------------------
@@ -239,17 +245,16 @@ CPU-only figure scripts:
   src/plot_topk_math.py
   src/plot_math_carry_screen.py
   src/plot_math_compact_circuit.py
+  src/plot_math_carry_replication.py
   src/plot_topk_units.py
   src/plot_units_compact_circuit.py
 
-Report-ready vector figures are under `report/figures/`. The compact arithmetic
-and units diagrams are generated directly from their graphs and final
-feature-screen JSON files. The arithmetic figure records the frozen Top-10
-inhibition and failed matched carry-specificity test; it deliberately labels
-the object as a rejected candidate circuit. The units figure shows exact
-feature IDs, layer assignments, retained graph edges, donor controls and
-confirmation statistics. It explicitly states that the edit is a final-token
-swap, the answer does not flip, and effect ratios are not variance explained.
+Report-ready vector figures are under `report/figures/`. The final arithmetic
+figure records the failed Top-10 primary, exact frozen Top-20 IDs, exploratory
+effect and untouched-case replication. The units figure shows exact feature
+IDs, layer assignments, retained graph edges, donor controls and confirmation
+statistics. Both state that their effects are selective logit shifts rather
+than answer flips or complete circuits.
 
 The report was fully rewritten to incorporate the final TopK experiments:
 

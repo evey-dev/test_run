@@ -8,7 +8,8 @@ attribution-graph and intervention methods can recover mechanisms in
 The project currently studies three behaviours:
 
 - physics units: compact, force-associated TopK panel; strongest positive result
-- arithmetic carry: larger TopK effects, but failed matched carry-specificity test
+- arithmetic carry: initial specificity failures followed by a replicated,
+  output-digit-balanced 20-feature effect
 - capitals/factual recall: weak or negative reproduction
 
 The aim is reproducibility analysis, not exact replication. Partial and negative
@@ -73,6 +74,8 @@ apply:
   - The Top-10 primary failed. A secondary Top-20 effect is therefore treated
     as hypothesis generation and the final notebook section freezes those exact
     IDs for one independent test on intervention-untouched cases.
+  - That one-shot case-level replication passed: paired specificity `-0.0859`,
+    bootstrap 95% interval `[-0.1367, -0.0391]`, with no top-token transfer.
 
 - `run_gpu_units_topk_retrain.ipynb`
   - Trains and diagnostically selects fixed units TopK candidates.
@@ -411,26 +414,26 @@ python -m src.math_carry_top20_replication \
   --output outputs/math_carry_localization/math_topk256_balanced_top20_replication.json
 ```
 
-No reranking occurs in this command. If the carry-target mean is negative and
-the carry-minus-control bootstrap interval is wholly below zero, the secondary
-finding has replicated; otherwise panel search stops. Even a pass supports a
-distributed carry-associated panel, not a monosemantic carry feature or a
-complete arithmetic circuit.
+No reranking occurs in this command. The completed replication changed the
+carry-target gap by `-0.0586`, the no-carry control by `+0.0273`, and their
+paired difference by `-0.0859` with bootstrap 95% interval
+`[-0.1367, -0.0391]`. The frozen criterion therefore passed. This supports a
+distributed carry-associated panel, not a monosemantic carry feature, answer
+flip, or complete arithmetic circuit. Panel search stops at this point.
 
-The report-ready arithmetic circuit-style summary is generated from the
-completed graph and feature-screen JSON files and therefore requires neither a
-GPU nor the SAE checkpoints:
+Generate the report-ready balanced arithmetic figure without a GPU:
 
 ```bash
-python -m src.plot_math_compact_circuit
+python -m src.plot_math_carry_replication
 ```
 
-This writes PNG, PDF and editable SVG versions to
-`outputs/topk_math_followup/figures/` and a PDF copy to
-`report/figures/fig_math_compact_carry_test.pdf`. It is intentionally a
-diagram of a rejected candidate carry circuit. The panel shifts arithmetic
-logit gaps, but its effect is not distinguishable from the matched no-carry
-effect; do not label the ten features as a discovered `carry 1` variable.
+The preferred inputs are the two completed JSON files in
+`outputs/math_carry_localization/`. If they have not been copied from Drive, the
+renderer verifies and reads the exact aggregates embedded in
+`run_gpu_math_carry_balanced_localization.ipynb`. It writes PDF, PNG and editable
+SVG versions under `report/figures/`. The older
+`fig_math_compact_carry_test.pdf` remains provenance for the failed graph-derived
+Top-10 panel but is no longer the report's final arithmetic figure.
 
 ### 8. Final TopK Units Workflow
 
@@ -523,12 +526,12 @@ The project supports a partial, bounded reproduction:
 1. The full requested workflow was implemented independently.
 2. A frozen ten-feature units panel produced a force-specific logit shift across
    16 disjoint systems relative to a mass donor control.
-3. The units answer did not flip, so the panel is not a complete factual-recall
-   circuit.
-4. Arithmetic TopK features affected digit logits but failed matched no-carry
-   specificity; they must not be labelled a carry circuit.
+3. Initial arithmetic panels failed specificity, but a frozen 20-feature panel
+   subsequently produced a smaller carry-selective effect on 32 untouched cases.
+4. Neither positive result flipped the answer or establishes a monosemantic
+   feature or complete circuit.
 5. Capitals remained weak even with high-confidence prompts.
 
-The scientific contribution is the combination of a compact positive unit
-effect and controlled boundary cases showing where the same inference is not
-warranted.
+The scientific contribution is the combination of two bounded sparse causal
+effects, controlled failed primaries, and explicit evidence about where stronger
+mechanistic interpretations are not warranted.
