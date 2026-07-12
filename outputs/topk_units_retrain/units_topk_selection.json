@@ -1,0 +1,99 @@
+{
+  "selection_rule": {
+    "minimum_mean_validation_fve": 0.9,
+    "minimum_layer_validation_fve": 0.85,
+    "maximum_mean_dead_feature_fraction": 0.8,
+    "choice": "smallest mean validation L0 among candidates meeting all fidelity and collapse thresholds",
+    "intervention_results_used_for_selection": false
+  },
+  "candidates": [
+    {
+      "config": "configs/sae_units_topk128_config.yaml",
+      "diagnostics_csv": "/content/test_run/outputs/topk_units_retrain/units_topk128_diagnostics.csv",
+      "activation_type": "topk",
+      "top_k": 128,
+      "layers": [
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        28
+      ],
+      "mean_validation_fve": 0.935793309706793,
+      "minimum_layer_validation_fve": 0.8891157274489924,
+      "mean_validation_l0": 99.76857142857143,
+      "maximum_layer_validation_l0": 114.87,
+      "mean_dead_feature_fraction": 0.7989327566964286,
+      "mean_decoder_norm_median": 1.0,
+      "meets_threshold": true
+    },
+    {
+      "config": "configs/sae_units_topk256_config.yaml",
+      "diagnostics_csv": "/content/test_run/outputs/topk_units_retrain/units_topk256_diagnostics.csv",
+      "activation_type": "topk",
+      "top_k": 256,
+      "layers": [
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        28
+      ],
+      "mean_validation_fve": 0.9301302800471504,
+      "minimum_layer_validation_fve": 0.8775730236771468,
+      "mean_validation_l0": 132.70785714285714,
+      "maximum_layer_validation_l0": 185.71,
+      "mean_dead_feature_fraction": 0.6653529575892857,
+      "mean_decoder_norm_median": 1.0,
+      "meets_threshold": true
+    },
+    {
+      "config": "configs/sae_units_topk512_config.yaml",
+      "diagnostics_csv": "/content/test_run/outputs/topk_units_retrain/units_topk512_diagnostics.csv",
+      "activation_type": "topk",
+      "top_k": 512,
+      "layers": [
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        28
+      ],
+      "mean_validation_fve": 0.9267213922965465,
+      "minimum_layer_validation_fve": 0.8714990324718273,
+      "mean_validation_l0": 165.52,
+      "maximum_layer_validation_l0": 207.465,
+      "mean_dead_feature_fraction": 0.5385567801339286,
+      "mean_decoder_norm_median": 1.0,
+      "meets_threshold": true
+    }
+  ],
+  "selected": {
+    "config": "configs/sae_units_topk128_config.yaml",
+    "diagnostics_csv": "/content/test_run/outputs/topk_units_retrain/units_topk128_diagnostics.csv",
+    "activation_type": "topk",
+    "top_k": 128,
+    "layers": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28
+    ],
+    "mean_validation_fve": 0.935793309706793,
+    "minimum_layer_validation_fve": 0.8891157274489924,
+    "mean_validation_l0": 99.76857142857143,
+    "maximum_layer_validation_l0": 114.87,
+    "mean_dead_feature_fraction": 0.7989327566964286,
+    "mean_decoder_norm_median": 1.0,
+    "meets_threshold": true
+  }
+}

@@ -9,15 +9,20 @@
 \usepackage{parskip}
 \usepackage{abstract}
 \usepackage{tabularx}
+\usepackage{pdflscape}
 \usepackage{xcolor}
 \usepackage{xspace}
 \usepackage[hidelinks]{hyperref}
 
+\setlength{\parindent}{0pt}
+\setlength{\absparindent}{0pt}
+\setlength{\absparsep}{\parskip}
+
 \newcommand{\model}{\texttt{Qwen3-4B-Instruct-2507}\xspace}
 \newcommand{\code}[1]{\nolinkurl{#1}}
 \newcommand{\prompt}[1]{\texttt{#1}}
-% Recalculate after all textual and figure revisions are complete.
-\newcommand{\reportwordcount}{4,917}
+\newcommand{\FVE}{\mathrm{FVE}} % Recalculate after final textual and figure revisions.
+\newcommand{\reportwordcount}{5,584}
 
 \begin{document}
 \onehalfspacing
@@ -26,62 +31,29 @@
 \begin{titlepage}
     \centering
     \vspace*{2.0cm}
-    {\LARGE\bfseries Tracing Small Circuits in an Open Language Model\par}
+    {\LARGE\bfseries Tracing Sparse Causal Features in an Open Language Model\par}
     \vspace{0.5cm}
-    {\Large A Reproducibility Study of Attribution Graphs in Qwen3-4B-Instruct\par}
+    {\Large A Small-Scale Reproducibility Study of Attribution Graphs\par}
     \vspace{2.0cm}
     {\large MPhil in Data Intensive Science\par}
     \vspace{0.5cm}
     {\large Project 28: Mechanistic Interpretability of Open Source LLMs\par}
     \vfill
-    \begin{tabular}{ll}
-        Candidate: & Evelyn Paskhaver \\
+    \begin{tabular}{ll}         Candidate: & Evelyn Paskhaver \\
         Supervisor: & Miles Cranmer \\
         Date: & July 12, 2026 \\
         Word count: & \textbf{\reportwordcount} \\
     \end{tabular}
     \vfill
-    % Verify the candidate details, word count and required declaration before submission.
 \end{titlepage}
 \clearpage
 \pagenumbering{arabic}
 
-\begin{abstract}
-Anthropic's \emph{On the Biology of a Large Language Model} uses sparse features,
-attribution graphs and causal interventions to formulate hypotheses about
-mechanisms underlying language-model behaviour. The present study evaluates the
-transferability of that methodology to the open-weight, 4-billion-parameter
-\model. Two behaviours were
-studied: addition, focusing on propagation of a carry between decimal columns,
-and factual recall, instantiated by SI-unit and capital-city prompts. An
-independent pipeline generated synthetic prompt sets, captured final-position MLP
-outputs at seven layers, trained one 8,192-latent sparse autoencoder (SAE) per
-layer, constructed gradient-based contrast attribution graphs, and performed
-feature inhibition, latent swaps, raw-activation patches and component
-knockouts.
+\begin{abstract} Anthropic's \emph{On the Biology of a Large Language Model} combines sparse features, attribution graphs and causal interventions to formulate and test hypotheses about language-model computation. This study investigates whether that workflow transfers to the open-weight, four-billion-parameter \model under a deliberately small-scale design. Two behaviours were examined: two-digit addition, with emphasis on decimal carry propagation, and factual recall, instantiated by capital-city and SI-unit prompts. An independent pipeline generated synthetic prompt corpora, captured MLP outputs at seven transformer layers, trained behaviour-specific sparse autoencoders (SAEs), constructed contrastive attribution graphs, and evaluated graph features by inhibition and swap-in interventions. Complete-latent and raw-MLP patches served as positive controls.
 
-The results provided partial support for methodological transfer. The clearest
-factual-recall effect was a full-latent
-force-to-energy patch: on the energy prompt, the probability of the force prefix
-\texttt{new} rose from 0.0240 to 0.4980 and became the top prediction, while the
-energy prefix \texttt{j} fell from 0.7969 to 0.2354. Graph-selected sparse swaps
-were much weaker. In arithmetic, progressively ablating 73 graph-positive
-features reduced the correct-minus-dropped-carry logit gap only from 7.12 to
-6.63. A stronger full-latent patch reduced it to 0.74, whereas a raw MLP patch
-transferred the source answer digit completely. A control source whose answer
-digit was 2 transferred 2 rather than a generic no-carry state, indicating that
-the intervention did not isolate carry as an independent variable. Capital-city
-swaps remained weak even for high-confidence prompts.
+The investigation proceeded through successive falsification tests. Initial ReLU SAEs reconstructed held-out activations well (mean validation fraction of variance explained 0.907--0.959), but activated 2,167--3,545 of 8,192 latents on average. Thus poor sparse control could not be attributed simply to reconstruction error; the learned codes were insufficiently sparse. Broad patches confirmed that relevant causal information was present. In arithmetic, raw MLP state transferred the source answer digit, but matched no-carry controls showed that neither the graph set nor a subsequently trained TopK SAE isolated a carry-specific variable. Capital-city swaps remained weak even after replacing low-confidence prompts with high-confidence examples.
 
-The experimental workflow was therefore reproduced, and causal structure was
-identified at the level of broad activations, but no Anthropic-like compact
-sparse circuit was recovered. Several methodological factors plausibly account
-for this discrepancy: the present SAEs were independently trained on only 800
-final-position vectors per layer, their unconstrained $\ell_1$ objective has a scale
-degeneracy, and several all-position interventions applied them outside their
-training distribution. The findings consequently identify which components of
-circuit tracing transferred under a lightweight open-model implementation and
-which did not.
+A predeclared TopK follow-up produced the strongest result. For SI units, the selected $k=128$ SAE retained mean validation FVE 0.936 while reducing mean activity to 99.8 latents. Features were ranked on eight discovery systems and a frozen ten-feature panel was tested on 16 disjoint confirmation systems. Swapping force-source values into energy targets increased the newtons-minus-joules logit gap by 1.234 logits (bootstrap 95\% interval $[1.148,1.332]$), whereas a matched mass-source control changed it by $-0.090$ ($[-0.129,-0.051]$). The paired specificity effect was 1.324 logits ($[1.223,1.430]$) and had the predicted sign in all 16 cases. The top prediction nevertheless remained joules. The result is therefore a compact, force-associated causal panel, not a complete circuit or an answer flip. Overall, the experimental methodology and one sparse causal effect were reproduced, while arithmetic and capital-city controls delimit the strength of the mechanistic claim.
 \end{abstract}
 
 \clearpage
@@ -90,760 +62,391 @@ which did not.
 
 \section{Introduction}
 
-Large language models can produce correct answers without exposing the internal
-computations that produced them. Mechanistic interpretability attempts to replace
-a purely input--output description with a causal account in terms of internal
-representations and interactions. This is difficult because a model neuron need
-not correspond to one human-understandable concept: multiple features may be
-represented in superposition, making individual neurons polysemantic
-\cite{elhage2022superposition}. Sparse autoencoders offer one possible change of
-basis. They reconstruct an activation with a relatively small set of active
-learned directions, which can sometimes be more interpretable and causally useful
-than the original neurons \cite{cunningham2023sae,bricken2023monosemanticity}.
+Language models can produce correct outputs without revealing the internal computations that generated them. Mechanistic interpretability seeks causal accounts of those computations in terms of internal representations and their interactions. A central obstacle is superposition: a model may encode more features than it has individual neurons, so a neuron need not correspond to one human-interpretable concept \cite{elhage2022superposition}. Sparse autoencoders (SAEs) attempt to recover a more useful basis by reconstructing model activations from a small number of active learned directions
+\cite{cunningham2023sae,bricken2023monosemanticity}.
 
-Lindsey et al. applied this general programme at much greater scale in
-\emph{On the Biology of a Large Language Model} \cite{lindsey2025biology}. Their
-case studies use attribution graphs to propose computational pathways for
-behaviours including addition and factual recall, then test those pathways with
-interventions. The companion methods work is explicit that a graph describes a
-local replacement model and is a source of hypotheses, not automatically a
-faithful explanation of the underlying model \cite{ameisen2025circuit}. This
-qualification makes the work well suited to a reproducibility study: successful
-reproduction requires both a plausible graph and the predicted causal effects in
-the original model.
+Lindsey et al. applied this programme at scale in \emph{On the Biology of a Large Language Model} \cite{lindsey2025biology}. Their attribution graphs trace locally important paths from prompt tokens through sparse features to output logits, yielding hypotheses about mechanisms such as addition and factual recall. The companion methods study emphasises that an attribution graph is a local replacement model and a hypothesis generator; causal interventions in the underlying model remain necessary \cite{ameisen2025circuit}. This qualification is fundamental to reproducibility. A visually plausible graph is not itself a reproduced mechanism, and a negative intervention is scientifically informative when the implementation and controls distinguish competing explanations.
 
-The present study evaluates that transfer in \model, an open-weight causal
-language model with 4.0 billion parameters, 36 transformer layers and hidden
-width 2,560 \cite{yang2025qwen3,qwenmodelcard}. The experimental design uses
-small synthetic prompt corpora, independently trained SAEs at selected layers, a
-pruned attribution-style graph, and causal validation by inhibition and
-activation swapping. It thus evaluates the methodological sequence at a
-substantially smaller scale than Anthropic's study rather than attempting an
-architectural replication of the cross-layer transcoder. Addition and factual
-recall constitute the two principal behaviours. Factual recall is evaluated in
-two domains: capital cities, which parallel the target study's factual-recall
-examples, and SI units, which provide a science-focused extension. The SI-unit
-domain also permits controlled minimal pairs in which, for example,
-\texttt{force} is replaced by \texttt{energy} while the remainder of the prompt
-is held constant.
+The present study independently implements this sequence for \model, an open-weight causal language model with 4.0 billion parameters, 36 transformer layers and hidden width 2,560 \cite{yang2025qwen3,qwenmodelcard}. The target is methodological rather than architectural reproduction: small synthetic prompt sets, lightweight per-layer SAEs, a pruned attribution-style graph, and validation by inhibition or swap-in interventions. The two principal behaviours are addition and factual recall. Factual recall is examined both through capital-city prompts, which parallel the target paper's narrative, and SI units, which constitute a science-focused extension and permit controlled minimal pairs such as force, energy and mass.
 
-The investigation asks three questions:
+Three research questions organise the analysis:
 
 \begin{enumerate}
-    \item Can a lightweight, per-layer SAE pipeline identify sparse feature sets
-    whose interventions predictably alter the model's output distribution?
-    \item When sparse feature interventions are insufficient, is causal structure
-    detectable at broader levels of the activation representation?
-    \item Which methodological differences explain agreement or disagreement
-    with the Anthropic result?
+    \item Can a lightweight per-layer SAE pipeline identify compact feature     sets whose interventions alter a pre-specified output contrast?
+    \item Do such effects generalise beyond the graph prompt and distinguish     the hypothesised concept from matched alternatives?
+    \item When a sparse intervention fails, do reconstruction diagnostics and     broader activation controls identify where the reproducibility chain     breaks?
 \end{enumerate}
 
-Reproduction was assessed against criteria stricter than the observation of an
-arbitrary logit change. The clean model was required to express the behaviour;
-a graph-derived intervention was then required to move a pre-specified
-target-versus-contrast quantity in the predicted direction; and the effect was
-required to exceed changes attributable to numerical precision and, where
-possible, to survive a reverse-direction or alternative-source control. Under
-these criteria, the evidence supports a partial reproduction. Broad latent and
-raw-activation patches demonstrate causal information, whereas sparse graph
-features rarely control the predicted answer. The analysis therefore examines
-why reconstruction quality, sparse attribution and mechanistic faithfulness
-diverge in the present implementation.
+The principal contribution is an evidence chain rather than a binary claim of success or failure. Initial sparse interventions were weak; broad patches then established that causal information was present; reconstruction diagnostics identified excessive latent density; and a fixed TopK comparison tested that diagnosis. The revised representation yielded a compact and specific unit-domain effect, whereas matched arithmetic controls rejected a carry-specific interpretation. This progression permits a narrower and stronger conclusion than either presenting only the positive unit result or treating all weak interventions as an undifferentiated failure.
 
 \section{Background and relation to the target study}
 
-\subsection{Sparse decompositions}
+\subsection{Sparse activation decompositions}
 
-Let $x\in\mathbb{R}^{d}$ be an activation from a transformer component. A
-one-hidden-layer SAE encodes $x$ into an overcomplete latent vector $z\in
-\mathbb{R}^{m}$ and reconstructs it as $\hat{x}$:
-\begin{align}
-    z &= \operatorname{ReLU}\!\left(W_{\mathrm e}(x-b_{\mathrm d})+b_{\mathrm e}\right), \\
-    \hat{x} &= W_{\mathrm d}z+b_{\mathrm d}.
-\end{align}
-When $m>d$, sparsity rather than dimensional compression is intended to make the
-representation useful. If only a few coordinates of $z$ are non-zero for each example,
-the decoder columns can be treated as candidate feature directions. Previous
-work has shown that such decompositions can yield more interpretable units and
-support causal edits in some settings \cite{cunningham2023sae,bricken2023monosemanticity}.
-Neither low reconstruction error nor an overcomplete dictionary alone, however,
-establishes that a latent is monosemantic or causally complete.
+Let $x\in\mathbb{R}^{d}$ denote an MLP output and let $u=x/s$ be its normalised form. The initial SAE encodes and reconstructs $u$ as
+\begin{align}     z &= \operatorname{ReLU}\!\left(W_{\mathrm e}(u-b_{\mathrm d})          +b_{\mathrm e}\right), \\
+    \hat{u} &= W_{\mathrm d}z+b_{\mathrm d}.
+    \label{eq:relu-sae}
+\end{align} Here $m=\dim(z)>d$, so sparsity rather than dimensional compression is intended to make decoder columns candidate feature directions. Reconstruction fidelity is measured by the fraction of variance explained,
+\begin{equation}
+    \FVE=1-\frac{\sum_n\lVert u_n-\hat{u}_n\rVert_2^2}
+    {\sum_n\lVert u_n-\bar{u}_{\mathrm{train}}\rVert_2^2}.
+    \label{eq:fve}
+\end{equation} High FVE establishes that the dictionary preserves typical activations; it does not establish monosemanticity, sparse causal control, or faithful behaviour under off-manifold edits.
+
+The follow-up models use a hard TopK activation,
+\begin{equation}     z=\operatorname{TopK}_{k}\!\left(
+      \operatorname{ReLU}(W_{\mathrm e}(u-b_{\mathrm d})+b_{\mathrm e})
+      \right),
+    \label{eq:topk}
+\end{equation} which retains only the $k$ largest positive coordinates and sets the remainder to zero. This directly controls per-example support size and is an established alternative to tuning an $\ell_1$ coefficient \cite{gao2024scaling}. In the present implementation decoder columns are projected to unit norm after each optimiser step. This removes a scale ambiguity relevant to the original ReLU models and makes the size of a latent intervention more interpretable.
 
 \subsection{Anthropic's attribution graphs}
 
-The target study did not use independent per-layer SAEs as direct substitutes
-for its model's computation. It used a 30-million-feature cross-layer transcoder
-(CLT) for Claude 3.5 Haiku \cite{lindsey2025biology}. A feature at layer $\ell$
-reads the residual stream at that layer and has separate decoder contributions
-to the MLP outputs of layer $\ell$ and later layers. In simplified notation,
-\begin{align}
-    a^{\ell} &= \operatorname{JumpReLU}(W_{\mathrm{enc}}^{\ell}x^{\ell}), \\
-    \hat{y}^{\ell} &= \sum_{k\leq \ell}W_{\mathrm{dec}}^{k\rightarrow\ell}a^k,
-\end{align}
-where $x^{\ell}$ is the residual-stream input and $y^{\ell}$ is an MLP output
-\cite{ameisen2025circuit}. Features across layers are trained jointly. For a
-particular prompt, Anthropic then constructs a local replacement model that adds
-the observed reconstruction error, freezes attention patterns and normalisation
-denominators, and exactly matches the original forward pass at the unperturbed
-point. Attribution graphs are pruned views of this local model. Interventions in
-the original model are required because a locally exact replacement can still
-respond incorrectly away from that point.
+The target study used a 30-million-feature cross-layer transcoder (CLT) for Claude 3.5 Haiku rather than independent per-layer output SAEs
+\cite{lindsey2025biology}. In simplified notation, a feature at layer $r$ reads the residual stream and may contribute to multiple subsequent MLP outputs:
+\begin{align}     a^r &= \operatorname{JumpReLU}(W_{\mathrm{enc}}^r x^r), \\
+    \hat{y}^{\ell} &= \sum_{r\leq\ell}W_{\mathrm{dec}}^{r\rightarrow\ell}a^r.
+\end{align} Features across layers are therefore trained jointly. For a particular prompt, Anthropic's local replacement model restores observed reconstruction errors and freezes selected attention and normalisation quantities so that the unperturbed forward pass is reproduced exactly. The resulting graph remains a local approximation; intervention and perturbation-faithfulness tests determine whether it responds like the underlying model away from the clean point
+\cite{ameisen2025circuit}.
 
-The present study is therefore a small-scale reproduction of the workflow rather
-than an architectural replication of the CLT. Table~\ref{tab:method-comparison}
-summarises the distinction. This distinction constrains the interpretation of
-negative results: failure of the present feature basis does not imply failure of
-sparse-feature methods generally, while the success of a broad patch does not
-establish recovery of a sparse circuit.
+Table~\ref{tab:method-comparison} states the correspondence precisely. The present work reproduces the scientific workflow at a smaller scale, but it does not treat independent output SAEs as architecturally equivalent to a CLT. This distinction is used when interpreting both the successful units panel and the negative arithmetic result.
 
-\begin{table}[ht]
+\begin{table}[tbp]
 \centering
 \caption{Methodological correspondence to the target study.}
 \label{tab:method-comparison}
 \small
-\begin{tabularx}{\textwidth}{p{0.20\textwidth}XX}
-\toprule
-Component & Anthropic target study & Present study \\
-\midrule
-Model & Claude 3.5 Haiku and a smaller research model & Open-weight \model \\
-Dictionary & Joint cross-layer transcoder; 30 million features for Haiku & Seven independent MLP-output SAEs; 8,192 latents each (57,344 total per behaviour) \\
-Training support & Features at all model layers, trained jointly & Final-token activations from 1,000 behaviour-specific prompts at layers 4, 8, 12, 16, 20, 24 and 28 \\
-Local graph & Error nodes plus frozen attention and normalisation operations & Clean-value straight-through splice; local gradients through the original model; no explicit error nodes \\
-Feature nodes & Active features across token positions & SAE features only at the final prompt position \\
-Validation & Constrained feature interventions and mechanistic-faithfulness evaluation & Error-preserving inhibition/swap, raw MLP patching and component knockout \\
+\begin{tabularx}{\textwidth}{p{0.19\textwidth}XX}
+\toprule Component & Anthropic target study & Present study \\
+\midrule Model & Claude 3.5 Haiku and a smaller research model & Open-weight \model \\
+Dictionary & Joint CLT; 30 million features for Haiku & Seven independent MLP-output SAEs; 8,192 latents each \\
+Training support & All model layers, jointly trained on large corpora & 1,000 behaviour-specific final-token activations at layers 4, 8, 12, 16, 20, 24 and 28 \\
+Local graph & Explicit error nodes; selected operations frozen & Clean-value straight-through splice; gradients through the original model \\
+Feature support & Features across layers and token positions & SAE features at the final prompt position \\
+Validation & Constrained feature interventions and faithfulness tests & Error-preserving feature edits, complete-latent and raw-MLP controls \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \section{Methods}
 
-\subsection{Model, execution and reproducibility}
+\subsection{Model, prompts and activation capture}
 
-All experiments used \model in non-thinking mode. The model was loaded with
-bfloat16 weights through Hugging Face Transformers and evaluated without
-sampling. Raw completion prompts were tokenised directly rather than wrapped in
-a chat template. Random seeds for Python, NumPy and PyTorch were fixed to 787;
-this seed controls dataset order, train--validation splits and SAE initialisation.
-The principal analyses used layers
-$\{4,8,12,16,20,24,28\}$ from the model's 36 layers.
+All experiments used \model in non-thinking mode with deterministic next-token evaluation. The model was loaded through Hugging Face Transformers with bfloat16 weights. Prompts were tokenised directly rather than wrapped in a chat template. Python, NumPy and PyTorch seeds were fixed to 787 for dataset order, train--validation splitting and initial SAE training. The selected transformer layers were $\{4,8,12,16,20,24,28\}$.
 
-GPU analyses were executed in Google Colab because the intended CSD3 service was
-unavailable during the experimental period. This choice affected the execution
-environment but not the architecture of the analysis pipeline: the notebooks
-invoke standalone scripts under \code{src/}, retrieve versioned code from the
-public GitHub repository, and persist large activation matrices, checkpoints and
-output artifacts separately in Google Drive. The software environment, random
-seed, model configuration and behaviour-specific SAE configurations are
-versioned. The analyses reported here correspond to
-\code{run_gpu_units_hypertrain.ipynb},
-\code{run_gpu_math_final.ipynb} and
-\code{run_gpu_capitals_final.ipynb}. The repository is available at
-\url{https://github.com/evey-dev/test_run}.
+Three deterministic synthetic corpora were generated. The arithmetic corpus contains 1,000 two-digit sums, balanced over the 100 pairs of ones digits. The unit corpus contains five quantities, 20 contextual objects and ten templates, giving 1,000 prompts. The capitals corpus expands 189 country and state examples to 1,000 prompts by substituting non-capital cities from a fixed list. A forward hook recorded the MLP output at the final input token, producing one $1000\times2560$ matrix per selected layer and behaviour. Separate SAE sets were trained for arithmetic, units and capitals.
 
-\subsection{Prompt sets and baseline checks}
-
-Three deterministic synthetic corpora were generated. The addition corpus
-contains 1,000 two-digit sums, balanced over the 100 possible pairs of ones
-digits with ten random tens-digit pairs for each. If the ones digits carry, the
-distractor is the correct total minus ten; otherwise it is the total plus ten.
-The units corpus contains five quantities (temperature, mass, time, force and
-energy), 20 contextual objects per quantity and ten templates, giving 1,000
-prompts. The capitals corpus was initialised from 189 country/state examples and
-expanded to 1,000 prompts by substituting non-capital cities from a fixed city
-list.
-
-An earlier baseline audit, retained in JSON format, used 200 addition prompts,
-200 unit prompts and the original 189 capital prompts. Addition accuracy was
-evaluated on a short greedy completion; units and capitals used prefix-aware
-completion to handle multi-token answers. These results establish baseline model
-competence but do not constitute final held-out estimates for the expanded
-1,000-prompt corpora. The SAE and intervention analyses therefore use the clean
-output distribution for each specific intervention prompt as their principal
-baseline.
-
-Because arithmetic answers are generated autoregressively, the carry analysis
-required the relevant decimal position to be isolated. The principal carry
-prompt was
+Arithmetic was evaluated autoregressively at the tens digit. For example,
 \begin{center}
 \prompt{Question: What is 58 + 83? Answer: 1}
-\end{center}
-which teacher-forces the hundreds digit of $141$ and asks the model for the tens
-digit. The correct next token is \texttt{4}; the counterfactual obtained by
-dropping the carry from $8+3$ is \texttt{3}. The matched no-carry source was
-\prompt{54 + 83 = 137}, which has the same token length and the same teacher-forced
-hundreds digit. An alternative source, \prompt{44 + 83 = 127}, was used to
-distinguish transfer of a general no-carry state from transfer of the
-source-specific next digit.
+\end{center} teacher-forces the hundreds digit of 141. The correct next token is \texttt{4};
+\texttt{3} is the counterfactual produced by dropping the carry from $8+3$. Matched no-carry sources preserved token length and the teacher-forced hundreds digit. An additional \code{44+83=127} source distinguished an abstract no-carry state from source-specific transfer of the next digit.
 
-The unit minimal pair was
-\begin{center}
-\prompt{Fact: The official SI unit for the force/energy of a moving engine thrust is named "}
-\end{center}
-with only \texttt{force} versus \texttt{energy} changed. Because the answers are
-multi-token, reported targets are first-token prefixes: principally
-\texttt{new} for newtons and \texttt{j} for joules. Capital pairs were
-Dallas/Austin versus Oakland/Sacramento, followed by higher-confidence
-Zarqa/Amman versus Basra/Baghdad.
+Unit interventions operate on first-token answer prefixes because the complete answers are multi-token. The principal output contrast is
+\begin{equation}     G_{\mathrm{unit}}=\ell(\texttt{new})-\ell(\texttt{j}),
+    \label{eq:unit-gap}
+\end{equation} where the prefixes represent newtons and joules. Force and mass prompts act as activation donors to an energy target. The mass donor is a matched factual recall control: it changes the physical quantity but should not transfer the newtons preference. Capital interventions analogously compare first-token prefixes for source and target cities.
 
-\subsection{Activation capture and SAE training}
+\subsection{SAE training and diagnostic selection}
 
-Forward hooks captured each selected MLP's output at the final input token. Each
-behaviour therefore produced a $1000\times2560$ activation matrix per layer. A
-seeded 80:20 split supplied 800 training and 200 validation vectors, shared
-across layers. Separate SAE sets were trained for addition, units and capitals to
-avoid conflating domain-specific activation distributions in the final
-comparison.
-
-For layer $\ell$, activations were divided by
+For each layer, a shared seeded 80:20 split supplied 800 training and 200 validation vectors. Activations were divided by
+\begin{equation}     s_{\ell}=\frac{\mathbb{E}_{\mathrm{train}}\lVert x^{\ell}\rVert_2}
+    {\sqrt{2560}},
+\end{equation} so the mean norm of the normalised training vectors was approximately $\sqrt{2560}$. Each SAE had input width 2,560 and latent width 8,192. The initial ReLU models were trained for 75 epochs with Adam, learning rate $10^{-3}$, batch size 64 and
 \begin{equation}
-    s_{\ell}=\frac{\mathbb{E}_{\mathrm{train}}\|x^{\ell}\|_2}{\sqrt{2560}},
-\end{equation}
-so that the mean normalised L2 norm was approximately $\sqrt{2560}$. The SAE had
-input dimension 2,560 and latent dimension 8,192. It was trained for 75 epochs
-with Adam, learning rate $10^{-3}$, batch size 64 and
-$\lambda=3\times10^{-4}$. With $u=x/s_{\ell}$, the implemented objective was
-\begin{equation}
-    \mathcal{L}=\operatorname{mean}\!\left[(u-\hat{u})^2\right]
-    +\lambda\operatorname{mean}(|z|).
-    \label{eq:sae-loss}
-\end{equation}
-The checkpoint with minimum validation loss was retained rather than the final
-epoch. Each SAE contains 41,953,792 trainable parameters; the seven models were
-trained independently rather than as a single 294-million-parameter network.
-Consequently, ``lightweight'' refers to computational runtime and experimental
-scope, not to a small statistical parameterisation.
+    \mathcal{L}_{\mathrm{ReLU}}=operatorname{mean}
+    \left[(u-\hat{u})^2\right]+3\times10^{-4}\operatorname{mean}(|z|).
+    \label{eq:relu-loss}
+\end{equation} The checkpoint with minimum validation loss was retained. One SAE contains 41,953,792 trainable parameters; ``lightweight'' therefore describes the runtime and data scope, not a low parameter count.
+
+After the initial interventions, all three ReLU sets were evaluated on their fixed validation splits using FVE, mean non-zero latent count ($L_0$), cosine similarity and dead-feature fraction. The diagnostic motivated a pre-specified TopK comparison for arithmetic and units. Candidate values $k\in\{128,256,512\}$ were fixed before any candidate intervention result was examined. These models used the same layer set, width, data split and 75-epoch schedule, but Equation~\ref{eq:topk}, unit-normalised decoder columns and no $\ell_1$ term. A candidate was eligible only if mean validation FVE was at least 0.90, every layer's FVE was at least 0.85, and mean dead-feature fraction was at most 0.80. Among eligible candidates, the model with the smallest mean validation $L_0$ was selected. Intervention outcomes were not inputs to this selection rule.
 
 \subsection{Contrast attribution graphs}
 
-During graph construction, each SAE was inserted at the final prompt position
-using a straight-through, clean-value splice. If $\hat{x}$ is the SAE
-reconstruction, the modified activation is
-\begin{equation}
-    x' = x + \hat{x}-\operatorname{stopgrad}(\hat{x}).
-\end{equation}
-Thus $x'=x$ in the forward pass, while gradients from the output flow through
-the SAE latents. This prevents compounded reconstruction error from changing the
-clean prediction before attribution.
+At graph construction time each SAE was inserted at the final prompt position with a clean-value straight-through splice,
+\begin{equation}     x'=x+\hat{x}-\operatorname{stopgrad}(\hat{x}).
+    \label{eq:straight-through}
+\end{equation} The forward value is exactly $x$, while gradients from the output pass through the SAE. This prevents reconstruction error from changing the baseline before features are attributed.
 
-For a target token $t$ and contrast $c$, the scalar objective is
-\begin{equation}
-    J = \operatorname{logit}(t)-\operatorname{logit}(c).
+For target token $t$ and contrast token $c$, the graph objective is
+\begin{equation}     J=\ell(t)-\ell(c).
     \label{eq:contrast}
-\end{equation}
-This contrastive formulation is required for the carry analysis: a feature is
-relevant if it supports \texttt{4} \emph{relative to} \texttt{3}, rather than
-merely increasing both digit logits. A
-latent's first-order node attribution is
-\begin{equation}
-    A_i=z_i\frac{\partial J}{\partial z_i}.
-\end{equation}
-For adjacent selected layers, the implemented edge attribution from feature $i$
-to feature $j$ is
-\begin{equation}
-    E_{i\rightarrow j}=z_i
+\end{equation} The first-order attribution of active feature $i$ is $A_i=z_i\partial J/\partial z_i$. Between adjacent selected layers, the edge quantity is
+\begin{equation}     E_{i\rightarrow j}=z_i
     \frac{\partial z_j}{\partial z_i}
     \frac{\partial J}{\partial z_j}.
-\end{equation}
-Input-token edges use the analogous embedding dot-gradient quantity. The graph
-retains the 20 largest-magnitude active nodes per selected layer, input nodes and
-edges between retained nodes whose magnitude exceeds $10^{-6}$. Decoder
-directions are projected through the unembedding matrix to provide three
-``top-output'' labels. These labels are used only as diagnostics and do not
-establish a feature's semantic interpretation. JSON, Mermaid and interactive
-HTML representations are retained for each graph.
+\end{equation} Input-token edges use the analogous embedding dot-gradient score. The graph retains the 20 active nodes of largest absolute attribution per selected layer and edges above magnitude $10^{-6}$. Decoder directions are projected through the unembedding matrix to obtain three diagnostic output labels. These labels provide evidence about a direction's output alignment; they are not treated as proof that a latent is monosemantic.
 
-\begin{figure}[ht]
+\begin{figure}[tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/fig_pipeline.pdf}
-\caption{Independent small-scale reproduction pipeline, showing the stage at
-which each methodological approximation is introduced.}
+\caption{Independent small-scale reproduction pipeline. The lower branch distinguishes sparse feature tests from broader positive controls.}
 \label{fig:pipeline}
 \end{figure}
 
-\subsection{Causal interventions and evaluation}
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig_math_attribution_graph.pdf}
+\caption{Backward-connected visual subset of the arithmetic attribution graph for $\ell(\texttt{4})-\ell(\texttt{3})$. Up to five nodes per stage are shown; the complete pruned graph is retained in JSON and interactive HTML form. Red and blue denote positive and negative local attribution respectively.}
+\label{fig:math-graph}
+\end{figure}
 
-Feature inhibition is error-preserving. For a selected coordinate set $S$, let
-$z^{(-S)}$ equal $z$ with those coordinates set to zero. The true MLP output is
-edited by only the decoded feature difference:
-\begin{equation}
-    x' = x+s_{\ell}W_{\mathrm d}\left(z^{(-S)}-z\right).
+\subsection{Causal interventions and confirmation protocols}
+
+Feature interventions preserve the SAE reconstruction error. If $z^{(-S)}$ sets coordinates $S$ to zero, inhibition edits the true MLP output by only the decoded feature difference,
+\begin{equation}     x'=x+s_{\ell}W_{\mathrm d}\left(z^{(-S)}-z\right).
     \label{eq:inhibit}
-\end{equation}
-With $S=\varnothing$, the model is exactly unchanged. A latent swap from source
-$s$ to target $t$ similarly applies
-\begin{equation}
-    x'_t=x_t+\alpha s_{\ell}W_{\mathrm d}(z_s-z_t),
+\end{equation} A source-to-target swap applies
+\begin{equation}     x'_t=x_t+\alpha s_{\ell}W_{\mathrm d}(z_s-z_t),
     \label{eq:swap}
-\end{equation}
-where $\alpha$ is an edit strength. Sparse swaps replace only selected
-coordinates; full-latent swaps use all 8,192. Raw MLP patching replaces the
-selected target MLP outputs directly with source outputs and therefore bypasses
-the SAE. Full knockouts set an MLP, attention or transformer-block output to zero
-at specified token positions.
+\end{equation} either on a selected coordinate set or on the complete 8,192-dimensional code. Raw MLP patching replaces selected target MLP outputs directly and bypasses the SAE. Component knockout sets an MLP, attention or block output to zero. The latter two are positive or localisation controls, not sparse-circuit evidence.
 
-Interventions were initially applied at the final position and subsequently at
-all aligned positions when diagnostics indicated that final-position editing was
-insufficient. Token IDs and activation norms were recorded to verify that the
-intended non-zero locations were modified. Effects are reported using token
-probability, token logit and the contrast gap in Equation~\ref{eq:contrast}. A
-change in the top-1 prediction provides direct evidence of behavioural control
-but was not a necessary criterion: the clean arithmetic distribution is highly
-saturated, so a substantial logit-gap change can remain informative without
-altering the highest-probability token. Conversely, a prediction change under a
-broad, destructive intervention does not independently identify a specific
-circuit.
+Early diagnostics compared final-position and all-position edits. Token IDs and pre-edit MLP norms were printed to verify the actual positions and non-zero activation being modified. Because SAEs were trained at the final position, the final feature screens use only that position; all-position interventions are reported explicitly as distribution-mismatched exploratory controls.
+
+Two discovery--confirmation protocols were subsequently frozen. For arithmetic, features from one carry graph were ranked on eight discovery pairs by the target intervention effect minus the effect on a matched no-carry control. The predeclared top-ten panel was then tested on 24 disjoint pairs. Success required a negative mean carry-minus-control difference, a bootstrap 95\% interval wholly below zero, and a negative mean carry-target effect. For units, 73 positive-attribution features from one force graph were ranked on eight physical systems by the force-source swap effect minus the matched mass-source effect. The frozen top-ten panel was tested on 16 disjoint systems. Success required both the force effect and force-minus-mass effect to be positive with bootstrap intervals wholly above zero. All intervals use 5,000 seeded non-parametric resamples of the evaluation cases and quantify variation across prompt systems, not model-sampling uncertainty.
+
+The first units baseline-only screen used indirect wording and left too few fully qualified systems. Before any feature intervention was run, the protocol was amended to direct prompts of the form ``the official SI unit used to measure [quantity] is named''. Four wording variants were audited for 64 physical systems; eligible direct prompts were then split by system. The exact discovery and confirmation prompts were absent from the SAE corpus, and no physical system appeared in both splits.
+
+\subsection{Execution and reproducibility}
+
+The implementation is maintained in the public repository
+\url{https://github.com/evey-dev/test_run}. Dataset generation, activation capture, SAE training, graph construction, intervention, diagnostics and figure generation are standalone Python modules under \code{src/}; the notebooks are orchestration layers rather than the sole executable form of the analysis. YAML files record model and SAE settings, and all principal results are serialised as JSON or CSV before plotting.
+
+GPU execution used Google Colab after CSD3 became unavailable during the experimental period. Each final notebook mounts Google Drive, pulls the current repository from GitHub, installs the package in editable mode, restores or trains checkpoints, and copies checkpoints and outputs back to Drive. Recorded notebook metadata and logs identify NVIDIA T4 and A100-SXM4-80GB runtimes; no claim is made that results require either GPU type. The model runs in bfloat16, whereas aggregate statistics and bootstrap calculations use NumPy precision. The final paths are documented in \code{README.md}: arithmetic TopK training and screening use \code{run_gpu_math_topk_retrain.ipynb} and
+\code{run_gpu_math_carry_feature_followup.ipynb}; units use
+\code{run_gpu_units_topk_retrain.ipynb}; and retained capital experiments use
+\code{run_gpu_capitals_final.ipynb}. Earlier notebooks remain as an auditable record of exploratory settings rather than being silently replaced.
 
 \section{Results}
 
 \subsection{Baseline competence}
 
-Table~\ref{tab:baseline} reports the retained initial baseline audit. Every
-tested addition prompt was answered correctly. Performance on units and capitals
-was lower, partly because these answers are multi-token and because some
-templates elicited continuations such as \texttt{after} rather than an immediate
-answer. Intervention effects are therefore interpreted relative to the complete
-clean output distribution for the relevant prompt; low-confidence capital
-examples are not considered directly comparable to high-confidence arithmetic
-examples.
+Table~\ref{tab:baseline} reports the retained initial audit. Arithmetic was reliable, whereas units and capitals included multi-token answers and templates that sometimes elicited an intervening word rather than the answer prefix. Every causal benchmark therefore reapplied a clean-baseline eligibility rule to each specific prompt. Aggregate baseline percentages are competence checks from an earlier prompt-set version, not estimates for the final confirmation pools.
 
-\begin{table}[ht]
+\begin{table}[tbp]
 \centering
-\caption{Initial baseline audit. ``Top-$k$'' means that an acceptable answer was
-found in the saved top-20/prefix-aware evaluation. These prompt counts predate
-the expanded 1,000-prompt SAE corpora.}
+\caption{Initial baseline audit. ``In top-$k$'' denotes an acceptable answer in the saved top-20 or prefix-aware completion check.}
 \label{tab:baseline}
 \begin{tabular}{lrrr}
-\toprule
-Behaviour & Prompts & Top-1 correct & In top-$k$ \\
-\midrule
-Addition & 200 & 200 (100.0\%) & 200 (100.0\%) \\
+\toprule Behaviour & Prompts & Top-1 correct & In top-$k$ \\
+\midrule Addition & 200 & 200 (100.0\%) & 200 (100.0\%) \\
 SI units & 200 & 134 (67.0\%) & 193 (96.5\%) \\
 Capitals & 189 & 94 (49.7\%) & 158 (83.6\%) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Factual recall: SI units}
+\subsection{Stage I: the original ReLU representation}
 
-The clean force prompt predicted \texttt{new} with probability 0.8164 and logit
-20.62. The matched energy prompt predicted \texttt{j} with probability 0.7969
-and logit 19.88; \texttt{new} still had probability 0.0240 and logit 16.38. The
-force and energy contrast graphs each contained 20 retained feature nodes per
-layer. Filtering by positive node attribution selected 76 force-supporting and
-97 energy-supporting features respectively.
+The initial attribution graphs produced only small sparse effects. The most important diagnostic question was whether this reflected poor SAE reconstruction. Table~\ref{tab:relu-diagnostics} and Figure~\ref{fig:sae-diagnostics} reject that simple explanation. Mean validation FVE was 0.954 for arithmetic, 0.959 for units and 0.907 for capitals. Mean cosine similarity was at least 0.993 in every domain. However, the corresponding codes activated 2,167, 3,545 and 3,103 latents per example: approximately 26\%, 43\% and 38\% of the dictionary. A representation with thousands of active coordinates is reconstructive but does not provide the compact bottleneck needed for an Anthropic-like feature intervention.
 
-The largest factual-recall effect was produced by the all-position full-latent
-swap from force into energy. It changed the top prediction from \texttt{j} to
-\texttt{new}:
-\texttt{new} rose from probability 0.0240 (logit 16.38) to 0.4980 (logit 18.38),
-while \texttt{j} fell from 0.7969 (19.88) to 0.2354 (17.62). The reverse
-energy-to-force patch did not change the highest-probability answer, but it raised the \texttt{j} logit
-from 10.06 to 14.81 and probability from below the displayed four-decimal
-resolution to 0.0026, while reducing \texttt{new} probability from 0.8164 to
-0.6836. Layer-wise full-latent scans placed the largest individual movements at
-layers 24 and 28. For example, force-to-energy patching at layer 24 lowered the
-\texttt{j} logit by 1.12 and raised \texttt{new} by 1.25.
-
-Sparse interventions did not produce comparable transfer. Swapping all 97 positive
-energy-graph features into force left the \texttt{j} logit at 10.06 and increased
-\texttt{new} from 20.62 to 20.75. Swapping 76 positive force-graph features into
-energy raised \texttt{new} only from logit 16.38 to 16.75 and probability 0.0240
-to 0.0352; \texttt{j} remained the top token. Inhibiting the same force features
-at the final position reduced \texttt{new} probability from 0.8164 to 0.8008 and
-its logit by 0.24. Diagnostics confirmed that the targeted latents were active;
-the small effect was therefore not attributable to the selection of inactive
-coordinates.
-
-\begin{table}[ht]
+\begin{table}[tbp]
 \centering
-\caption{Main SI-unit swap results. Probabilities are for first-token answer
-prefixes, not whole words.}
-\label{tab:units}
-\small
-\begin{tabularx}{\textwidth}{p{0.24\textwidth}p{0.17\textwidth}XXXX}
-\toprule
-Target run & Intervention & $p(\texttt{j})$ & $p(\texttt{new})$ & $\ell(\texttt{j})$ & $\ell(\texttt{new})$ \\
-\midrule
-Energy & clean & 0.7969 & 0.0240 & 19.88 & 16.38 \\
-Energy & full force latent & 0.2354 & 0.4980 & 17.62 & 18.38 \\
-Energy & sparse force features & 0.8008 & 0.0352 & 19.88 & 16.75 \\
-\addlinespace
-Force & clean & $<0.0001$ & 0.8164 & 10.06 & 20.62 \\
-Force & full energy latent & 0.0026 & 0.6836 & 14.81 & 20.38 \\
-Force & sparse energy features & $<0.0001$ & 0.8242 & 10.06 & 20.75 \\
+\caption{Original ReLU SAE diagnostics averaged over seven layers on the fixed 200-vector validation splits. Dead fraction is the fraction of dictionary features inactive on the validation split.}
+\label{tab:relu-diagnostics}
+\begin{tabular}{lrrr}
+\toprule Domain & Mean validation FVE & Mean validation $L_0$ & Mean dead fraction \\
+\midrule Addition & 0.9545 & 2,166.6 & 0.0106 \\
+SI units & 0.9591 & 3,544.6 & 0.0000 \\
+Capitals & 0.9068 & 3,102.8 & 0.0000 \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
-These results establish that the learned latent spaces contain information that
-can causally alter unit-token selection, particularly in the force-to-energy
-direction. They do not, however, establish a sparse-circuit reproduction: the
-observed effect occurred only when the complete latent code across seven layers
-and all token positions was transferred, whereas the graph-selected positive
-subset was insufficient.
-
-\begin{figure}[ht]
+\begin{figure}[tbp]
 \centering
-\includegraphics[width=\textwidth]{figures/fig_units_interventions.pdf}
-\caption{Full-latent unit swaps transfer answer-prefix preference, whereas the
-graph-selected sparse subsets do not. In panel (b), positive values of
-$\ell(\texttt{new})-\ell(\texttt{j})$ favour the force prefix.}
-\label{fig:units}
+\includegraphics[width=\textwidth]{figures/fig_sae_diagnostics.pdf}
+\caption{Layerwise fidelity and achieved sparsity of the original ReLU SAEs. High FVE coexists with thousands of active latents. The plotted dead-feature fraction is measured on combined train and validation support.}
+\label{fig:sae-diagnostics}
 \end{figure}
 
-\subsection{Addition: a carry between decimal columns}
+Broad interventions were introduced to test whether the model locations still contained causal information. For the unit minimal pair, an all-position complete-latent force-to-energy patch changed the top prefix from \texttt{j} to
+\texttt{new}: $p(\texttt{new})$ rose from 0.0240 to 0.4980 while $p(\texttt{j})$ fell from 0.7969 to 0.2354. Swapping the 76 positive graph features increased the \texttt{new} logit by only 0.37 and did not flip the answer. On six baseline-qualified graph-held-out pairs, final-position sparse swapping increased $G_{\mathrm{unit}}$ by a mean 0.229 logits (95\% interval $[0.146,0.333]$), with the predicted direction in all six cases but no top-token transfer. These findings localised a difference between information in the overall SAE code and control by its graph-selected coordinates.
 
-On \code{58+83} after teacher-forcing \texttt{1}, the clean model predicted
-\texttt{4} with displayed probability 1.0000 and logit 30.62. The dropped-carry
-token \texttt{3} had probability 0.0008 and logit 23.50, so the clean contrast
-gap was $J=7.12$. On the no-carry minimal pair \code{54+83}, the next token
-\texttt{3} had displayed probability 1.0000 and logit 29.38; \texttt{4} had
-probability 0.0002 and logit 20.88.
+Arithmetic showed the same hierarchy. On \code{58+83}, inhibiting all 73 positive carry-graph features reduced the correct-minus-dropped-carry gap from 7.12 to 6.63. A strength-two complete-latent patch from \code{54+83} reduced it to 0.74, and a raw all-position MLP patch made \texttt{3} the top token. The apparently successful transfer was not yet evidence of an abstract carry state: an alternative \code{44+83} source made its own next digit, \texttt{2}, the top token under the same broad patch. On 12 graph-held-out carry pairs, raw MLP patching changed the gap by $-13.99$ logits and transferred the source top token in all cases, whereas ReLU sparse inhibition changed it by only $-0.396$ ($[-0.458,-0.333]$). The raw control establishes causal sufficiency of the selected MLP state, but its source-digit dependence limits the semantic claim.
 
-Progressive inhibition of carry-graph features produced a small, non-monotonic
-response. At 10 features, the \texttt{3} logit increased by 0.12 while
-\texttt{4} was unchanged. At 50 features, \texttt{4} decreased by 0.12 and
-\texttt{3} increased by 0.25. With all 73 positive-attribution features,
-\texttt{4} decreased by 0.38 and \texttt{3} increased by 0.12, reducing the gap
-from 7.12 to 6.63. The direction is consistent with the contrast graph but the
-effect is too small to establish a compact carry circuit.
+An all-position MLP knockout supplied a complementary diagnostic. Across the seven selected layers, \texttt{4} remained top but its probability fell from approximately 1.0 to 0.6406; \texttt{3} rose to 0.1836 and \texttt{2} to 0.1426. Layer 24 alone was particularly destructive and made \texttt{2} the top prediction. This demonstrates that layer 24 contributes strongly to answer selection. It does not identify a carry representation, because multiple alternative digits increased and zeroing an entire component is not a concept-specific intervention. Attention knockout was weaker, while full-block knockout produced non-answer tokens and was consequently excluded as an interpretable circuit test.
 
-Full-latent swaps were stronger. At edit strength 1, patching \code{54+83} into
-\code{58+83} increased the \texttt{3} logit from 23.50 to 24.12 and probability
-from 0.0008 to 0.0017; \texttt{4} remained at probability 0.9961. At strength 2,
-\texttt{3} rose to probability 0.3203 and logit 27.88, while \texttt{4} fell to
-0.6797 and 28.62. The contrast gap decreased to 0.74. By comparison, swapping
-only the 80 positive features from the no-carry graph did not produce the
-predicted directional effect: the \texttt{4} logit increased from 30.62 to 30.75
-and \texttt{3} remained at 23.50.
+\subsection{Stage II: capital-city controls}
 
-Raw all-position MLP patching bypassed the SAE and produced a complete transfer
-of the source answer at the displayed precision. Patching \code{54+83} into
-\code{58+83} changed the top token from
-\texttt{4} to \texttt{3}, with \texttt{3} logit 29.62 and \texttt{4} logit
-21.25. The reverse patch changed the no-carry target from \texttt{3} to
-\texttt{4}. These interventions establish that the selected-layer MLP outputs
-contain causally sufficient information to determine the next answer digit, but
-they do not identify the semantic content of that information.
+Capital-city experiments tested whether weak transfer was merely a consequence of uncertain clean predictions. In the initial Dallas/Oakland pair,
+\texttt{ Austin} had probability 0.2773 for Dallas, while
+\texttt{ Sacramento} had probability 0.2217 for Oakland and was not the top token. Complete-latent patches moved the relevant logits but did not exchange the answers. A second pair therefore used high-confidence baselines: Zarqa predicted the Amman prefix with probability 0.9844 and Basra predicted Baghdad with probability 0.9648. Patching Basra into Zarqa raised the Baghdad logit from 6.97 to 12.62, but its probability remained 0.0002 and Amman remained top. Graph-selected swaps were smaller.
 
-The alternative-source control clarifies this ambiguity. \code{44+83=127} is
-also no-carry in the ones column, but its teacher-forced next digit is
-\texttt{2}, not \texttt{3}. A strength-2 full-latent patch into \code{58+83}
-made \texttt{2} the top token with probability 0.6523; \texttt{3} also rose to
-0.3477 and \texttt{4} fell to 0.0001. The raw MLP patch transferred \texttt{2}
-with displayed probability 1.0000. The successful raw patch therefore primarily
-transfers source-specific next-digit state and does not independently establish
-the transfer of an abstract ``carry 1'' feature.
+The high-confidence control removes one explanation for the negative result, but not all of them. Country/state knowledge may be represented across components not captured by final-position MLP SAEs, and first-token patching may not reproduce the multi-token retrieval trajectory. The result is therefore reported as a negative factual-recall reproduction rather than evidence that the model lacks structured geographic knowledge.
 
-\begin{table}[ht]
+\begin{figure}[tbp]
 \centering
-\caption{Arithmetic interventions on the \code{58+83} tens-digit target. The
-clean logits are $\ell_4=30.62$ and $\ell_3=23.50$.}
-\label{tab:math}
-\small
-\begin{tabularx}{\textwidth}{Xrrrrl}
-\toprule
-Intervention & $p(4)$ & $p(3)$ & $\ell_4$ & $\ell_3$ & Interpretation \\
-\midrule
-Clean & 1.0000 & 0.0008 & 30.62 & 23.50 & Correct, saturated \\
-73 positive features inhibited & 0.9961 & -- & 30.25 & 23.62 & Small directional shift \\
-Full \code{54+83} latent, $\alpha=1$ & 0.9961 & 0.0017 & 30.50 & 24.12 & Partial shift \\
-Full \code{54+83} latent, $\alpha=2$ & 0.6797 & 0.3203 & 28.62 & 27.88 & Large but non-sparse shift \\
-Raw \code{54+83} MLP & 0.0002 & 1.0000 & 21.25 & 29.62 & Source digit transferred \\
-Full \code{44+83} latent, $\alpha=2$ & 0.0001 & 0.3477 & 18.00 & 26.75 & Source digit 2 becomes top \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The all-position MLP knockout provides complementary evidence. Zeroing the MLP
-outputs at all seven selected layers reduced \texttt{4} probability to 0.6406
-and logit to 27.25, while increasing \texttt{3} to probability 0.1836 and logit
-26.00. However, \texttt{2} also rose to probability 0.1426 and logit 25.75.
-Layer 24 alone produced the largest disruption: the model predicted \texttt{2}
-with probability 1.0000, while the \texttt{4} logit fell by 10.88. Thus layer 24
-is causally important for maintaining the answer, but the knockout does not show
-that it represents a carry-specific variable. The result instead demonstrates a
-broader dependence of digit selection on this layer's MLP output.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\textwidth]{figures/fig_math_interventions.pdf}
-\caption{Arithmetic interventions reveal broad causal answer state but do not
-isolate a carry-specific sparse feature group.}
-\label{fig:math}
-\end{figure}
-
-\subsection{Factual recall: capital cities}
-
-The original Dallas/Oakland pair had low baseline confidence. Dallas predicted
-\texttt{ Austin} with probability 0.2773, only slightly ahead of
-\texttt{ Dallas} at 0.2158. For Oakland, \texttt{ Sacramento} had probability
-0.2217 while \texttt{ after} was top at 0.4141. A full Oakland-to-Dallas latent
-swap raised the Austin probability to 0.3281 but did not transfer Sacramento,
-whose logit rose only from 2.67 to 3.97. In the reverse direction, Sacramento
-rose from 0.2217 to 0.3359, but \texttt{ after} remained top at 0.3809. Sparse
-swaps were smaller still.
-
-Low baseline confidence was a plausible confound; a second pair therefore used
-Zarqa to Amman and Basra to Baghdad. Clean first-token probabilities were 0.9844
-for \texttt{ Am} and 0.9648 for \texttt{ Baghdad}. Higher baseline confidence did
-not produce stronger causal transfer.
-Patching Basra into Zarqa raised the Baghdad logit from 6.97 to 12.62, but its
-probability remained 0.0002 and \texttt{ Am} remained top at 0.9805. The reverse
-patch reduced Baghdad probability from 0.9648 to 0.8711 and raised the Amman
-prefix from 0.0001 to 0.0002. Graph-selected sparse swaps caused negligible
-changes in both directions. Capital recall therefore constitutes a weak or
-negative reproduction whose outcome cannot be attributed solely to low prompt
-confidence.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\textwidth]{figures/fig_capitals_interventions.pdf}
-\caption{Capital-city full-latent interventions. Panel (a) reports changes in
-the source- and target-answer logits; panel (b) compares the target-answer
-probability before and after intervention. The high-confidence Basra--Zarqa
-control reduces one potential confound but does not yield clear answer transfer.}
+\includegraphics[width=0.94\textwidth]{figures/fig_capitals_interventions.pdf}
+\caption{Complete-latent capital-city interventions. Increasing clean confidence from the Dallas/Oakland pair to Zarqa/Basra did not yield answer transfer.}
 \label{fig:capitals}
 \end{figure}
 
+\subsection{Stage III: TopK arithmetic and a failed specificity test}
+
+The ReLU diagnostic motivated a representation-level correction rather than repeatedly enlarging a dense feature set. Arithmetic TopK candidates preserved high fidelity while reducing activity by approximately an order of magnitude. TopK-128 achieved mean FVE 0.9466 and mean $L_0=124.6$, but its mean dead-feature fraction of 0.832 exceeded the predeclared threshold. TopK-256 was therefore selected with mean FVE 0.9410, minimum layer FVE 0.9319, mean $L_0=171.6$ and dead fraction 0.716. TopK-512 was eligible but denser and was not selected.
+
+On 12 graph-held-out all-position pairs, inhibiting the selected graph features reduced the carry-target gap by a mean $-0.875$ logits ($[-0.969,-0.771]$), more than twice the original ReLU mean. Every target moved in the expected direction. The matched no-carry gap, however, changed by $-0.885$ logits. The paired target-minus-control estimate was 0.010 ($[-0.125,0.167]$), with the carry target more negative in only four of 12 pairs. The intervention therefore altered arithmetic digit confidence but was not selective for carrying.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_math_topk_tradeoff_specificity.pdf}
+\caption{Predeclared arithmetic TopK selection and matched causal test. The selected representation is substantially sparser, but its graph-feature effect is equally present on no-carry controls. Lines in panel (b) connect matched prompt pairs.}
+\label{fig:math-topk}
+\end{figure}
+
+Position mismatch could have concealed a final-token feature effect. Repeating the benchmark at the SAE training position produced a mean target change of $-0.656$ and control change of $-0.625$; the paired estimate remained indistinguishable from zero at $-0.031$ ($[-0.156,0.104]$). Finally, features were ranked on eight discovery pairs and a frozen top-ten panel was evaluated on 24 disjoint confirmation pairs. The target gap decreased by $-0.141$ logits, but the no-carry control also decreased by $-0.109$. The paired specificity effect was $-0.031$ ($[-0.089,0.026]$), failing the predeclared rule. Twenty-one of 24 carry targets moved in the predicted direction, yet none changed top prediction. Five matched random panels produced paired means between $-0.036$ and 0.021, reinforcing the conclusion that the residual top-ten effect was small relative to panel variability.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_math_carry_feature_screen.pdf}
+\caption{Final-position arithmetic discovery and frozen confirmation. Negative values favour carry selectivity. The primary top-ten interval crosses zero, so the panel does not satisfy the predeclared carry-specificity criterion.}
+\label{fig:math-carry-screen}
+\end{figure}
+
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_math_compact_carry_test.pdf}
+\caption{Evidence summary for the arithmetic candidate panel. Feature IDs, layer assignments and displayed selected-feature edges are taken from the retained graph. The same ten final-token latent values are inhibited on disjoint carry cases and matched no-carry controls. The paired specificity interval crosses zero; this is therefore a rejected candidate circuit rather than an identified carry mechanism.}
+\label{fig:math-compact}
+\end{figure}
+\end{landscape}
+\clearpage
+
+This sequence distinguishes sensitivity from mechanism. The TopK dictionary made interventions larger and the selected features consistently affected digit logits, but the matched control showed that the effect was generic to the arithmetic contexts tested. It would therefore be incorrect to label this panel ``carry 1'' solely because it was found on a carry graph.
+
+\subsection{Stage IV: a compact units panel}
+
+The same fixed TopK procedure was applied to units without changing the original SAE corpus. All three candidates met the diagnostic thresholds. TopK-128 was selected because it had the smallest mean validation activity: FVE 0.9358, minimum layer FVE 0.8891, mean $L_0=99.8$ and dead fraction 0.799. TopK-256 and TopK-512 had mean $L_0$ values 132.7 and 165.5 respectively. Relative to the original units ReLU SAE, the selected code used 35.5 times fewer active latents while losing only 0.0233 mean FVE.
+
+An initial graph-held-out benchmark provided an independent directional check. Eight of 16 candidate prompt pairs met both clean source and target criteria. Across those eight, swapping all positive graph features at the final token increased $G_{\mathrm{unit}}$ by 0.586 logits ($[0.352,0.883]$), with the predicted direction in every case. The complete latent and raw MLP controls produced changes of 1.352 and 1.617 logits. No condition changed the top prediction. Compared with the original ReLU sparse effect of 0.229 on its six eligible pairs, TopK provided a larger but still broad graph-set effect.
+
+The frozen feature screen then tested whether that effect could be concentrated and distinguished from another unit donor. Of the 73 positive graph features, the ten highest-ranked discovery features comprised eight layer-28 features, one layer-8 feature and one layer-4 feature. Six decoder directions had force-related top-output labels; this is supporting evidence, not a semantic definition. On 16 disjoint confirmation systems, the force-source swap increased the newtons-minus-joules gap by 1.234 logits ($[1.148,1.332]$). The mass-source control changed it by $-0.090$ ($[-0.129,-0.051]$), giving a paired specificity effect of 1.324 ($[1.223,1.430]$). All 16 systems had a positive force effect and a force effect larger than the corresponding mass effect.
+
+The cumulative panel response was coherent: force-minus-mass effects were 0.352, 0.813, 1.055 and 1.324 logits for the top 1, 3, 5 and 10 features. The top-20 panel gave 1.348 and all 73 positive graph features gave 1.391, whereas the reverse-ranked bottom-ten control gave only 0.055 ($[0.008,0.098]$). Five layer-count-matched random panels had effects between 0.328 and 1.191; the primary panel exceeded all five, although five draws are insufficient for a formal randomisation test. The complete-latent and raw-MLP paired effects were 2.840 and 2.891 logits respectively.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_units_topk_selection_confirmation.pdf}
+\caption{Units TopK selection, discovery ranking and frozen confirmation. The candidate was selected from reconstruction diagnostics before interventions; the top-ten panel was ranked only on discovery systems. In panel (d), every confirmation system shows a larger shift for force than for the mass control.}
+\label{fig:units-topk}
+\end{figure}
+
+The clean mean confirmation gap was $-9.41$, the force-swapped gap was $-8.17$ and the mass-control gap was $-9.50$. Joules consequently remained the top prediction in every case. The force-source effect of the top-ten panel was 97.5\% of the corresponding 73-feature force-source effect and 40.6\% of the complete-latent force-source effect. These are ratios of observed intervention effects, not fractions of variance or of the mechanism explained.
+
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth]{figures/fig_units_compact_causal_circuit.pdf}
+\caption{Evidence summary for the compact force-associated panel. Feature IDs, layer assignments and displayed layer-28 edges are taken from the retained graph; swaps replace the ten final-token latent values with source values. The diagram summarises a selective logit shift, not a token flip or a complete computational circuit.}
+\label{fig:units-compact}
+\end{figure}
+\end{landscape}
+\clearpage
+
+This result satisfies the predeclared causal criterion and is the strongest partial reproduction in the study. Its defensible interpretation is that a small, attribution-guided, layer-28-dominated group carries force-associated information that selectively shifts unit-token preference across new physical systems. The experiment does not show that these ten latents are uniquely necessary, that each is monosemantic, or that the panel alone computes factual recall.
+
 \section{Discussion}
 
-\subsection{Extent of reproduction}
+\subsection{What was and was not reproduced}
 
-The first research question yields a qualified negative result. Aggregate
-inhibition of graph-selected features occasionally moved the pre-specified
-contrast in the expected direction, most clearly in the arithmetic scan.
-However, no graph-selected sparse swap produced a clear transfer of a tested
-answer. The evidence is therefore insufficient to classify the result as a
-sparse-circuit reproduction.
+The project reproduced the complete experimental workflow requested for a small-scale study: fixed behavioural baselines, MLP activation capture, behaviour-specific per-layer SAEs, a pruned input--feature--logit graph, and causal validation in the underlying model. It also recovered one compact sparse effect. The units top-ten panel generalised from one graph prompt through a separate discovery set to 16 disjoint confirmation systems and was specific relative to a mass donor. The coherent panel-size progression, weak reverse-ranked control and broad positive controls strengthen this conclusion.
 
-The evidence concerning the second research question is more affirmative. Full
-latent codes and raw MLP outputs contain causally effective information. The
-force-to-energy unit patch changes the most probable answer prefix, the stronger
-no-carry arithmetic latent patch nearly equalises the correct and dropped-carry
-digits, and raw MLP patches transfer source digits in both directions. These
-controls distinguish two possible failure modes: transferable internal state is
-present in the model, but the selected sparse coordinates do not constitute a
-compact causal basis for that state.
+The result remains materially weaker than the target paper's circuit narratives. It changes a logit contrast without changing the answer; only one SAE seed and one graph seed were tested; and five random panels do not define a precise null distribution. The term ``force-associated panel'' is therefore more accurate than ``force circuit''. The central diagram deliberately exposes this boundary.
 
-The alternative arithmetic source substantially constrains interpretation of
-the apparent transfer. In its absence, the
-\code{54+83}\,$\rightarrow$\,\code{58+83} prediction change could be interpreted
-as transfer of a no-carry mechanism. The transfer of \texttt{2} from
-\code{44+83} instead supports the narrower conclusion that broad patches
-transfer source-specific answer state. Evidence for a carry variable would
-require generalisation across multiple source--target pairs in which carry
-status and output digit are independently varied.
+Arithmetic and capitals provide informative non-reproductions. Arithmetic features influenced digit logits more strongly after TopK retraining, but the effect did not distinguish carry targets from no-carry controls. Broad patches transferred source-specific answer state, demonstrating causal information without isolating its semantic factorisation. Capital results remained weak after clean confidence was increased. Taken together, these domains show why an intervention must be paired with a control that varies the hypothesised concept independently of the desired token.
 
-The findings reproduce the methodological structure of the target study but are
-substantially weaker at the level of sparse causal control. The study established
-the behaviour, selected a decisive logit contrast, constructed a pruned feature
-graph, derived interventions and evaluated them in the underlying model. It did
-not recover a compact sparse-feature mechanism. This outcome is consistent with
-the target study's report that cross-layer transcoders outperform per-layer
-alternatives and that mechanistic faithfulness requires empirical evaluation
-rather than assumption \cite{ameisen2025circuit}.
+\subsection{Why reconstruction was insufficient}
 
-\subsection{Divergence between reconstruction and sparse causal control}
+The diagnostic evidence permits a mathematical explanation without attributing all negative results to generic ``SAE limitations''. First, the original $\ell_1$ objective is scale-degenerate when decoder norms are unconstrained. For $0<c<1$, the transformation
+\begin{equation}     W_{\mathrm e}'=cW_{\mathrm e},\quad     b_{\mathrm e}'=cb_{\mathrm e},\quad     W_{\mathrm d}'=c^{-1}W_{\mathrm d}
+\end{equation} gives $z'=cz$ by positive homogeneity of ReLU and leaves $W_{\mathrm d}'z'=W_{\mathrm d}z$ unchanged, while multiplying the latent $\ell_1$ penalty by $c$. This does not prove that optimisation fully exploited the degeneracy, but it proves that the raw penalty is not an invariant measure of sparsity. The observed $L_0$ values confirm the practical consequence: high FVE was achieved with dense codes. TopK plus decoder normalisation removes this particular ambiguity by controlling support size directly, and the units result improved accordingly.
 
-Several methodological differences provide testable explanations for the gap
-between reconstruction performance and sparse causal control. These explanations
-do not require an unsupported assumption that the discrepancy arises solely
-from model-specific properties of Qwen.
+Second, reconstruction and causal separability are different objectives. Equation~\ref{eq:fve} constrains average clean-distribution error $\lVert x-\hat{x}\rVert$, whereas a feature intervention asks whether a selected $\Delta z$ produces the intended and concept-specific change $\Delta x=W_{\mathrm d}\Delta z$. For output objective $J$, a local expansion is
+\begin{equation}     J(x+\Delta x)-J(x)     =\nabla J(x)^{\top}\Delta x+O(\lVert\Delta x\rVert_2^2).
+\end{equation} Low reconstruction error does not bound the second-order term for edited points, nor require that semantically distinct factors occupy distinct coordinates. Correlated latents can reconstruct well while finite ablation or swap effects are distributed across many directions. The arithmetic TopK result illustrates this distinction directly: the sparse edit had a stable effect, but the same effect occurred in the matched control.
 
-\paragraph{The implemented $\ell_1$ objective is scale-degenerate.}
-Equation~\ref{eq:sae-loss} penalises latent magnitude, but the decoder columns
-are not constrained to unit norm. For any $c>0$, consider the rescaling
-\begin{equation}
-    W_{\mathrm e}'=cW_{\mathrm e},\qquad b_{\mathrm e}'=cb_{\mathrm e},
-    \qquad W_{\mathrm d}'=\frac{1}{c}W_{\mathrm d}.
-\end{equation}
-Positive homogeneity of ReLU gives $z'=cz$, while
-$W_{\mathrm d}'z'=W_{\mathrm d}z$. Reconstruction is unchanged but the $\ell_1$ term
-is multiplied by $c$ and can, in principle, be made arbitrarily small. This
-property does not demonstrate that optimisation fully exploited the degeneracy,
-and ReLU can still produce exact zeros. It does establish that the raw $\ell_1$ term
-is not an invariant measure of sparsity and that $\lambda$ alone cannot guarantee
-a sparse code. Decoder normalisation, an $\ell_0$-oriented nonlinearity such as
-JumpReLU, or a scale-aware penalty would remove or reduce this ambiguity. The
-target CLT used a decoder-norm-aware Tanh penalty rather than the present raw $\ell_1$ term
-\cite{ameisen2025circuit}.
+Third, independent per-layer output SAEs do not model cross-layer feature effects in the manner of Anthropic's CLT. A CLT can assign one upstream feature decoder contributions to several later MLPs, whereas the present graph links separately trained dictionaries through local derivatives. The clean-value splice preserves the unperturbed output, but it does not create explicit error nodes or guarantee perturbation faithfulness. The target methods paper likewise treats faithfulness as an empirical property rather than a consequence of graph construction \cite{ameisen2025circuit}.
 
-\paragraph{The dictionaries are underconstrained by the activation sample.}
-Each per-layer SAE has approximately 42 million trainable parameters but only
-800 training vectors. The 1,000 prompts are also highly templated: units span
-five quantities and ten repeated syntactic forms. Low validation reconstruction
-loss on the same prompt distribution therefore does not establish feature
-uniqueness, monosemanticity or causal generalisation. Final $\ell_0$ firing-rate,
-dead-feature and feature-consistency diagnostics were not retained.
-Consequently, no quantitative claim about achieved sparsity is made.
+\subsection{Limitations of the experimental scope}
 
-\paragraph{Training and intervention supports do not always match.}
-SAEs were trained only on final-token MLP outputs. All-position latent
-interventions then encoded every prompt position, including words and digits,
-with those final-position dictionaries. This is out of distribution by
-construction. The mismatch is most pronounced in arithmetic: training prompts ended
-at \texttt{Answer:}, whereas the carry graph and swaps operate after a
-teacher-forced \texttt{1}. The exact force prompt also appears in the generated
-unit corpus, whereas the synthetically modified energy minimal pair does not; the
-principal unit result therefore does not constitute a strictly held-out
-generalisation test. These limitations do not invalidate the observed
-forward-pass changes, but they restrict the extent to which those changes support
-claims about stable, distribution-independent features.
+The lightweight design imposed statistical and representational constraints. Each approximately 42-million-parameter SAE was fitted to 800 training vectors from a highly templated domain. Validation vectors share the same generator, so high FVE does not establish dictionary uniqueness or generalisation to arbitrary language. A single seed provides no estimate of feature-basis stability. Although the final units confirmation prompts were absent from the SAE corpus, they remain synthetically related to it.
 
-\paragraph{The graph is a smaller local approximation.}
-Only final-position SAE features are nodes. Attention and normalisation are not
-frozen, and reconstruction discrepancies are not represented as explicit error
-nodes. The straight-through splice guarantees the clean value, but its gradients
-remain a first-order local approximation through the original nonlinear model.
-The graph can consequently rank locally sensitive coordinates without providing
-the same replacement-model semantics as Anthropic's CLT graph. Positive node
-attribution is also not guaranteed to imply a large finite ablation effect when
-features interact nonlinearly.
+The SAEs were trained only on final-token MLP outputs. Early all-position edits therefore encoded token positions outside their training support, and the arithmetic teacher-forced digit was not the same endpoint used in the original activation corpus. The final screens corrected the intervention-position mismatch but did not retrain on teacher-forced arithmetic states. Attention and residual-stream features were not decomposed. A weak MLP-feature result therefore cannot establish that a mechanism is absent elsewhere in the model.
 
-\paragraph{Saturation and intervention specificity matter.}
-The clean arithmetic gap of 7.12 logits leaves little probability mass on
-\texttt{3}; small but real logit changes are visually compressed. Increasing
-edit strength exposes a larger effect, but also moves farther from the local
-regime in which gradient attribution is most defensible. Component knockout
-presents a different inferential limitation: it establishes causal dependence
-but is too destructive to provide mechanistic specificity. The increase in both
-\texttt{2} and \texttt{3}, together with the layer-24 change to \texttt{2},
-demonstrates that a change in the highest-probability token does not by itself
-identify a carry circuit.
+The confirmation sample sizes, 24 arithmetic pairs and 16 unit systems, support case-level consistency but remain small. Bootstrap intervals condition on these constructed prompt pools and do not account for SAE seed, graph seed or prompt generator uncertainty. Unit and capital measurements use first-token prefixes rather than probabilities of complete answer strings. Finally, bfloat16 logits are quantised visibly in increments such as 0.0625 or 0.125; effects near that scale require replication across cases, which is why isolated small changes were not treated as principal findings.
 
-\subsection{Threats to validity}
+One implementation defect was identified during audit: an exploratory raw-MLP layer-scan path patched every requested layer in each nominal single-layer row. Those rows are excluded from all layer-localisation claims, and the hook logic has been corrected. Aggregate raw patches, component knockouts, SAE layer scans and the final discovery--confirmation experiments use different paths and are unaffected. Reporting and excluding this defect is part of the reproducibility analysis rather than a post hoc adjustment to the main effect.
 
-The study is exploratory and uses selected prompts rather than a registered
-large-sample intervention benchmark. The forward passes are deterministic, but
-only one SAE seed was used, so feature identities and sparse effects have no
-between-seed stability estimate. Prompt corpora supply train and validation
-splits for reconstruction, but the intervention prompts were not consistently
-reserved as an independent test set. Aggregate baseline outputs were retained
-from an earlier, smaller dataset version, while final SAE training used the
-expanded corpora. These baseline percentages should therefore be treated as
-competence checks, not confidence intervals for final test accuracy.
+\subsection{Computational and infrastructure constraints}
 
-Tokenisation also constrains interpretation. Unit and capital answers are often
-multi-token, so the experiments intervene on first-token prefixes rather than
-complete answer strings. Arithmetic teacher forcing isolates a decimal position
-but changes the activation context relative to SAE training. Finally, bfloat16
-execution and single-run reporting make changes of roughly 0.1 logits weak
-evidence unless they form a coherent pattern or are supported by stronger
-controls.
+The intended CSD3 environment became unavailable to the project for approximately two weeks during a late-June heatwave. A University notice attributed the major incident to cooling failure during recent hot weather and listed CSD3 among the unavailable Research Computing Data Hall services
+\cite{csd3incident}. The CSD3 status page subsequently recorded the service as unavailable during post-incident recovery \cite{csd3status}. The project's unbacked activation matrices and checkpoint artifacts were no longer available and had to be regenerated. This is consistent with CSD3's documented storage model: active \code{hpc-work}/RDS storage is not backed up, whereas node-local storage is deleted after jobs \cite{csd3storage}. Source code remained versioned in GitHub, which made the pipeline recoverable but did not eliminate the cost of recapturing activations and retraining SAEs.
 
-A post-experiment code audit identified one reporting defect: the saved raw-MLP
-layer-scan path patched every requested layer in each nominal single-layer row.
-Consequently, the repeated per-layer raw-scan rows are excluded from the present
-analysis. The aggregate raw MLP patches, full knockouts and SAE layer scans use
-separate execution paths and are unaffected. The hook-selection error has been
-corrected in the repository. Exclusion of the affected rows prevents an invalid
-layer-localisation inference.
+The replacement Colab environment permitted completion of the targeted experiments but changed the feasible search strategy. Colab meters paid GPU access against a compute-unit balance, and Google states that hardware availability, runtime limits and usage conditions vary over time and are not published as fixed limits \cite{colabfaq}. Resource use is therefore described qualitatively rather than assigned a universal compute-unit-per-hour rate. Compute was prioritised for fixed candidate sweeps, held-out controls and frozen confirmation rather than all-layer, all-token activation corpora, multiple SAE seeds or a cross-layer transcoder. This constraint limits uncertainty estimates and architectural fidelity, but it does not explain away the observed contrast between arithmetic and units: both final TopK protocols were executed within the same repository and intervention framework.
 
-\subsection{Prioritised future work}
+\subsection{Prioritised further work}
 
-The highest-priority extension is to align the random variables represented in
-SAE training with those modified during causal evaluation. Increasing the number
-of training epochs without resolving this mismatch would provide limited
-additional evidence.
+The most informative next experiment is replication of the units top-ten effect across SAE and graph seeds with an enlarged, pre-generated confirmation pool. The complete selection procedure, including feature ranking and panel size, must be rerun independently; retaining the same feature IDs after retraining would not test basis stability. More layer-count-matched random panels would permit a formal randomisation comparison.
 
-\begin{enumerate}
-    \item Capture activations at all token positions, or at a pre-specified set of
-    intervention positions, and include teacher-forced partial answers in the
-    arithmetic SAE corpus.
-    \item Retrain with decoder-column normalisation or a gated/JumpReLU objective;
-    report $\ell_0$ firing counts, dead-feature rates, reconstruction variance and
-    clean-model recovery before interpreting features.
-    \item Build a held-out factorial carry benchmark. Carry status, source next
-    digit and target next digit should vary independently across many matched
-    pairs. Rank features by their marginal effect on
-    $\ell(\text{correct})-\ell(\text{dropped carry})$ across examples rather than
-    on a single prompt.
-    \item Repeat SAE training across seeds and test whether feature groups, not
-    exact feature indices, reproduce their causal effects.
-    \item Subject to available computational resources, replace independent output SAEs with per-layer
-    transcoders or a small cross-layer transcoder and add explicit residual/error
-    nodes. Compare model-level recovery and perturbation faithfulness at matched
-    feature budgets.
-    \item Extend the graph to attention or residual-stream features. The weak
-    sparse MLP result does not establish that the missing mechanism is absent;
-    it may be represented in attention-mediated state or SAE reconstruction
-    error.
-\end{enumerate}
+For arithmetic, further enlargement of the current graph panel is not the first priority because the matched control has already identified a specificity failure. SAEs should instead be trained on the teacher-forced decimal positions that will be intervened upon, with carry status, source next digit and target next digit varied factorially. A successful feature group should generalise across output digits and show a target-minus-no-carry effect under a frozen criterion.
 
-These steps would discriminate among the explanations advanced here. In
-particular, improved sparse effects after position-matched training would support
-distribution mismatch as the main cause; persistence of broad raw-patch effects
-without stable sparse features would support a genuinely distributed or
-interaction-dependent representation.
+At greater computational scale, per-layer transcoders or a small CLT should be compared with the independent output SAEs at matched reconstruction and active feature budgets. Explicit error nodes and perturbation-faithfulness tests would bring the graph semantics closer to the target work. Attention or residual stream decompositions may also be necessary for factual retrieval. These extensions are motivated by specific diagnostic failures in the present study, not solely by the expectation that a larger model or dictionary must perform better.
 
 \section{Conclusion}
 
-The present study independently implemented a small-scale mechanistic-
-interpretability pipeline for an open-weight language model. The pipeline
-generated and audited behavioural prompts, captured selected MLP activations,
-trained per-layer SAEs, constructed contrast attribution graphs, and evaluated
-them using feature inhibition, latent swaps and activation-level controls. The
-principal positive finding is a hierarchy of causal effects rather than an
-isolated feature: raw MLP state can transfer an arithmetic answer; complete SAE
-latent state can substantially alter arithmetic and unit predictions; and sparse
-graph-selected subsets generally cannot. Capital recall provides a negative
-result even after baseline confidence was increased.
+This study independently reproduced a small-scale circuit-tracing workflow for an open language model and evaluated each link in the inferential chain. The original ReLU SAEs achieved high held-out reconstruction fidelity but activated thousands of latents. Broad patches established that the selected MLP states contained causal answer information, while matched controls showed that arithmetic transfer was source-digit-specific and that capital-city transfer was weak. A predeclared TopK correction substantially improved sparsity and intervention magnitude. It did not recover a carry-specific panel, but it did yield a frozen ten-feature units panel whose force-source effect replicated on 16 disjoint systems and was absent under a mass-source control.
 
-The evidence therefore supports transfer of the experimental methodology more
-strongly than recovery of a sparse circuit. Under the lightweight Qwen
-implementation, attribution graphs generate testable causal hypotheses, but
-their highest-attribution SAE nodes do not consistently constitute a compact,
-faithful mechanism. The mathematical and methodological analysis identifies
-four specific limitations---scale-degenerate sparsity, limited activation
-support, positional distribution mismatch and a less expressive local
-replacement model---that yield testable explanations for the partial
-reproduction. The study thereby establishes both whether the target effects were
-observed and the conditions under which the corresponding mechanistic inferences
-are warranted.
+The resulting conclusion is a partial but substantive reproduction. Sparse attribution features can provide compact causal control in this lightweight Qwen setting, but reconstruction quality and directional logit movement are insufficient on their own. Mechanistic interpretation requires concept-matched controls, held-out confirmation and explicit separation of sparse evidence from broad activation patching. The units panel satisfies those conditions for a selective force-associated shift; the arithmetic and capital experiments define where the method did not transfer. This combination of positive and negative evidence is the principal reproducibility result.
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{12}
 
-\bibitem{lindsey2025biology}
-J. Lindsey, W. Gurnee, E. Ameisen, et al.,
-``On the Biology of a Large Language Model,''
+\bibitem{lindsey2025biology} J. Lindsey, W. Gurnee, E. Ameisen, et al., ``On the Biology of a Large Language Model,''
 \emph{Transformer Circuits Thread}, 2025.
 \url{https://transformer-circuits.pub/2025/attribution-graphs/biology.html}
 
-\bibitem{ameisen2025circuit}
-E. Ameisen, J. Lindsey, A. Pearce, et al.,
-``Circuit Tracing: Revealing Computational Graphs in Language Models,''
+\bibitem{ameisen2025circuit} E. Ameisen, J. Lindsey, A. Pearce, et al., ``Circuit Tracing: Revealing Computational Graphs in Language Models,''
 \emph{Transformer Circuits Thread}, 2025.
 \url{https://transformer-circuits.pub/2025/attribution-graphs/methods.html}
 
-\bibitem{cunningham2023sae}
-H. Cunningham, A. Ewart, L. Riggs, R. Huben, and L. Sharkey,
-``Sparse Autoencoders Find Highly Interpretable Features in Language Models,''
+\bibitem{cunningham2023sae} H. Cunningham, A. Ewart, L. Riggs, R. Huben, and L. Sharkey, ``Sparse Autoencoders Find Highly Interpretable Features in Language Models,''
 \emph{arXiv preprint arXiv:2309.08600}, 2023.
 \url{https://arxiv.org/abs/2309.08600}
 
-\bibitem{bricken2023monosemanticity}
-T. Bricken, A. Templeton, J. Batson, et al.,
-``Towards Monosemanticity: Decomposing Language Models With Dictionary Learning,''
+\bibitem{bricken2023monosemanticity} T. Bricken, A. Templeton, J. Batson, et al., ``Towards Monosemanticity: Decomposing Language Models With Dictionary Learning,''
 \emph{Transformer Circuits Thread}, 2023.
 \url{https://transformer-circuits.pub/2023/monosemantic-features/index.html}
 
-\bibitem{elhage2022superposition}
-N. Elhage et al.,
-``Toy Models of Superposition,''
+\bibitem{elhage2022superposition} N. Elhage et al., ``Toy Models of Superposition,''
 \emph{Transformer Circuits Thread}, 2022.
 \url{https://transformer-circuits.pub/2022/toy_model/index.html}
 
-\bibitem{yang2025qwen3}
-A. Yang, A. Li, B. Yang, et al.,
-``Qwen3 Technical Report,''
+\bibitem{gao2024scaling} L. Gao, T. Dupr\'e la Tour, H. Tillman, et al., ``Scaling and Evaluating Sparse Autoencoders,''
+\emph{arXiv preprint arXiv:2406.04093}, 2024.
+\url{https://arxiv.org/abs/2406.04093}
+
+\bibitem{yang2025qwen3} A. Yang, A. Li, B. Yang, et al., ``Qwen3 Technical Report,''
 \emph{arXiv preprint arXiv:2505.09388}, 2025.
 \url{https://arxiv.org/abs/2505.09388}
 
-\bibitem{qwenmodelcard}
-Qwen Team,
-``Qwen3-4B-Instruct-2507 Model Card,'' 2025.
+\bibitem{qwenmodelcard} Qwen Team, ``Qwen3-4B-Instruct-2507 Model Card,'' 2025.
 \url{https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507}
+
+\bibitem{colabfaq} Google, ``Google Colab: Frequently Asked Questions---Resource Limits,'' accessed July 12, 2026.
+\url{https://research.google.com/colaboratory/intl/en-GB/faq.html}
+
+\bibitem{csd3status} University of Cambridge Research Computing Services, ``West Cambridge Data Centre Upgrade and Planned Disruption June 2025--December 2026,'' updated July 8, 2026.
+\url{https://docs.hpc.cam.ac.uk/data_centre_upgrade.html}
+
+\bibitem{csd3incident} University of Cambridge Department of Chemical Engineering and Biotechnology, ``Major IT Incident: Cooling Failure at West Cambridge Data Centre,'' July 1, 2026.
+\url{https://intranet.ceb.cam.ac.uk/news}
+
+\bibitem{csd3storage} University of Cambridge Research Computing Services, ``CSD3 File and I/O Management,'' accessed July 12, 2026.
+\url{https://docs.hpc.cam.ac.uk/hpc/user-guide/io_management.html}
 
 \end{thebibliography}
 
@@ -851,13 +454,6 @@ Qwen Team,
 \section*{Declaration of use of autogeneration tools}
 \addcontentsline{toc}{section}{Declaration of use of autogeneration tools}
 
-Generative AI tools, including OpenAI Codex, were used during software
-development to assist with code review, debugging, experimental documentation,
-and the structuring and drafting of this report. GPU experiments were executed by
-the candidate. The candidate remains responsible for checking the final
-analysis, numerical claims, citations, wording and conclusions. This declaration
-describes the use of these tools in the preparation of the submitted work.
-% Verify this declaration against any course-prescribed wording before submission.
-%TC:endignore
+Generative AI tools, including OpenAI Codex, were used during software development to assist with code review, debugging, experimental documentation, figure generation, and the structuring and drafting of this report. GPU experiments were executed by the candidate. The candidate remains responsible for checking the final analysis, numerical claims, citations, wording and conclusions. This declaration describes the use of these tools in the preparation of the submitted work. % Verify this declaration against any course-prescribed wording before submission. %TC:endignore
 
 \end{document}

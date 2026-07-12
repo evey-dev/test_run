@@ -1,273 +1,292 @@
-Changes summary
-===============
+IMPLEMENTATION AND ANALYSIS CHANGE SUMMARY
+==========================================
 
-This file records implementation and notebook decisions that are not obvious from
-the code alone.
+Purpose
+-------
 
+This file records why the implementation changed during the reproducibility
+investigation. `report_notes.txt` is the source of truth for the scientific
+interpretation; `ai_handoff_summary.txt` contains exact final numbers and pending
+work.
 
-Core code changes
------------------
 
-`src/attribution_graph.py`
+1. Contrastive attribution
+--------------------------
 
-- Added `--contrast-target`.
-- When provided, the attribution objective is:
+File:
+  src/attribution_graph.py
 
-    target logit - contrast target logit
+Added `--contrast-target`. Graph objectives can now be defined as:
 
-- This is important for arithmetic carry because the question is whether the
-  model prefers the correct carry digit over a dropped-carry alternative.
-- Graph JSON records the target, contrast target, and objective metadata.
+  target logit - contrast logit
 
-`src/intervention.py`
+This was necessary for arithmetic. At the tens digit of 58+83=141, a feature is
+relevant if it favours 4 relative to the dropped-carry alternative 3, not merely
+if it raises every digit logit. Graph JSON records both tokens and the objective.
 
-- Added graph-feature sign filtering:
+The graph renderer now retains JSON, Mermaid and interactive HTML outputs. A
+CPU plotting script creates a compact backward-connected report view while
+labelling it as a visual subset rather than the complete graph.
 
-    --graph-feature-sign positive|negative|all
 
-- Added edit strength:
+2. Intervention correctness and diagnostics
+-------------------------------------------
 
-    --edit-strength
+File:
+  src/intervention.py
 
-- Added full knockout component selection:
+Added or corrected:
 
-    --knockout-component mlp|attn|block
+- `--graph-feature-sign positive|negative|all`
+- `--edit-strength`
+- `--knockout-component mlp|attn|block`
+- `--positions last|all|comma-separated indices`
+- `--layer-scan`
+- `--position-scan`
+- `--print-tokens`
+- `--raw-mlp-swap`
+- source activation capture for sparse, complete-latent and raw MLP swaps
+- token-position displays and pre-knockout component norms
 
-- Added broader diagnostics:
+Reason:
 
-    --layer-scan
-    --position-scan
-    --positions last|all|comma-separated indices
-    --print-tokens
+Early outputs did not visibly prove that the intended positions and non-zero
+activations were being edited. Printing token IDs, decoded tokens and norms made
+position alignment auditable. Error-preserving SAE interventions modify the
+true MLP output by only the decoded latent difference, so an empty intervention
+is exactly the clean model.
 
-- Added raw MLP swap support:
+Full MLP, attention and block knockout were retained as component-level
+diagnostics. They are intentionally not treated as sparse feature evidence.
 
-    --raw-mlp-swap
+A later audit found an exploratory raw-MLP layer-scan path that applied all
+requested layers in each nominal row. Those rows are excluded from the report;
+aggregate raw patches and all final screens use separate paths. The hook logic
+was corrected.
 
-- Improved diagnostics so interventions print token positions and pre-knockout
-  activation norms. This was added because it was initially unclear whether the
-  code was editing the intended positions or whether activations were nonzero.
 
-`src/train.py`
-
-- Training now keeps and saves the best validation checkpoint rather than blindly
-  saving the final epoch.
-
-
-Notebook changes
-----------------
-
-Final notebooks:
-
-- `run_gpu_units_hypertrain.ipynb`
-- `run_gpu_math_final.ipynb`
-- `run_gpu_capitals_final.ipynb`
-
-These are the recommended notebooks for final report outputs.
-
-Older notebooks remain in the repository for provenance:
-
-- `run_gpu.ipynb`
-- `run_gpu_math.ipynb`
-- `run_gpu_units.ipynb`
-- `run.ipynb`
-
-They were not renamed because old Colab/Drive references may still point to them.
-The README now documents which notebooks are final.
-
-
-Colab/GitHub/Drive setup
-------------------------
-
-- Colab notebooks were used because CSD3 was unavailable.
-- The substantive pipeline is still standalone and can be run with the scripts in
-  `src/`.
-- Colab notebooks now pull code from GitHub first.
-- Google Drive remains the artifact store for large files:
-  - activation arrays
-  - SAE checkpoints
-  - graph outputs
-  - intervention JSONs
-- Existing Drive backup/copy lines were retained where requested.
-
-
-SAE training decisions
-----------------------
-
-The project brief asks for lightweight SAEs on a few selected layers. It does not
-require every layer.
-
-Final selected layers:
-
-  4, 8, 12, 16, 20, 24, 28
-
-Behaviour-specific final training was used because training was fast enough and
-because mixed/general checkpoints made interpretation less clean.
-
-Final config files:
-
-- `configs/sae_units_final_train_config.yaml`
-- `configs/sae_math_final_train_config.yaml`
-- `configs/sae_capitals_final_train_config.yaml`
-
-
-Important conceptual decisions
-------------------------------
-
-Arithmetic must be per digit.
-
-For `58 + 83 = 141`, the tens digit is studied with:
-
-  Question: What is 58 + 83? Answer: 1
-
-The correct next token is `4`; the dropped-carry alternative is `3`.
-
-The graph should use:
-
-  --target "4" --contrast-target "3"
-
-because this studies the carry-vs-dropped-carry decision directly.
-
-All-position edits matter.
-
-Final-token-only MLP interventions mostly did not affect the math output. The
-stronger result came from all-position MLP knockout, which implies the relevant
-state is distributed across prompt positions.
-
-Sparse SAE features did not isolate the carry.
-
-The current results support the existence of a broad activation-level carry
-signal, but not a clean compact SAE feature group that controls it.
-
-
-Current empirical story
------------------------
-
-Physics units:
-
-- Best positive reproduction.
-- Use as the main successful behaviour.
-- Results are better aligned with intervention/swap validation than the other
-  behaviours.
-
-Math carry:
-
-- Partial reproduction.
-- Clean model strongly predicts correct digit `4`.
-- Sparse SAE interventions weakly move the dropped-carry `3` upward.
-- All-position MLP knockout produces the strongest causal shift:
-  - `4` probability drops to about 0.6406
-  - `3` probability rises to about 0.1836
-  - `2` also rises, so this is broad digit destabilization, not a clean carry
-    feature.
-
-Capitals:
-
-- Weak/negative reproduction.
-- Dallas/Oakland prompts were low confidence.
-- Higher-confidence controls were added but still did not produce a clean swap.
-- Use as evidence that factual recall was not cleanly captured by this setup.
-
-
-Report implication
-------------------
-
-The report should not claim a full Anthropic-style circuit reproduction.
-
-The strongest claim is:
-
-  The independent pipeline reproduces the methodology and finds some causal
-  structure, especially for units and broad arithmetic interventions, but the
-  lightweight SAE setup does not consistently recover compact sparse circuits in
-  Qwen3-4B-Instruct.
-
-This is consistent with the project brief because the brief values rigorous
-reproducibility investigation, including partial or negative reproductions.
-
-
-Final validation and report figures
------------------------------------
-
-- Added `run_gpu_final_validation.ipynb` as a short post-hoc validation notebook.
-  It restores existing final artifacts; it does not retrain SAEs or regenerate
-  attribution graphs.
-- Added `src/sae_diagnostics.py` to measure held-out reconstruction fidelity,
-  achieved sparsity, dead features and encoder/decoder norm distributions.
-- Added `src/heldout_validation.py` to evaluate fixed graph-derived edits on 12
-  new arithmetic pairs and 12 new units pairs, with broad latent/raw controls and
-  deterministic bootstrap summaries.
-- Added `src/plot_validation.py` for SAE-diagnostic and graph-held-out figures.
-- Added `src/plot_attribution_graph.py` for a compact backward-connected view of
-  a complete saved graph. The printed view is explicitly labelled as a subset.
-- Added four checked vector figures under `report/figures/` and inserted them in
-  `report/report.tex` in place of placeholders.
-- Added `report/FIGURE_PLAN.txt` with exact filenames, data provenance, captions,
-  insertion locations and rules for the three figures pending the final run.
-- Corrected the final arithmetic graph filename in the README to
-  `math_final_carry_58_83_4v3_graph.json`.
-
-Scientific interpretation of the new checks:
-
-- Weak reconstruction can be investigated as one contributor to weak sparse
-  interventions, but reconstruction metrics cannot prove causation.
-- Strong reconstruction with weak causal effects would make a simple
-  reconstruction-error explanation untenable.
-- The new benchmark is graph-held-out. Unit sources may occur in the SAE
-  validation split, so they must not all be described as fully SAE-held-out.
-
-
-Optional TopK mathematics experiment
+3. SAE checkpointing and diagnostics
 ------------------------------------
 
-- Added backward-compatible `topk` activation support to `SparseAutoencoder`.
-- Attribution, inhibition, swapping and diagnostics now call the shared SAE
-  encoder and recover activation type and `top_k` from checkpoint metadata.
-- Added optional unit-norm decoder projection during training; original configs
-  retain their previous ReLU and unconstrained-decoder defaults.
-- Added fixed mathematics candidates at k=128, 256 and 512.
-- Added metric-only selection in `src/select_sae_candidate.py`; intervention
-  outputs cannot influence candidate choice.
-- Extended `src/heldout_validation.py` with an optional matched no-carry
-  specificity control.
-- Added `src/plot_topk_math.py` and `run_gpu_math_topk_retrain.ipynb`.
-- All new checkpoints and outputs use separate `topk_math_retrain` paths.
+Files:
+  src/train.py
+  src/sae_diagnostics.py
 
-TopK result and final carry screen
-----------------------------------
+Training now saves the checkpoint with minimum validation loss rather than the
+last epoch. Diagnostics report:
 
-- The completed metric-only selection chose TopK 256: mean validation FVE
-  0.9410, minimum layer FVE 0.9319, mean validation L0 171.6 and mean dead
-  fraction 0.716.
-- Sparse graph-feature inhibition strengthened from -0.396 with the original
-  ReLU SAE to -0.875 in correct-minus-dropped-carry logit-gap delta.
-- The matched no-carry control changed by -0.885. The paired carry-minus-control
-  estimate was +0.010 (bootstrap 95% CI [-0.125, +0.167]), so the stronger
-  intervention is not evidence of carry specificity.
-- Added a configurable `--positions` option to `src/heldout_validation.py` while
-  retaining `all` as its backward-compatible default.
-- Added `src/math_carry_feature_screen.py`, which excludes the already inspected
-  benchmark, screens individual features on an eight-case discovery split,
-  freezes the ordering, and confirms a predeclared top-10 panel on 24 fresh
-  cases with multiple negative controls. Partial output is resumable.
-- Added `src/plot_math_carry_screen.py` and
-  `run_gpu_math_carry_feature_followup.ipynb`. The notebook restores existing
-  TopK checkpoints and graph, repeats specificity at the final token, runs the
-  discovery/confirmation screen, and stores checkpoints under
-  `outputs/topk_math_followup` in Drive.
+- validation MSE and fraction of variance explained;
+- cosine and relative-L2 reconstruction fidelity;
+- mean/median/p95 latent L0;
+- train, validation and combined dead-feature fractions;
+- encoder and decoder norm distributions;
+- activation type and TopK metadata.
 
-Guarded TopK units experiment
------------------------------
+Reason:
 
-- Added fixed units TopK k=128/256/512 configurations using the same
-  hyperparameters and metric-only selection thresholds as mathematics.
-- Added `src/units_feature_screen.py`. It ranks positive force-graph features on
-  eight discovery systems, freezes a Top-10 panel, and confirms it on sixteen
-  different systems with one prompt per system.
-- Fresh force, energy and mass prompts are exact-string absent from the SAE
-  corpus; physical-system groups are disjoint between discovery and
-  confirmation.
-- The primary specificity contrast is force-source swap delta minus matched
-  mass-source swap delta on the same energy target. Random, reverse-ranked,
-  layer, full-graph, full-latent and raw-MLP controls are retained as secondary.
-- Added `src/plot_topk_units.py` and `run_gpu_units_topk_retrain.ipynb` with
-  resumable Drive checkpoints under `topk_units_retrain`.
+The original weak feature interventions could not be interpreted until SAE
+reconstruction and achieved sparsity were measured. The final ReLU diagnosis
+was high FVE but thousands of active latents, so simple reconstruction failure
+was rejected and density became the next testable problem.
+
+
+4. Position-aware held-out validation
+-------------------------------------
+
+Files:
+  src/heldout_validation.py
+  run_gpu_final_validation.ipynb
+
+Added deterministic graph-held-out benchmarks with:
+
+- clean source/target eligibility;
+- sparse, complete-latent and raw-MLP conditions;
+- `--positions` control;
+- matched no-carry arithmetic specificity;
+- 5,000-resample seeded bootstrap intervals;
+- explicit graph-held-out versus SAE-support metadata.
+
+Reason:
+
+One striking prompt can be selected accidentally. Aggregate prompt pairs test
+whether the graph-derived edit generalises. Arithmetic also needs a matched
+no-carry control; otherwise generic digit-state disruption can look like carry
+removal.
+
+
+5. TopK SAE extension
+---------------------
+
+Files:
+  src/train.py
+  src/attribution_graph.py
+  src/intervention.py
+  src/sae_diagnostics.py
+  src/select_sae_candidate.py
+
+Added backward-compatible TopK SAEs:
+
+  z = TopK_k(ReLU(encoder(x - decoder_bias)))
+
+TopK configurations use unit-normalised decoder columns and `l1_lambda: 0.0`.
+Original ReLU configurations retain their old behaviour.
+
+Fixed candidate values are k=128, 256 and 512. Candidate selection is isolated
+from intervention outcomes. Required thresholds:
+
+  mean validation FVE >= 0.90
+  minimum layer validation FVE >= 0.85
+  mean combined dead fraction <= 0.80
+
+Among eligible candidates, choose the smallest mean validation L0.
+
+Reason:
+
+Hard TopK directly controls support size and unit decoder norms remove the
+scale ambiguity of the original raw-L1 objective. The intervention must then be
+tested again; improved sparsity alone does not prove mechanistic specificity.
+
+
+6. Arithmetic TopK specificity screen
+-------------------------------------
+
+Files:
+  configs/sae_math_topk128_config.yaml
+  configs/sae_math_topk256_config.yaml
+  configs/sae_math_topk512_config.yaml
+  src/math_carry_feature_screen.py
+  src/plot_topk_math.py
+  src/plot_math_carry_screen.py
+  run_gpu_math_topk_retrain.ipynb
+  run_gpu_math_carry_feature_followup.ipynb
+
+The metric-only rule selected TopK-256. It increased the all-position sparse
+carry-target effect from the original ReLU mean -0.396 to -0.875 logits.
+However, the no-carry control changed by -0.885, so the effect was not
+carry-specific.
+
+The final-position feature screen:
+
+- excluded previously inspected benchmark cases;
+- ranked individual graph features on 8 discovery pairs;
+- froze the top-10 panel;
+- tested 24 disjoint confirmation pairs;
+- retained bottom-ranked and five matched random controls.
+
+The primary paired interval crossed zero. This is a predeclared negative result
+and is retained in the report.
+
+
+7. Units TopK specificity screen
+-------------------------------
+
+Files:
+  configs/sae_units_topk128_config.yaml
+  configs/sae_units_topk256_config.yaml
+  configs/sae_units_topk512_config.yaml
+  src/units_feature_screen.py
+  src/plot_topk_units.py
+  run_gpu_units_topk_retrain.ipynb
+
+The metric-only rule selected TopK-128. The final screen:
+
+- took 73 positive-attribution candidates from one force graph;
+- ranked features on 8 discovery physical systems;
+- used force-source minus matched mass-source effect as the estimand;
+- froze a top-10 panel;
+- tested 16 different physical systems;
+- ensured exact prompts were absent from the SAE corpus;
+- used one prompt per system and disjoint system groups;
+- retained cumulative, reverse-ranked, random, layer, all-graph, full-latent and
+  raw-MLP comparators.
+
+The original indirect prompt wording yielded too few fully qualified systems.
+A baseline-only audit was therefore changed to direct SI-unit wording before any
+feature intervention. Four wording variants over 64 systems were checked. This
+protocol amendment is recorded in output JSON and is not post-outcome selection.
+
+The frozen top-10 panel passed its predeclared rule on 16/16 systems:
+
+  force shift       +1.2344 [1.1484, 1.3320]
+  mass shift        -0.0898 [-0.1289, -0.0508]
+  paired effect     +1.3242 [1.2227, 1.4297]
+
+No top prediction changed. The implementation and report call this a compact
+force-associated panel, not a complete circuit.
+
+
+8. Figure and report generation
+-------------------------------
+
+CPU-only figure scripts:
+
+  src/plot_validation.py
+  src/plot_attribution_graph.py
+  src/plot_topk_math.py
+  src/plot_math_carry_screen.py
+  src/plot_math_compact_circuit.py
+  src/plot_topk_units.py
+  src/plot_units_compact_circuit.py
+
+Report-ready vector figures are under `report/figures/`. The compact arithmetic
+and units diagrams are generated directly from their graphs and final
+feature-screen JSON files. The arithmetic figure records the frozen Top-10
+inhibition and failed matched carry-specificity test; it deliberately labels
+the object as a rejected candidate circuit. The units figure shows exact
+feature IDs, layer assignments, retained graph edges, donor controls and
+confirmation statistics. It explicitly states that the edit is a final-token
+swap, the answer does not flip, and effect ratios are not variance explained.
+
+The report was fully rewritten to incorporate the final TopK experiments:
+
+  report/report.tex
+
+A separate sub-1,000-word executive summary was added:
+
+  report/executive_summary.tex
+
+The report is structured as a sequence of diagnostic tests rather than a
+chronological notebook log. Exploratory broad controls lead to measured SAE
+density, then to fixed TopK selection, matched specificity tests and the final
+units confirmation.
+
+
+9. Colab, GitHub and Drive execution
+-----------------------------------
+
+Colab notebooks pull the code repository from GitHub first. A Drive zip remains
+as backup. Large activation arrays, checkpoints and outputs are copied to Google
+Drive; existing `!cp` and `!rm` lines requested by the user were retained.
+
+Colab was used because CSD3 became unavailable during a late-June cooling
+incident associated with hot weather. The project lost unbacked activation and
+checkpoint artifacts and regenerated them. Final recorded runtime hardware
+includes NVIDIA T4 and A100-SXM4-80GB.
+
+Do not state a fixed Colab compute-unit rate. Google's FAQ says resource limits,
+GPU availability and usage conditions vary and are not published as fixed
+limits. The report describes a compute-unit budget without using the guessed
+6.77 units/hour figure.
+
+
+10. Notebook roles
+------------------
+
+Recommended final workflows:
+
+  run_gpu_math_topk_retrain.ipynb
+  run_gpu_math_carry_feature_followup.ipynb
+  run_gpu_math_carry_balanced_localization.ipynb  (pending final extension)
+  run_gpu_units_topk_retrain.ipynb
+  run_gpu_capitals_final.ipynb
+
+Retained exploratory/provenance notebooks include:
+
+  run_gpu.ipynb
+  run_gpu_math.ipynb
+  run_gpu_units.ipynb
+  run_gpu_math_final.ipynb
+  run_gpu_units_hypertrain.ipynb
+
+They were not renamed because existing Drive and notebook references may depend
+on their names. README explains when each should be used.

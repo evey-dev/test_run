@@ -1,0 +1,117 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE\bfseries Executive Summary\par}
+    \vspace{0.35cm}
+    {\large Tracing Sparse Causal Features in an Open Language Model\par}
+    \vspace{0.25cm}
+    {\normalsize Evelyn Paskhaver \hfill July 12, 2026\par}
+\end{center}
+
+\section*{Purpose and importance}
+
+Large language models can produce correct answers without exposing the internal
+process that generated them. Mechanistic interpretability seeks to identify
+internal variables and computational pathways that causally support a model's
+behaviour. Anthropic's \emph{On the Biology of a Large Language Model} presented
+an influential method that decomposes neural activations into sparse features,
+connects those features in attribution graphs, and tests graph-derived
+hypotheses by intervening on the model. Independent reproduction is important
+because an intuitively labelled graph is not necessarily a faithful account of
+the original computation.
+
+This project tested whether the same scientific workflow could be transferred
+to Qwen3-4B-Instruct-2507, an open-weight model with four billion parameters.
+Two behaviours were studied: addition, focusing on propagation of a carry
+between decimal columns, and factual recall, represented by capital-city and SI
+unit questions. The objective was not merely to generate diagrams, but to
+determine whether small groups of learned features exerted the predicted and
+concept-specific causal effects.
+
+\section*{Approach}
+
+An independent, public pipeline generated synthetic prompts, recorded
+multilayer perceptron activations at seven transformer layers, trained a sparse
+autoencoder for each layer, constructed contrastive attribution graphs, and
+performed feature inhibition and activation swap-in experiments. Complete
+autoencoder codes and raw model activations were patched as positive controls.
+Clean-baseline checks ensured that each evaluated prompt expressed the expected
+behaviour.
+
+The investigation was deliberately sequential. Initial feature interventions
+were weak, so reconstruction and sparsity were measured directly. The first
+autoencoders explained 90.7--95.9\% of held-out activation variance, but used
+2,167--3,545 of 8,192 latent variables per example. The problem was therefore
+not simply inaccurate reconstruction: the codes were too dense to support a
+compact feature-level account. A fixed comparison of TopK autoencoders then
+tested whether direct control of the number of active variables improved causal
+specificity. Candidate models were selected from reconstruction diagnostics
+before their intervention outcomes were examined.
+
+\newpage
+\section*{Key findings}
+
+Broad activation patches demonstrated that the selected model components
+contained causally relevant information. In addition, replacing target MLP
+states with those from a matched source could transfer the source answer digit.
+However, a source with a different answer digit transferred that digit as well.
+The intervention therefore moved general answer state rather than isolating an
+abstract carry variable. TopK retraining made sparse arithmetic interventions
+larger and more consistent, but a matched no-carry control changed by the same
+amount. A frozen ten-feature panel consequently failed the predeclared
+carry-specificity test. Capital-city swaps also remained weak after low-confidence
+examples were replaced with high-confidence prompts.
+
+The strongest positive result occurred for SI units. The selected TopK model
+retained 93.6\% mean held-out variance while using approximately 100 active
+latents, 35.5 times fewer than the original units autoencoder. Features from one
+force attribution graph were ranked on eight discovery systems. The resulting
+ten-feature panel was frozen and evaluated on 16 different physical systems.
+Swapping force-source values into energy prompts increased the
+newtons-versus-joules logit gap by 1.234 logits (bootstrap 95\% interval
+1.148--1.332). A matched mass-source control changed the gap by $-0.090$
+($-0.129$ to $-0.051$), giving a paired specificity effect of 1.324 logits
+(1.223--1.430). Every confirmation case moved more strongly under the force
+source than under the mass control. Eight of the ten latents were located at
+layer 28, and the panel reproduced 97.5\% of the force-source shift obtained by
+swapping all 73 positive graph features.
+
+The model nevertheless continued to predict joules in every confirmation case.
+The result is therefore evidence for a compact, force-associated causal panel,
+not a complete factual-recall circuit, a set of uniquely necessary variables,
+or a transferred answer.
+
+\section*{Implications and next steps}
+
+The project provides a partial reproduction with a clear inferential boundary.
+Sparse attribution features can exert compact, concept-selective causal effects
+in a lightweight open-model setting, as demonstrated for force versus mass.
+Reconstruction accuracy and directional logit movement alone are insufficient:
+the arithmetic result became interpretable only after a matched control showed
+that its effect was not specific to carrying.
+
+The highest-priority next step is an independent replication of the units
+selection procedure across autoencoder and graph seeds, using a larger frozen
+confirmation pool and more random feature panels. Arithmetic autoencoders
+should be trained on the same teacher-forced decimal positions used in
+interventions, with carry status and answer digit varied independently. At
+greater computational scale, per-layer or cross-layer transcoders and explicit
+error nodes would provide a closer architectural comparison with Anthropic's
+method.
+
+All principal code, configurations, notebooks and output formats are documented
+in the public repository at
+\url{https://github.com/evey-dev/test_run}. The reproducibility pack allows the
+positive units result, the controlled negative results, and the methodological
+diagnostics to be audited independently.
+
+\end{document}

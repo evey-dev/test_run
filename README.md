@@ -3,13 +3,13 @@
 This repository is an independent small-scale reproducibility study inspired by
 Anthropic's *On the Biology of a Large Language Model*. It asks whether similar
 attribution-graph and intervention methods can recover mechanisms in
-`Qwen3-4B-Instruct`.
+`Qwen3-4B-Instruct-2507`.
 
 The project currently studies three behaviours:
 
-- physics units: strongest positive result
-- arithmetic carry: partial reproduction with useful diagnostics
-- capitals/factual recall: weak or negative result
+- physics units: compact, force-associated TopK panel; strongest positive result
+- arithmetic carry: larger TopK effects, but failed matched carry-specificity test
+- capitals/factual recall: weak or negative reproduction
 
 The aim is reproducibility analysis, not exact replication. Partial and negative
 results are part of the scientific finding when they are documented carefully.
@@ -29,14 +29,16 @@ back to Hugging Face Hub where implemented, but the expected reproducible setup
 is to restore or download the model locally.
 
 ```bash
-huggingface-cli download Qwen/Qwen3-4B-Instruct --local-dir models/Qwen3-4B-Instruct
+huggingface-cli download Qwen/Qwen3-4B-Instruct-2507 --local-dir models/Qwen3-4B-Instruct
 ```
 
 ## Why Colab Notebooks Exist
 
-The Colab notebooks were used because CSD3 access was unavailable during the
-project work. They are convenience wrappers around standalone repository scripts;
-the core pipeline can be run directly from the command line.
+The Colab notebooks were used after a cooling incident during hot weather made
+CSD3 unavailable during the final project period. They are convenience wrappers
+around standalone repository scripts; the core pipeline can be run directly
+from the command line. The project does not assume a fixed Colab compute-unit
+rate because Google documents these limits and hardware availability as dynamic.
 
 The notebooks now pull code from GitHub first. Google Drive is still used for
 large artifacts such as SAE checkpoints, activation files, graphs, and final JSON
@@ -44,10 +46,48 @@ outputs. Drive zip/copy cells are retained as backup paths.
 
 ## Recommended Notebooks
 
-Use these for final results:
+Use these for the final reported results, in this order where dependencies
+apply:
+
+- `run_gpu_math_topk_retrain.ipynb`
+  - Trains fixed TopK arithmetic candidates at `k=128,256,512`.
+  - Selects a candidate from reconstruction/sparsity diagnostics before any
+    candidate intervention result is used.
+  - Builds the selected carry graph and runs a matched no-carry benchmark.
+  - The completed run selected TopK-256 and found a larger but non-specific
+    arithmetic effect.
+
+- `run_gpu_math_carry_feature_followup.ipynb`
+  - Restores the selected TopK-256 checkpoints and graph.
+  - Runs the final-token discovery/confirmation screen on disjoint arithmetic
+    pairs.
+  - The frozen top-10 panel failed its predeclared carry-specificity criterion.
+
+- `run_gpu_math_carry_balanced_localization.ipynb`
+  - Optional final extension using the already selected TopK-256 checkpoints.
+  - Screens every SAE latent after conditioning on the predicted tens digit,
+    then freezes a Top-10 panel before causal confirmation on 32 disjoint pairs.
+  - Also evaluates output-digit-conditioned carry decodability in the raw MLP
+    output at each selected layer.
+  - Excludes all pairs in the completed benchmark and graph-feature screen. Do
+    not tune or replace its primary panel after confirmation results are shown.
+
+- `run_gpu_units_topk_retrain.ipynb`
+  - Trains and diagnostically selects fixed units TopK candidates.
+  - Builds one force graph, ranks features on eight discovery systems, and tests
+    a frozen top-10 panel on 16 different systems against a mass donor control.
+  - The completed run selected TopK-128 and produced the report's strongest
+    compact causal result.
+
+- `run_gpu_capitals_final.ipynb`
+  - Trains/restores capitals-specific ReLU checkpoints.
+  - Includes Dallas/Oakland and higher-confidence Zarqa/Basra controls.
+  - Use as a negative or weak reproduction, not as the headline.
+
+Supporting validation and original-ReLU provenance:
 
 - `run_gpu_final_validation.ipynb`
-  - Short post-hoc validation notebook; run after the three behaviour notebooks.
+  - Post-hoc diagnostics for the original ReLU checkpoints and fixed graphs.
   - Restores existing checkpoints and graphs without retraining or rebuilding
     attribution graphs.
   - Measures held-out reconstruction fidelity, achieved sparsity and decoder
@@ -57,25 +97,17 @@ Use these for final results:
     30 minutes required by each attribution-graph cell.
 
 - `run_gpu_units_hypertrain.ipynb`
-  - Final physics-units notebook.
+  - Original ReLU physics-units workflow.
   - Trains/restores units-specific SAE checkpoints.
   - Runs contrast attribution graphs and intervention tests.
-  - This is the strongest behaviour to foreground in the report.
+  - Its broad force-to-energy patch motivated the guarded TopK follow-up.
 
 - `run_gpu_math_final.ipynb`
-  - Final arithmetic/carry notebook.
+  - Original ReLU arithmetic/carry workflow.
   - Trains/restores math-specific SAE checkpoints.
   - Runs contrast attribution for `58 + 83`, intervention scans, swaps, and
     controls.
-  - Use this for the partial-reproduction story: broad MLP interventions move
-    probability toward dropped-carry alternatives, but sparse SAE features do not
-    isolate a clean carry circuit.
-
-- `run_gpu_capitals_final.ipynb`
-  - Final capitals/factual-recall notebook.
-  - Trains/restores capitals-specific SAE checkpoints.
-  - Includes Dallas/Oakland and higher-confidence Zarqa/Basra controls.
-  - Use as a negative or weak reproduction result, not as the headline.
+  - Broad MLP interventions move digit state but do not isolate carry.
 
 Older notebooks are kept for provenance and debugging:
 
@@ -86,41 +118,6 @@ Older notebooks are kept for provenance and debugging:
 
 Do not rename the older notebooks unless there is a specific reason. Keeping
 them stable avoids breaking references in Colab, Drive, or old notes.
-
-Optional targeted follow-up:
-
-- `run_gpu_math_topk_retrain.ipynb`
-  - Trains TopK mathematics SAEs with `k=128,256,512` and unit-normalised
-    decoder columns, using the same deterministic activation corpus and split.
-  - Selects the smallest code meeting predeclared FVE and dictionary-collapse
-    thresholds before constructing any graph or viewing intervention results.
-  - Builds one graph for the selected candidate, reruns the fixed 12-pair
-    graph-held-out benchmark, and adds a matched no-carry specificity control.
-  - Uses separate local and Drive folders under `topk_math_retrain`; it does not
-    overwrite the final ReLU checkpoints or outputs.
-
-- `run_gpu_math_carry_feature_followup.ipynb`
-  - Run after `run_gpu_math_topk_retrain.ipynb`; it restores the selected TopK
-    256 checkpoints and completed graph rather than retraining or rebuilding it.
-  - First repeats the matched benchmark at the final token, aligning the
-    intervention with the SAE training support and attribution graph.
-  - Then screens graph features on eight fresh discovery pairs, freezes their
-    ordering, and evaluates a predeclared top-10 panel on 24 separate
-    confirmation pairs with layer, reverse-rank, random and full-graph controls.
-  - Checkpoints the long screen directly to Drive under `topk_math_followup`, so
-    rerunning an interrupted cell resumes completed features and panels.
-
-- `run_gpu_units_topk_retrain.ipynb`
-  - Final guarded units follow-up; run only after the completed ReLU units work.
-  - Trains TopK `k=128,256,512` on the same final-token units corpus and selects
-    one candidate from reconstruction/sparsity diagnostics before intervention.
-  - Builds one selected force graph, reruns a 16-context final-token benchmark,
-    and freezes a Top-10 feature panel using separate discovery contexts.
-  - Confirmation uses exact-prompt SAE-absent contexts and compares force-source
-    swaps against matched mass-source swaps into the same energy targets.
-    Discovery and confirmation physical systems are disjoint.
-  - All checkpoints and outputs use `topk_units_retrain` Drive paths and the long
-    feature screen resumes after interruption.
 
 ## Standalone Pipeline
 
@@ -290,7 +287,7 @@ The static graph figure is a labelled visual subset selected from the complete
 JSON. The JSON and interactive HTML remain the authoritative full graph
 artifacts.
 
-### 7. Optional TopK Mathematics Follow-up
+### 7. Final TopK Mathematics Workflow
 
 The complete guarded workflow is in `run_gpu_math_topk_retrain.ipynb`. The
 candidate configurations are:
@@ -365,7 +362,49 @@ selectivity only if its paired mean is negative, its bootstrap 95% interval is
 entirely below zero, and its mean carry-target effect is negative. Secondary
 panel sizes must not be selected post hoc.
 
-### 8. Guarded TopK Units Follow-up
+The optional output-digit-balanced localisation is a distinct final test of the
+same selected SAE, not another hyperparameter sweep:
+
+```bash
+python -m src.math_carry_balanced_localization \
+  --sae-config configs/sae_math_topk256_config.yaml \
+  --candidate-pairs 149 \
+  --discovery-pairs 32 \
+  --confirmation-pairs 32 \
+  --seed 4787 \
+  --panel-sizes 1 3 5 10 20 \
+  --primary-panel-size 10 \
+  --random-panels 5 \
+  --exclude-json \
+    outputs/topk_math_retrain/math_topk256_heldout_specificity.json \
+    outputs/topk_math_followup/math_topk256_carry_feature_screen.json \
+  --output outputs/math_carry_localization/math_topk256_balanced_carry_localization.json \
+  --activation-cache outputs/math_carry_localization/math_topk256_balanced_carry_activations.npz
+```
+
+Discovery ranks all 57,344 latents by their standardised carry-minus-no-carry
+activation difference within shared output-digit strata. Confirmation data do
+not affect that ordering. The primary result passes only if the frozen Top-10
+retains a positive conditioned activation interval and inhibition has a
+carry-minus-control interval wholly below zero. The notebook writes resumable
+JSON and activation checkpoints directly to Drive.
+
+The report-ready arithmetic circuit-style summary is generated from the
+completed graph and feature-screen JSON files and therefore requires neither a
+GPU nor the SAE checkpoints:
+
+```bash
+python -m src.plot_math_compact_circuit
+```
+
+This writes PNG, PDF and editable SVG versions to
+`outputs/topk_math_followup/figures/` and a PDF copy to
+`report/figures/fig_math_compact_carry_test.pdf`. It is intentionally a
+diagram of a rejected candidate carry circuit. The panel shifts arithmetic
+logit gaps, but its effect is not distinguishable from the matched no-carry
+effect; do not label the ten features as a discovered `carry 1` variable.
+
+### 8. Final TopK Units Workflow
 
 The complete workflow is `run_gpu_units_topk_retrain.ipynb`. It uses:
 
@@ -381,15 +420,16 @@ token, matching SAE training. The standalone confirmation command is:
 
 ```bash
 python -m src.units_feature_screen \
-  --sae-config configs/sae_units_topk256_config.yaml \
-  --graph outputs/topk_units_retrain/units_topk256_force_graph.json \
+  --sae-config configs/sae_units_topk128_config.yaml \
+  --graph outputs/topk_units_retrain/units_topk128_force_graph.json \
   --positions last \
   --discovery-cases 8 \
   --confirmation-cases 16 \
-  --output outputs/topk_units_retrain/units_topk256_feature_screen.json
+  --output outputs/topk_units_retrain/units_topk128_feature_screen.json
 ```
 
-The `k=256` paths are illustrative; use `units_topk_selection.json`. Exact
+The completed diagnostic selection chose `k=128`; always verify this in
+`units_topk_selection.json` before running a fresh experiment. Exact
 force, mass and energy prompts are absent from the SAE corpus. Discovery uses
 eight systems and confirmation uses sixteen different systems, with one prompt
 per system, selected from a 64-system baseline pool. An initial baseline-only
@@ -404,18 +444,63 @@ panel succeeds only when both the force-source effect and its advantage over the
 matched mass-source control have bootstrap 95% intervals wholly above zero.
 Confirmation panel sizes must not be selected post hoc.
 
+The report-ready Anthropic-style circuit summary is generated entirely from the
+completed graph and feature-screen JSON files; it does not load the model, SAE
+weights or activation matrices:
+
+```bash
+python -m src.plot_units_compact_circuit
+```
+
+This writes PNG, PDF and editable SVG versions to
+`outputs/topk_units_retrain/figures/` and a PDF copy to
+`report/figures/fig_units_compact_causal_circuit.pdf`. The figure combines
+retained attribution-graph edges with the separately measured frozen-panel
+swap. It must be described as a force-associated causal summary: the
+intervention shifted the newtons-minus-joules logit gap but did not change the
+top prediction from joules.
+
+The completed frozen top-10 confirmation produced:
+
+```text
+force-source gap shift:       +1.2344  (95% CI +1.1484 to +1.3320)
+mass-source control shift:    -0.0898  (95% CI -0.1289 to -0.0508)
+force-minus-mass specificity: +1.3242  (95% CI +1.2227 to +1.4297)
+```
+
+The force effect exceeded the mass effect in all 16 confirmation systems. The
+top prediction remained joules, so this is a compact force-associated logit
+shift rather than answer transfer.
+
+## Build the Written Deliverables
+
+From `report/`:
+
+```bash
+latexmk -pdf -interaction=nonstopmode -halt-on-error report.tex
+latexmk -pdf -interaction=nonstopmode -halt-on-error executive_summary.tex
+texcount -sum -merge report.tex
+texcount -sum -merge executive_summary.tex
+```
+
+The main report must remain at or below 7,000 words. The executive summary is a
+separate document and must remain below 1,000 words. Report figures are vector
+PDFs under `report/figures/`; their generators and source artifacts are recorded
+in `report/FIGURE_PLAN.txt`.
+
 ## Current Scientific Bottom Line
 
-The project should not claim a clean reproduction of Anthropic's sparse circuits.
-The strongest story is:
+The project supports a partial, bounded reproduction:
 
-1. Physics units show the best positive intervention behaviour.
-2. Arithmetic carry shows partial causal evidence: broad all-position MLP/latent
-   interventions can move probability toward dropped-carry alternatives, but a
-   compact sparse SAE carry circuit was not recovered.
-3. Capitals remain weak even after testing higher-confidence examples, suggesting
-   factual recall is harder to patch cleanly with this setup.
+1. The full requested workflow was implemented independently.
+2. A frozen ten-feature units panel produced a force-specific logit shift across
+   16 disjoint systems relative to a mass donor control.
+3. The units answer did not flip, so the panel is not a complete factual-recall
+   circuit.
+4. Arithmetic TopK features affected digit logits but failed matched no-carry
+   specificity; they must not be labelled a carry circuit.
+5. Capitals remained weak even with high-confidence prompts.
 
-This supports a rigorous reproducibility report: the pipeline was implemented,
-adapted where necessary, and used to identify where the Anthropic-style method
-does and does not transfer under constrained resources.
+The scientific contribution is the combination of a compact positive unit
+effect and controlled boundary cases showing where the same inference is not
+warranted.

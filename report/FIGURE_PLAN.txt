@@ -1,346 +1,310 @@
-REPORT FIGURE PLAN
-==================
+FINAL REPORT FIGURE INVENTORY
+=============================
 
 Purpose
 -------
-This file is the source of truth for every main-report figure. Use vector PDF
-files in report/report.tex; PNG files are previews only. The existing plots and
-pipeline diagram are generated from code, so no manual redrawing is required.
-The interactive graph HTML files remain useful supplementary artifacts but are
-too dense to serve as primary report figures.
 
-Status key
-----------
-INSERTED: generated, checked in the compiled report, and already referenced.
-PENDING RUN: code exists, but the final GPU notebook must generate real values.
-PENDING INSERT: output exists only after that run and must then be copied into
-report/figures and referenced from report.tex.
+This file records the provenance and interpretation of every figure used in
+`report/report.tex`. Use vector PDFs in the report. PNG files are previews and
+SVG files are editable sources where available.
+
+All listed figures have been generated and visually inspected. No GPU is needed
+to regenerate figures from the retained JSON/CSV outputs.
 
 
-1. Experimental pipeline
-------------------------
-Exact filename: report/figures/fig_pipeline.pdf
-Editable source: report/figures/fig_pipeline.tex
-Status: INSERTED as Figure 1, label fig:pipeline.
-Location: Methods, immediately after the contrast-attribution-graph method.
+Figure 1: experimental pipeline
+-------------------------------
 
-Content:
-- prompt corpora;
-- selected final-token MLP activations;
-- independent per-layer SAEs;
-- local contrast graph;
-- sparse, complete-latent and raw-MLP causal tests.
+Report file:
+  report/figures/fig_pipeline.pdf
 
-Build command, from report/figures:
+Editable source:
+  report/figures/fig_pipeline.tex
+
+Build:
+  cd report/figures
   latexmk -pdf -interaction=nonstopmode -halt-on-error fig_pipeline.tex
 
+Purpose:
+  Show prompt corpora, selected MLP activations, layerwise SAEs, contrast graph,
+  and the distinction between sparse interventions and broad positive controls.
 
-2. Carry attribution graph
---------------------------
-Exact filename: report/figures/fig_math_attribution_graph.pdf
-Generator: src/plot_attribution_graph.py
-Source artifact: outputs/math_final_carry_58_83_4v3_graph.json
-Status: PENDING RUN, then PENDING INSERT.
-Location: Methods, after Figure fig:pipeline and before the causal-intervention
-subsection. Suggested label: fig:math-graph.
 
-Content:
-- input, layers 4/8/12/16/20/24/28 and the logit(4)-logit(3) objective;
-- up to five backward-connected nodes per stage;
-- positive and negative node/edge attribution signs;
-- an explicit note that this is a visual subset of the complete JSON/HTML graph.
+Figure 2: arithmetic attribution graph
+--------------------------------------
 
-Suggested caption:
-  Backward-connected visual subset of the arithmetic attribution graph for the
-  contrast logit(4)-logit(3). Up to five nodes per stage and fourteen edges per
-  transition are displayed for legibility; the complete pruned graph is
-  retained in JSON and interactive HTML form.
+Report file:
+  report/figures/fig_math_attribution_graph.pdf
 
-Generation command:
-  python src/plot_attribution_graph.py \
+Generator:
+  src/plot_attribution_graph.py
+
+Source:
+  outputs/math_final_carry_58_83_4v3_graph.json
+
+Build:
+  python -m src.plot_attribution_graph \
     --graph outputs/math_final_carry_58_83_4v3_graph.json \
     --output-dir outputs/report_figures \
     --stem fig_math_attribution_graph
 
-After generation, copy both PDF and PNG from:
-  /content/drive/MyDrive/mphil-project/outputs/report_figures/
-to:
-  report/figures/
+Interpretation:
+  This is a backward-connected visual subset with at most five nodes per stage.
+  It is not the complete graph. The full JSON and interactive HTML are the
+  authoritative graph artifacts. Red and blue show positive and negative local
+  attribution for logit(4)-logit(3).
 
 
-3. SI-unit interventions
-------------------------
-Exact filename: report/figures/fig_units_interventions.pdf
-Editable source: report/figures/fig_units_interventions.tex
-Status: INSERTED, label fig:units.
-Location: Results, SI-unit subsection.
+Figure 3: original ReLU SAE diagnostics
+---------------------------------------
 
-Source results:
-- outputs/units_final_swap_minpair_force_to_energy.json
-- outputs/units_final_swap_sparse_force_to_energy.json
-- outputs/units_final_swap_minpair_energy_to_force.json
-- outputs/units_final_swap_sparse_energy_to_force.json
+Report file:
+  report/figures/fig_sae_diagnostics.pdf
 
-Content:
-- first-token probabilities for j and new on the energy target;
-- shared logit contrast logit(new)-logit(j) for both swap directions;
-- clean, complete-latent and sparse-feature conditions.
+Generator:
+  src/plot_validation.py
 
-Build command, from report/figures:
-  latexmk -pdf -interaction=nonstopmode -halt-on-error \
-    fig_units_interventions.tex
+Sources:
+  outputs/final_sae_diagnostics_math.csv
+  outputs/final_sae_diagnostics_units.csv
+  outputs/final_sae_diagnostics_capitals.csv
 
+Build:
+  python -m src.plot_validation \
+    --diagnostics outputs/final_sae_diagnostics_math.csv \
+                  outputs/final_sae_diagnostics_units.csv \
+                  outputs/final_sae_diagnostics_capitals.csv \
+    --heldout outputs/final_heldout_validation.json \
+    --output-dir outputs/report_figures
 
-4. Arithmetic interventions and controls
------------------------------------------
-Exact filename: report/figures/fig_math_interventions.pdf
-Editable source: report/figures/fig_math_interventions.tex
-Status: INSERTED, label fig:math.
-Location: Results, arithmetic subsection.
-
-Source results:
-- outputs/math_final_scan_carry_positive_allpos.json
-- outputs/math_final_swap_full_nocarry_to_carry.json
-- outputs/math_final_swap_full_nocarry_to_carry_strength2.json
-- outputs/math_final_swap_raw_mlp_nocarry_to_carry.json
-- outputs/math_final_knockout_mlp_allpos_carry_58_83.json
-- outputs/math_final_swap_full_44_83_to_58_83_strength2.json
-
-Content:
-- correct-minus-dropped-carry gap under all principal interventions;
-- probability controls showing that broad interventions also transfer or
-  increase other source-specific answer digits.
-
-Build command, from report/figures:
-  latexmk -pdf -interaction=nonstopmode -halt-on-error \
-    fig_math_interventions.tex
+Interpretation:
+  High validation FVE coexists with thousands of active ReLU latents. This
+  rules out a simple "poor reconstruction" explanation and motivates direct
+  sparsity control. The dead-feature panel uses combined train/validation
+  support; the report table separately labels validation dead fraction.
 
 
-5. Capital-city interventions
------------------------------
-Exact filename: report/figures/fig_capitals_interventions.pdf
-Editable source: report/figures/fig_capitals_interventions.tex
-Status: INSERTED, label fig:capitals.
-Location: Results, capital-city subsection.
+Figure 4: capital-city controls
+-------------------------------
 
-Source results:
-- outputs/capitals_final_swap_full_oakland_to_dallas.json
-- outputs/capitals_final_swap_full_dallas_to_oakland.json
-- outputs/capitals_final_hiconf_swap_full_basra_to_zarqa.json
-- outputs/capitals_final_hiconf_swap_full_zarqa_to_basra.json
+Report file:
+  report/figures/fig_capitals_interventions.pdf
 
-Content:
-- source- and target-answer logit changes under complete-latent patches;
-- target-answer probabilities before and after each patch;
-- low-confidence Dallas/Oakland and high-confidence Zarqa/Basra comparisons.
+Editable source:
+  report/figures/fig_capitals_interventions.tex
 
-Build command, from report/figures:
+Sources:
+  outputs/capitals_final_swap_full_oakland_to_dallas.json
+  outputs/capitals_final_swap_full_dallas_to_oakland.json
+  outputs/capitals_final_hiconf_swap_full_basra_to_zarqa.json
+  outputs/capitals_final_hiconf_swap_full_zarqa_to_basra.json
+
+Build:
+  cd report/figures
   latexmk -pdf -interaction=nonstopmode -halt-on-error \
     fig_capitals_interventions.tex
 
-
-6. SAE reconstruction and sparsity diagnostics
------------------------------------------------
-Exact filename: report/figures/fig_sae_diagnostics.pdf
-Generator: src/plot_validation.py
-Source artifacts:
-- outputs/final_sae_diagnostics_math.csv
-- outputs/final_sae_diagnostics_units.csv
-- outputs/final_sae_diagnostics_capitals.csv
-Status: PENDING RUN, then PENDING INSERT.
-Location: Results, in a new subsection immediately after baseline competence.
-Suggested label: fig:sae-diagnostics.
-
-Content:
-- held-out validation fraction of variance explained (FVE) by layer;
-- mean active latent count (L0) by layer;
-- dead-feature fraction by layer;
-- separate curves for addition, SI units and capitals.
-
-Suggested caption:
-  Layerwise SAE fidelity and achieved sparsity on the original deterministic
-  validation splits. FVE quantifies reconstruction relative to prediction by
-  the training-set mean; L0 is the mean number of non-zero latents, and the
-  dead-feature fraction is measured over the combined training and validation
-  activation support.
-
-Interpretation rule:
-- Low FVE or large relative error supports poor reconstruction fidelity as one
-  plausible contributor to weak sparse interventions.
-- High FVE with weak sparse interventions rules out that simple explanation and
-  shifts attention to achieved sparsity, feature instability, graph selection,
-  support mismatch and nonlinear feature interactions.
-- These are diagnostic associations. They do not prove that reconstruction
-  error caused an intervention failure.
-
-Required report edit after the run:
-The current Discussion sentence saying that final L0, dead-feature and related
-diagnostics were not retained must be replaced with the measured values. Do not
-retain that sentence once this figure is inserted.
+Interpretation:
+  The high-confidence Zarqa/Basra pair tests whether low clean confidence alone
+  explains weak Dallas/Oakland transfer. It does not yield answer transfer, so
+  capitals remain a negative factual-recall reproduction.
 
 
-7. Graph-held-out intervention benchmark
------------------------------------------
-Exact filename: report/figures/fig_heldout_generalisation.pdf
-Generator: src/plot_validation.py
-Source artifact: outputs/final_heldout_validation.json
-Status: PENDING RUN, then PENDING INSERT.
-Location: Results, after the arithmetic and SI-unit single-prompt results, in a
-new subsection titled Graph-held-out validation. Suggested label:
-fig:heldout-generalisation.
+Figure 5: arithmetic TopK selection and matched specificity
+-----------------------------------------------------------
 
-Content:
-- one point per baseline-qualified prompt pair;
-- black diamonds for condition means;
-- arithmetic change in correct-minus-dropped-carry gap;
-- units change in force-minus-energy-prefix gap;
-- sparse, complete-latent and raw-MLP conditions.
-
-Suggested caption:
-  Intervention effects on prompt pairs not used to construct either retained
-  attribution graph. Points denote baseline-qualified cases and diamonds denote
-  condition means. Negative changes are predicted for the arithmetic contrast;
-  positive changes are predicted for the force-to-energy unit transfer.
-
-Insertion rule:
-Report the eligible case count shown in each panel. If very few cases satisfy
-the clean-baseline criterion, retain the numerical output as a limitation and do
-not present the plot as a population-level estimate. These prompts are
-graph-held-out; describe SAE-training or validation support separately and do
-not call all of them fully held-out without that qualification.
-
-
-8. Optional TopK mathematics follow-up
----------------------------------------
-Exact filename:
+Report file:
   report/figures/fig_math_topk_tradeoff_specificity.pdf
-Generator: src/plot_topk_math.py
-Notebook: run_gpu_math_topk_retrain.ipynb
-Status: PENDING INSERT; already generated under
-outputs/topk_math_retrain/figures.
-Suggested location: Results, after the graph-held-out intervention benchmark.
-Suggested label: fig:math-topk-specificity.
 
-Content:
-- mean validation FVE against mean L0 for TopK k=128, 256 and 512;
-- the original dense ReLU SAE as a reference point when its CSV is available;
-- the candidate selected without intervention outcomes marked explicitly;
-- paired sparse-inhibition effects on each carry target and matched no-carry
-  source control.
+Generator:
+  src/plot_topk_math.py
 
-Insertion rule:
-- Insert the figure whether the selected TopK intervention is stronger or weaker
-  only if a candidate passed all predeclared selection thresholds and the full
-  benchmark completed without code changes after outcomes were viewed.
-- If no candidate passes, report the reconstruction-sparsity trade-off briefly
-  as a negative follow-up; do not construct a graph merely to force a causal
-  result.
-- Carry selectivity requires the target-minus-control paired difference to be
-  coherently negative. A target effect that is equally present on no-carry
-  sources supports generic arithmetic-answer influence, not a carry circuit.
+Sources:
+  outputs/topk_math_retrain/math_topk_selection.json
+  outputs/topk_math_retrain/math_topk128_diagnostics.csv
+  outputs/topk_math_retrain/math_topk256_diagnostics.csv
+  outputs/topk_math_retrain/math_topk512_diagnostics.csv
+  outputs/topk_math_retrain/math_topk256_heldout_specificity.json
 
-Suggested neutral caption:
-  Predeclared TopK SAE selection and matched causal specificity test. Panel (a)
-  compares reconstruction fidelity with achieved sparsity; the selected model
-  was chosen before intervention outcomes were observed. Panel (b) compares
-  graph-feature inhibition on graph-held-out carry targets with the corresponding
-  no-carry source controls. Lines connect matched prompt pairs and diamonds mark
-  condition means.
+Build:
+  python -m src.plot_topk_math \
+    --candidate-diagnostics \
+      outputs/topk_math_retrain/math_topk128_diagnostics.csv \
+      outputs/topk_math_retrain/math_topk256_diagnostics.csv \
+      outputs/topk_math_retrain/math_topk512_diagnostics.csv \
+    --selection outputs/topk_math_retrain/math_topk_selection.json \
+    --new-heldout outputs/topk_math_retrain/math_topk256_heldout_specificity.json \
+    --original-diagnostics outputs/final_sae_diagnostics_math.csv \
+    --output-dir outputs/topk_math_retrain/figures
+
+Interpretation:
+  TopK-256 was selected from diagnostics without intervention outcomes. Sparse
+  inhibition is larger than with ReLU, but carry and matched no-carry prompts
+  move by the same amount. This is not evidence for carry specificity.
 
 
-9. Final-position carry feature screen
----------------------------------------
-Exact filename:
-  report/figures/fig_math_carry_feature_screen.pdf
-Generator: src/plot_math_carry_screen.py
-Notebook: run_gpu_math_carry_feature_followup.ipynb
-Source artifact:
-  outputs/topk_math_followup/math_topk256_carry_feature_screen.json
-Status: PENDING RUN, then PENDING INSERT only if discussed in the report.
-Suggested location: Results, immediately after the TopK trade-off/specificity
-figure. Suggested label: fig:math-carry-screen.
-
-Content:
-- the 20 highest-ranked discovery features and their paired carry-minus-control
-  effects, coloured by layer;
-- confirmation effects and bootstrap intervals for the frozen cumulative
-  panels, complete positive graph set and reverse-ranked control;
-- paired carry-target and no-carry effects for the predeclared top-10 panel.
-
-Insertion rule:
-- The top-10 panel is the sole primary confirmation result. Do not select a
-  different panel size after viewing confirmation outcomes.
-- Insert a null figure if space permits because it documents a controlled failed
-  attempt to isolate carry and strengthens the reproducibility analysis.
-- A successful primary result requires a negative paired mean, a bootstrap 95%
-  interval wholly below zero and a negative carry-target mean. Random matched
-  panels remain an important qualitative specificity check.
-- The figure concerns final-token inhibition only. Do not combine it numerically
-  with the previous all-position estimate without labelling the position change.
-
-
-10. Units TopK selection and confirmation
+Figure 6: frozen arithmetic feature screen
 ------------------------------------------
-Exact filename:
+
+Report file:
+  report/figures/fig_math_carry_feature_screen.pdf
+
+Generator:
+  src/plot_math_carry_screen.py
+
+Source:
+  outputs/topk_math_followup/math_topk256_carry_feature_screen.json
+
+Build:
+  python -m src.plot_math_carry_screen \
+    --input outputs/topk_math_followup/math_topk256_carry_feature_screen.json \
+    --output-dir outputs/topk_math_followup/figures
+
+Interpretation:
+  Features were ranked on eight discovery pairs and the top-10 panel was frozen
+  before 24 confirmation pairs. The paired interval crosses zero. Keep this null
+  figure because it documents a controlled failed attempt to isolate carry.
+
+
+Figure 7: compact arithmetic candidate-circuit test
+---------------------------------------------------
+
+Report file:
+  report/figures/fig_math_compact_carry_test.pdf
+
+Generator:
+  src/plot_math_compact_circuit.py
+
+Sources:
+  outputs/topk_math_retrain/math_topk256_carry_58_83_4v3_graph.json
+  outputs/topk_math_followup/math_topk256_carry_feature_screen.json
+
+Build:
+  python -m src.plot_math_compact_circuit
+
+Outputs:
+  outputs/topk_math_followup/figures/fig_math_compact_carry_test.png
+  outputs/topk_math_followup/figures/fig_math_compact_carry_test.pdf
+  outputs/topk_math_followup/figures/fig_math_compact_carry_test.svg
+  report/figures/fig_math_compact_carry_test.pdf
+
+Interpretation rules:
+
+- Call it a rejected candidate carry circuit or carry-associated discovery
+  panel, not an identified `carry 1` mechanism.
+- The intervention inhibits ten final-token latents; it is not a donor swap.
+- The carry and no-carry effects are both negative and their paired specificity
+  interval crosses zero.
+- No top prediction changed.
+- Solid arrows are retained graph edges. Dotted input paths compress displayed
+  token-to-feature edges.
+
+
+Figure 8: units TopK selection and confirmation
+-----------------------------------------------
+
+Report file:
   report/figures/fig_units_topk_selection_confirmation.pdf
-Generator: src/plot_topk_units.py
-Notebook: run_gpu_units_topk_retrain.ipynb
-Source artifacts:
-- outputs/topk_units_retrain/units_topk_selection.json;
-- outputs/topk_units_retrain/units_topk*_diagnostics.csv;
-- outputs/topk_units_retrain/units_topk*_feature_screen.json.
-Status: PENDING RUN, then PENDING INSERT if discussed in the report.
-Suggested location: Results, after the final-position units robustness result.
-Suggested label: fig:units-topk-confirmation.
 
-Content:
-- reconstruction FVE against mean L0 for all fixed TopK candidates and the
-  original ReLU units SAE;
-- discovery force-minus-mass feature ranking;
-- frozen confirmation panel effects and bootstrap intervals;
-- paired force-source and mass-source effects for the primary Top-10 panel.
+Generator:
+  src/plot_topk_units.py
 
-Insertion rule:
-- The selected k must come exclusively from the saved diagnostic selection JSON.
-- The Top-10 panel is the only primary causal result. Do not replace it with a
-  secondary size, layer or random panel after viewing confirmation.
-- Primary success requires both the force-source effect and force-minus-mass
-  specificity effect to have bootstrap 95% intervals wholly above zero.
-- Insert a null result when space permits because it tests whether TopK
-  compactness transfers across domains without changing the original corpus.
+Sources:
+  outputs/topk_units_retrain/units_topk_selection.json
+  outputs/topk_units_retrain/units_topk128_diagnostics.csv
+  outputs/topk_units_retrain/units_topk256_diagnostics.csv
+  outputs/topk_units_retrain/units_topk512_diagnostics.csv
+  outputs/topk_units_retrain/units_topk128_feature_screen.json
 
+Build:
+  python -m src.plot_topk_units \
+    --candidate-diagnostics \
+      outputs/topk_units_retrain/units_topk128_diagnostics.csv \
+      outputs/topk_units_retrain/units_topk256_diagnostics.csv \
+      outputs/topk_units_retrain/units_topk512_diagnostics.csv \
+    --selection outputs/topk_units_retrain/units_topk_selection.json \
+    --screen outputs/topk_units_retrain/units_topk128_feature_screen.json \
+    --original-diagnostics outputs/final_sae_diagnostics_units.csv \
+    --output-dir outputs/topk_units_retrain/figures
 
-How to generate all pending figures
------------------------------------
-Run run_gpu_final_validation.ipynb from top to bottom. It does not retrain an SAE
-or construct a new attribution graph. It restores the existing final artifacts,
-recaptures deterministic activation matrices only if absent, evaluates the
-checkpoints, runs 12 arithmetic and 12 unit prompt-pair interventions, generates
-the three pending figures and copies outputs to Drive.
-
-Expected runtime is approximately 10--20 minutes on a Colab GPU, depending on
-model loading and Drive transfer. It should be substantially shorter than the
-attribution-graph cells. The graph-held-out benchmark is the only GPU-intensive
-part; figure generation itself is CPU-only and fast.
+Interpretation:
+  TopK-128 was chosen before interventions. Feature ranking uses eight discovery
+  systems; panel confirmation uses 16 disjoint systems. Force-source and mass
+  control effects are evaluated in separate runs on the same energy recipient.
+  The top-10 panel is the sole primary panel.
 
 
-Figures not intended for the main report
-----------------------------------------
-- Full interactive attribution graph HTML: retain in the reproducibility pack;
-  do not use a browser screenshot in the report.
-- Mermaid graph: retain as a portable source view; do not insert the complete
-  dense rendering into the report.
-- Every exploratory scan: retain JSON/notebook outputs, but summarise only the
-  prespecified comparisons and controls in main-text tables/figures.
+Figure 9: compact force-associated causal summary
+-------------------------------------------------
+
+Report file:
+  report/figures/fig_units_compact_causal_circuit.pdf
+
+Generator:
+  src/plot_units_compact_circuit.py
+
+Sources:
+  outputs/topk_units_retrain/units_topk128_force_graph.json
+  outputs/topk_units_retrain/units_topk128_feature_screen.json
+
+Build:
+  python -m src.plot_units_compact_circuit
+
+Outputs:
+  outputs/topk_units_retrain/figures/fig_units_compact_causal_circuit.png
+  outputs/topk_units_retrain/figures/fig_units_compact_causal_circuit.pdf
+  outputs/topk_units_retrain/figures/fig_units_compact_causal_circuit.svg
+  report/figures/fig_units_compact_causal_circuit.pdf
+
+Interpretation rules:
+
+- Call it a compact force-associated panel or force-to-unit transfer panel.
+- Do not call it a complete circuit or uniquely necessary feature set.
+- The intervention swaps ten final-token latent values; it does not zero them.
+- The top prediction remains joules.
+- The reported 97.5% and 40.6% values are ratios of force-source intervention
+  effects, not variance or mechanism explained.
+- Six force-related decoder labels are supporting diagnostics only.
+- Solid layer-28 paths are retained graph edges. The dotted path compresses
+  unshown graph nodes.
+
+The main report gives this figure a dedicated landscape page so all labels are
+legible at normal zoom.
 
 
-Final verification checklist
+Retained but not inserted in the final report
+---------------------------------------------
+
+`report/figures/fig_units_interventions.pdf`
+  Useful provenance for the original ReLU minimal-pair swaps. Superseded as the
+  headline by the TopK confirmation figure and summarised numerically in text.
+
+`report/figures/fig_math_interventions.pdf`
+  Useful exploratory broad-patch/knockout summary. The final report describes
+  the key values in text and gives space to the matched TopK controls instead.
+
+`outputs/report_figures/fig_heldout_generalisation.pdf`
+  Original ReLU graph-held-out benchmark. Its results are retained in text, but
+  the domain-specific TopK figures provide stronger and more carefully matched
+  final evidence.
+
+Full interactive graph HTML and Mermaid outputs
+  Retain in the reproducibility pack. Do not use dense browser screenshots as
+  primary report figures.
+
+
+Final build and visual check
 ----------------------------
-1. Run the final validation notebook and inspect every reported eligible count.
-2. Copy the three pending PDFs into report/figures.
-3. Insert only figures whose captions are supported by the observed values.
-4. Update the reconstruction paragraph and numerical tables from saved CSV/JSON.
-5. Recalculate the report word count.
-6. Run, from report/:
-     latexmk -pdf -interaction=nonstopmode -halt-on-error report.tex
-7. Inspect the complete PDF at 100 percent zoom for clipped labels and floats.
+
+From `report/`:
+
+  latexmk -pdf -interaction=nonstopmode -halt-on-error report.tex
+  latexmk -pdf -interaction=nonstopmode -halt-on-error executive_summary.tex
+
+Then verify:
+
+1. No missing figure or citation warnings.
+2. The landscape compact figure has no blank page before or after it.
+3. Figure text is readable at normal zoom.
+4. Captions preserve the no-token-flip and no-complete-circuit caveats.
+5. Main report word count is <= 7,000 and executive summary is < 1,000.

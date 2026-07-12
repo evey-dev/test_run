@@ -1,516 +1,333 @@
-Report preparation notes
-========================
+FINAL REPORT NOTES
+==================
 
-Working report thesis
----------------------
+Status
+------
 
-This should be written as a reproducibility investigation, not as a failed attempt
-to exactly copy Anthropic's result.
+The main report is `report/report.tex` and the separate executive summary is
+`report/executive_summary.tex`. The current main report is a complete draft,
+not a placeholder. It compiles successfully and is under the 7,000-word limit.
 
-The project implemented the requested pipeline: prompt sets, baseline evaluation,
-activation capture, lightweight per-layer SAEs, contrast attribution graphs, and
-inhibition/swap interventions. The results are mixed:
+The report must be presented as an investigation of reproducibility, not as an
+attempt to force an exact copy of Anthropic's result. The strongest defensible
+conclusion is:
 
-1. Physics units are the strongest positive reproduction.
-2. Arithmetic carry is a partial reproduction.
-3. Capitals/factual recall are weak or negative.
+  The full small-scale workflow was reproduced. A compact, attribution-guided
+  and force-associated TopK SAE panel produced a selective logit shift across
+  disjoint SI-unit confirmation systems. Arithmetic and capital-city controls
+  show that the method does not recover equally specific sparse mechanisms in
+  every domain.
 
-The defensible claim is that Anthropic-style attribution graphs and interventions
-can produce useful causal diagnostics in this setup, but the lightweight SAE
-features do not reliably recover clean sparse circuits across behaviours.
+Do not call the units panel a complete circuit, a group of uniquely necessary
+features, or a token-flipping intervention. Do not call the arithmetic panel a
+"carry 1" circuit.
 
 
-Why the final notebooks are structured this way
------------------------------------------------
+How the final argument is structured
+------------------------------------
 
-The final notebooks are behaviour-specific because mixed or older checkpoints
-made interpretation harder. Behaviour-specific runs make the report cleaner:
+The report follows an evidence-building sequence:
 
-- `run_gpu_units_hypertrain.ipynb`: final units evidence.
-- `run_gpu_math_final.ipynb`: final arithmetic evidence.
-- `run_gpu_capitals_final.ipynb`: final capitals evidence.
+1. Establish clean model competence and define decisive token contrasts.
+2. Train the lightweight ReLU SAEs requested by the project specification.
+3. Observe weak sparse interventions but strong broad activation controls.
+4. Measure SAE reconstruction and sparsity rather than guessing at the failure.
+5. Find high validation FVE but thousands of active ReLU latents.
+6. Replace the ambiguous L1 sparsity mechanism with fixed TopK candidates and
+   unit-normalised decoder columns.
+7. Select TopK candidates from diagnostics before looking at intervention
+   outcomes.
+8. Test arithmetic with matched no-carry controls; reject carry specificity.
+9. Test units with a mass donor control and frozen discovery/confirmation
+   split; obtain the strongest positive result.
 
-Colab was used because CSD3 was unavailable. This is an execution detail, not a
-methodological dependency. All substantive steps are standalone scripts under
-`src/`.
+This order records scientific progress without turning the report into a diary.
+Each change answers a specific diagnostic problem.
 
-Old notebooks should remain as provenance unless there is a reason to remove
-them. They show the path from exploratory attempts to the final protocol, but
-the report should cite final notebooks and script outputs only.
 
-
-Methodology decisions that matter
----------------------------------
-
-Selected layers:
-
-The project brief says "a few selected layers" and "lightweight SAEs per layer".
-It does not require every transformer layer. The selected layers were
-4, 8, 12, 16, 20, 24, and 28. Layer 32 was deprioritized because earlier results
-were weak/noisy and the main final effects were already visible in earlier/mid
-layers.
-
-Per-digit arithmetic:
-
-Qwen tokenizes many numbers digit-by-digit. Whole-answer attribution is therefore
-misleading for multi-digit arithmetic because it often studies only the first
-generated token. Arithmetic experiments use teacher forcing to study the relevant
-digit position directly.
-
-For `58 + 83 = 141`, the tens-position prompt is:
-
-  Question: What is 58 + 83? Answer: 1
-
-The correct next token is `4`. The dropped-carry alternative is `3`.
-
-Contrast attribution:
-
-For carry, the meaningful objective is not just "what raises 4?" but "what makes
-the model prefer 4 over 3?" Therefore the math graph should use:
-
-  --target "4" --contrast-target "3"
-
-This attributes `logit(4) - logit(3)`.
-
-All-position interventions:
-
-Early final-token-only interventions were too narrow. The important positive math
-diagnostic came from editing all prompt positions. This suggests carry-relevant
-state is distributed across prompt positions and residual/MLP updates, not
-localized only at the final token.
-
-Feature sign filtering:
-
-Attribution graphs include features with positive and negative effects on the
-chosen objective. Sparse interventions should often use:
-
-  --graph-feature-sign positive
-
-This avoids mixing features that support the target with features that suppress
-it.
-
-
-Main results to write about
----------------------------
-
-1. Physics units
-
-This should be the headline positive result. The units experiments had the
-cleanest intervention behaviour. The report should present this as the best
-evidence that the independent pipeline can find behaviour-relevant features and
-causal directions.
-
-Key framing:
-
-- The behaviour is narrower and less saturated than capitals.
-- Source/target swaps are easier to interpret.
-- Results are closer to the intended Anthropic-style validation pattern.
-
-2. Arithmetic carry
-
-Main prompt:
-
-  Question: What is 58 + 83? Answer: 1
-
-Clean baseline:
-
-  logit("4") = 30.62
-  prob("4") ~= 1.0000
-  logit("3") = 23.50
-  prob("3") = 0.0008
-  gap 4 - 3 = 7.12
-
-Important consequence:
-
-The model is very confident. Small sparse-feature interventions are unlikely to
-flip the answer, so logit movement is more informative than top-1 accuracy.
-
-Final-token MLP knockout:
-
-  logit("4") increased to 33.25
-  logit("3") stayed at 23.50
-
-Interpretation:
-
-The carry digit is not localized in final-token MLP outputs of the selected
-layers.
-
-All-position MLP knockout:
-
-  prob("4") fell to 0.6406
-  logit("4") fell to 27.25
-  prob("3") rose to 0.1836
-  logit("3") rose to 26.00
-  gap 4 - 3 collapsed from 7.12 to 1.25
-  prob("2") also rose to 0.1426
-
-Interpretation:
-
-This is the main positive arithmetic result. Broad MLP/residual updates across
-positions help stabilize the correct carry digit. However, because `2` also
-rises, the intervention is not carry-specific; it broadly destabilizes digit
-selection.
-
-Sparse SAE-feature inhibition:
-
-Graph-positive feature ablations produced small but directionally relevant
-movements, including increases in the dropped-carry `3` logit. They did not flip
-the output.
-
-Interpretation:
-
-The contrast graph contains some features related to the carry-vs-no-carry
-distinction, but the current SAE basis does not isolate a compact causal carry
-feature set.
-
-Swaps:
-
-Some math swaps moved probability in the desired direction. They are useful as
-supporting evidence, but should not be oversold as a clean carry-feature transfer.
-When the source prompt has a different answer token, swaps can leak source answer
-identity rather than isolate carry.
-
-3. Capitals
-
-Dallas/Oakland capitals were weak because the model was not very confident:
-
-  Dallas/Austin probability about 0.277
-  Oakland/Sacramento probability about 0.222
-
-Higher-confidence controls such as Zarqa/Amman and Basra/Baghdad were added, but
-they still did not produce a clean swap story.
-
-Interpretation:
-
-Capitals should be reported as a negative or weak reproduction. This may reflect
-that factual recall is distributed differently from units, that the selected SAE
-layers do not capture the relevant factual representation, or that prompt/token
-alignment makes all-position swaps hard to interpret.
-
-
-Can we isolate a "carry 1" feature?
-----------------------------------
-
-Current answer: not cleanly with this setup.
-
-The carry signal appears to exist in model activations because broad MLP/latent
-interventions move the model toward dropped-carry alternatives. However, the
-sparse graph-selected SAE features do not by themselves control the output.
-
-This is not evidence that SAEs can never isolate carry. It is evidence that this
-specific lightweight SAE setup did not recover a clean causal carry feature.
-
-Likely reasons:
-
-- carry information may be distributed across many latents
-- the signal may depend on nonlinear feature interactions
-- relevant information may sit in SAE reconstruction error
-- the chosen layers may miss part of the computation
-- final-token-only interventions were too narrow
-- the model's confidence margin is very large
-- attention/residual stream state may matter alongside MLP features
-
-Optional future experiment:
-
-Rank individual or grouped SAE features by marginal effect on
-`logit(4) - logit(3)` using ablation or swap. This would not prove a clean carry
-feature, but it could support the claim that effects are diffuse rather than
-separable.
-
-
-Suggested report structure
---------------------------
-
-1. Introduction
-   - Anthropic paper and motivation.
-   - Reproducibility goal in an open model.
-   - Why partial/negative reproduction is scientifically useful.
-
-2. Methods
-   - Qwen3-4B-Instruct.
-   - Prompt sets for units, arithmetic, capitals.
-   - Activation capture on selected layers.
-   - Lightweight per-layer SAEs.
-   - Attribution graph construction.
-   - Contrast targets.
-   - Inhibition and swap interventions.
-   - Colab execution due to CSD3 unavailability; standalone scripts remain the
-     real pipeline.
-
-3. Physics units
-   - Present strongest positive result.
-   - Include graph and intervention table.
-
-4. Arithmetic carry
-   - Explain digit-tokenization and teacher forcing.
-   - Present contrast objective.
-   - Show baseline confidence.
-   - Compare final-token MLP, all-position MLP, sparse SAE inhibition, and swaps.
-   - State that broad causal signal exists but sparse SAE feature recovery is
-     incomplete.
-
-5. Capitals
-   - Present as weak/negative reproduction.
-   - Explain low-confidence prompt issue and high-confidence follow-up.
-   - Avoid making capitals the headline.
-
-6. Comparison to Anthropic
-   - Similar pipeline components were implemented.
-   - Clean sparse circuits were not consistently recovered.
-   - Results appear sensitive to model, behaviour, prompt confidence, SAE quality,
-     layer choice, and intervention locality.
-
-7. Limitations and future work
-   - Larger/stronger SAEs.
-   - More prompts and less saturated arithmetic cases.
-   - Systematic feature-impact ranking.
-   - Attention/residual attribution.
-   - Better source/target prompt matching.
-   - More compute and repeated seeds.
-
-
-Presentation framing
---------------------
-
-Use a three-column story:
-
-  Units: works best.
-  Math: partially works, but sparse carry feature not isolated.
-  Capitals: does not cleanly work.
-
-The main conclusion should be:
-
-  "The method transferred as a pipeline, but the clean sparse-circuit story did
-  not transfer uniformly under this lightweight open-model setup."
-
-
-Final diagnostic extension (July 2026)
---------------------------------------
-
-One short final notebook was added: `run_gpu_final_validation.ipynb`. It does
-not retrain the SAEs and does not construct a new attribution graph. It restores
-the existing final checkpoints and graph JSONs, then performs two checks that
-materially improve the evidential quality of the report.
-
-1. SAE fidelity and achieved sparsity
-
-`src/sae_diagnostics.py` evaluates every final behaviour-specific checkpoint on
-the original deterministic train/validation activation split. It reports FVE,
-normalised MSE, cosine similarity, relative L2 error, L0, active fraction,
-dead-feature fraction and encoder/decoder norm distributions.
-
-This analysis is a hypothesis test, not a post-hoc excuse:
-
-- Poor validation FVE would support reconstruction insufficiency as one
-  plausible contributor to weak sparse causal control.
-- Good FVE with weak intervention effects would rule out that simple account and
-  point instead toward achieved sparsity, unstable/non-unique features, graph
-  selection, distribution mismatch or nonlinear interactions.
-- Reconstruction statistics alone cannot establish which factor caused an
-  intervention to fail.
-
-The earlier "SAE reconstruction-only baseline" in `intervention.py` is not a
-reconstruction-quality measurement. It uses an error-preserving splice and is a
-forward-pass identity by construction. It should not be cited as evidence that
-the SAE reconstructs well.
-
-2. Graph-held-out prompt pairs
-
-`src/heldout_validation.py` reuses the fixed final carry and force graphs on 12
-new arithmetic pairs and 12 new unit pairs. It compares the clean condition with
-sparse graph-feature edits, complete latent swaps and raw MLP patches. It reports
-per-case effects, baseline-qualified aggregate means, deterministic bootstrap
-intervals, directional success rates and top-token transfer rates.
-
-Scope must be described exactly:
-
-- The arithmetic pairs are absent from the complete addition SAE corpus and were
-  not used to construct the graph.
-- Unit source prompts are selected from the SAE validation split; their matched
-  energy variants are absent from the corpus. Both are absent from graph
-  construction, but the source is not SAE-held-out.
-- Therefore "graph-held-out" is accurate for both domains. "Fully held-out" is
-  not accurate for every unit source.
-
-The benchmark uses edit strength 1 and all aligned token positions. It does not
-tune feature sets, strengths or prompts after observing benchmark outcomes.
-
-
-Final figure policy
--------------------
-
-`report/FIGURE_PLAN.txt` is now the source of truth for all report figures.
-Four vector figures are already generated and inserted in `report/report.tex`:
-
-- pipeline schematic;
-- SI-unit intervention comparison;
-- arithmetic interventions and specificity controls;
-- capital-city intervention comparison.
-
-The final validation notebook will generate three additional figures from real
-saved artifacts:
-
-- `fig_sae_diagnostics.pdf`;
-- `fig_heldout_generalisation.pdf`;
-- `fig_math_attribution_graph.pdf`.
-
-The carry graph figure is a backward-connected visual subset for readability.
-The complete JSON and HTML remain the authoritative graph artifacts, and the
-caption must state that nodes and edges were omitted from the printed view.
-
-
-Optional TopK mathematics follow-up
------------------------------------
-
-`run_gpu_math_topk_retrain.ipynb` tests one specific, diagnosed weakness of the
-final ReLU SAEs: thousands of active latents per example. It is deliberately
-limited to mathematics and reuses the same deterministic final-position
-activation support, layers, split, seed and latent width.
-
-Candidates use TopK k=128, 256 and 512, unit-normalised decoder columns and no L1
-penalty. TopK directly bounds L0, while decoder normalisation removes the simple
-encoder/decoder rescaling degree of freedom. This does not address the separate
-final-position-training versus all-position-intervention mismatch.
-
-Selection occurs before intervention:
-
-- mean validation FVE >= 0.90;
-- minimum layer validation FVE >= 0.85;
-- mean dead-feature fraction <= 0.80;
-- choose the smallest mean L0 among eligible candidates.
-
-If no candidate qualifies, the notebook saves diagnostics and stops before graph
-construction. If one qualifies, only that candidate receives a new 58+83 graph
-and the unchanged 12-pair held-out benchmark.
-
-A matched no-carry specificity control inhibits the same positive carry-graph
-features on each no-carry source. The paired quantity is target carry-gap delta
-minus no-carry correct-gap delta. Negative values favour carry selectivity;
-similar negative changes in both conditions indicate generic answer support.
-
-All artifacts use `topk_math_retrain` paths. Existing final ReLU outputs are not
-overwritten.
-
-Completed TopK result
----------------------
-
-TopK 256 was selected before intervention. Its mean validation FVE was 0.9410
-(minimum layer FVE 0.9319), mean validation L0 was 171.6 and mean dead-feature
-fraction was 0.716. The original mathematics ReLU SAEs had approximately two
-thousand active latents per example, so the TopK model is a substantial and
-measured sparsity improvement while preserving high reconstruction fidelity.
-
-On the same 12 graph-held-out carry pairs, positive-feature inhibition changed
-the correct-minus-dropped-carry gap by -0.875 on average (95% bootstrap CI
-[-0.969, -0.771]), compared with -0.396 for the original ReLU graph. Full-latent
-swap changed from -0.385 to -0.563. Neither sparse nor full-latent conditions
-changed the top prediction; raw MLP transfer remained the upper-bound diagnostic
-and transferred all top predictions.
-
-The new matched control prevents overinterpretation. Inhibiting the same graph
-features on the corresponding no-carry prompts changed their correct-minus-
-carry-injected gap by -0.885. The paired carry-minus-control estimate was +0.010
-with bootstrap 95% CI [-0.125, +0.167], and only 4/12 carry effects were more
-negative than their matched controls. Thus TopK strengthened the graph-selected
-intervention but did not establish a carry-selective feature set. The features
-currently behave like generic arithmetic-answer support under this intervention.
-
-This result must not be described as an inherent failure of SAEs. It is evidence
-against a compact carry circuit recovered by this final-position, per-layer,
-lightweight TopK/ReLU pipeline and its single-graph feature selection.
-
-
-Final-position confirmatory follow-up
--------------------------------------
-
-`run_gpu_math_carry_feature_followup.ipynb` is the final justified arithmetic
-experiment before report writing. It addresses a specific mismatch: the SAE
-training corpus and graph use final-token activations, whereas the completed
-held-out benchmark inhibited those feature directions at all token positions.
-All-position editing can perturb operand-token representations and is therefore
-not a clean test of the final-token graph.
-
-The notebook first repeats the unchanged 12-pair benchmark with `--positions
-last`. It then excludes those 12 inspected cases, baseline-qualifies a fresh case
-pool, assigns eight pairs to discovery and 24 separate pairs to confirmation,
-and screens every positive graph feature individually at the final token. The
-discovery score is:
-
-  carry-target gap delta - matched no-carry control gap delta.
-
-Negative values favour carry selectivity. Feature order is frozen before any
-confirmation intervention. The predeclared primary panel is the first ten
-features. Prefix panels of sizes 1, 3, 5, 10 and 20 are a secondary dose response;
-the run also evaluates the full graph set, reverse-ranked features, each layer's
-feature group and five random panels matched to the top-10 layer counts.
-
-The primary panel is counted as confirmation only if its mean paired difference
-is negative, the upper endpoint of its bootstrap 95% interval is below zero, and
-its mean carry-target effect is negative. If this rule fails, do not choose a
-better-looking secondary panel. The defensible conclusion is then that explicit
-TopK sparsity improves compactness and intervention magnitude but still does not
-recover cross-prompt carry-specific causality.
-
-
-Guarded TopK units follow-up
+Project requirements covered
 ----------------------------
 
-The original final units ReLU SAEs reconstruct well (mean validation FVE 0.959)
-but are extremely dense (mean validation L0 3544.6). Unlike arithmetic, units
-already has a position-consistent sparse effect: on six baseline-qualified
-graph-held-out pairs, final-token force-feature swaps increase the newtons-minus-
-joules logit gap by +0.229 on average, with bootstrap 95% CI [+0.146, +0.333].
-This combination motivates one final cross-domain TopK test.
+- Two principal behaviours: addition and factual recall.
+- Factual recall has two domains: capitals and the science extension, SI units.
+- Fixed model and seeds.
+- Small synthetic prompt corpora and baseline checks.
+- MLP activation capture at selected layers 4, 8, 12, 16, 20, 24 and 28.
+- One behaviour-specific SAE per selected layer, with reported train/validation
+  split and latent width.
+- Pruned input-feature-logit attribution graphs.
+- Feature inhibition and swap-in validation.
+- Complete-latent, raw-MLP and knockout controls.
+- Public standalone repository, configurations, notebooks, output JSON/CSV and
+  figures.
+- Successes and failures reported separately.
 
-`run_gpu_units_topk_retrain.ipynb` trains fixed TopK k=128, 256 and 512
-candidates on the same deterministic final-token units activation corpus. It
-uses the same latent width, seed, epochs, learning rate, decoder normalisation,
-selection thresholds and metric-only selection rule as the mathematics sweep.
-Only the selected candidate receives a force-versus-energy graph.
 
-The selected model is first evaluated on sixteen of the seventeen available
-validation-context pairs at the final token, leaving one reserve. A separate
-feature screen then uses new force, mass and
-energy prompts whose exact strings are absent from the SAE corpus. Physical
-systems are assigned wholly to discovery or confirmation, preventing related
-prompt variants from crossing the split.
+Original ReLU SAE diagnosis
+---------------------------
 
-The baseline gate requires the clean energy target to predict the joules prefix
-and the clean force source to predict the newtons prefix. Whether the mass
-control predicts a kilogram prefix is retained as a diagnostic and a
-prompt-variant preference, but it does not determine eligibility. This is
-deliberate: the mass prompt supplies a non-force activation control and is not
-the causal target whose baseline competence is required for interpreting the
-newtons-minus-joules effect.
+All SAEs have input width 2,560 and latent width 8,192. Each behaviour/layer
+uses 800 training and 200 validation vectors. The initial ReLU objective was
+MSE + 3e-4 times mean latent L1, trained for 75 epochs with Adam at 1e-3 and
+batch size 64.
 
-The first baseline-only execution of this screen tested 32 systems under four
-variants of an indirect prompt of the form "the force associated with [long
-context]". It produced 85 expected energy predictions but only 29 expected
-force predictions, leaving 27 eligible prompt variants across fourteen systems.
-This was insufficient for the fixed 8-system discovery and 16-system
-confirmation design. No feature intervention had been executed at this point.
-The prompt pool was therefore repaired before causal results were observed: it
-was expanded to 64 unseen systems and the matched prompt was rewritten to place
-the measured quantity directly before the requested SI unit. This change
-addresses clean-task competence while retaining exact-prompt absence, disjoint
-system groups, and the original discovery/confirmation sample sizes. It must be
-reported as a baseline-driven protocol amendment, not concealed as the original
-predeclared wording.
+Mean validation diagnostics over seven layers:
 
-For every feature panel, the same energy target receives either a force-source
-swap or a matched mass-source swap. The primary specificity estimand is:
+  Addition: FVE 0.9545, L0 2,166.6, validation dead fraction 0.0106
+  SI units: FVE 0.9591, L0 3,544.6, validation dead fraction 0.0000
+  Capitals: FVE 0.9068, L0 3,102.8, validation dead fraction 0.0000
 
-  force-source newtons-minus-joules gap delta
-  minus mass-source newtons-minus-joules gap delta.
+The important inference is not "reconstruction error caused failure". FVE is
+high. The measured problem is that the ReLU representations are dense. High FVE
+does not require semantic or causal separability.
 
-Eight discovery systems rank positive graph features. The ordering is frozen
-before sixteen different confirmation systems are evaluated, with one prompt
-per system. The Top-10 panel is the sole primary result; Top-1/3/5/20, complete
-graph, reverse rank, layer groups, five
-layer-count-matched random panels, full latent and raw MLP swaps are secondary
-controls.
+Mathematical reason the original objective is weak as a sparsity guarantee:
 
-Primary success requires both the force-source mean and force-minus-mass mean to
-be positive with bootstrap 95% intervals wholly above zero. If this rule fails,
-do not choose another k, panel size or layer after viewing confirmation. Retain
-the ReLU final-position result and report the compact TopK test as negative.
+  W_e' = c W_e, b_e' = c b_e, W_d' = W_d / c
+
+for 0 < c < 1 preserves the ReLU reconstruction because z' = c z, while it
+reduces the raw L1 term. Decoder norms were not constrained in the original
+models. This does not prove optimisation used the degeneracy, but it proves the
+penalty is not an invariant sparsity measure. The measured L0 values show the
+practical density.
+
+
+Arithmetic evidence
+-------------------
+
+Main teacher-forced example:
+
+  Question: What is 58 + 83? Answer: 1
+
+The next token is the tens digit of 141. Correct token 4 had logit 30.62;
+dropped-carry token 3 had logit 23.50, so the clean gap was 7.12.
+
+Exploratory hierarchy:
+
+- Inhibiting 73 positive graph features reduced the gap only to 6.63.
+- A strength-2 complete SAE-latent patch from 54+83 reduced it to 0.74.
+- A raw all-position MLP patch transferred source digit 3.
+- A 44+83 control transferred source digit 2, so broad patching transfers
+  answer state, not an independently established no-carry variable.
+- All-position MLP knockout reduced p(4) to 0.6406, raised p(3) to 0.1836 and
+  p(2) to 0.1426. This is broad digit destabilisation, not a carry circuit.
+- Layer 24 was impactful under destructive knockout, but this localises causal
+  dependence only at the component level.
+
+TopK candidate selection:
+
+- Fixed candidates: k = 128, 256, 512.
+- Required mean FVE >= 0.90, every layer FVE >= 0.85, and mean combined dead
+  fraction <= 0.80.
+- Choose the eligible candidate with smallest mean validation L0.
+- k=128 failed dead fraction (0.8324).
+- k=256 was selected: mean FVE 0.9410, minimum layer FVE 0.9319, mean L0 171.6,
+  dead fraction 0.7162.
+
+All-position matched benchmark, 12 pairs:
+
+  carry target delta       -0.875, CI [-0.969, -0.771]
+  no-carry control delta   -0.885, CI [-0.958, -0.823]
+  target-control            0.010, CI [-0.125,  0.167]
+
+Final-position frozen screen, 8 discovery and 24 confirmation pairs:
+
+  top-10 target delta      -0.1406, CI [-0.1719, -0.1146]
+  no-carry control delta   -0.1094, CI [-0.1458, -0.0729]
+  target-control           -0.0313, CI [-0.0885,  0.0260]
+  target moved negative in 21/24; no top-token flips
+
+The TopK features affect arithmetic logits, but the control interval crosses
+zero. The predeclared carry-specificity test failed. This is a controlled null
+result, not a reason to relabel the panel after viewing it.
+
+The circuit-style arithmetic summary is
+`report/figures/fig_math_compact_carry_test.pdf`, generated by
+`python -m src.plot_math_compact_circuit`. It shows the exact frozen feature
+IDs and retained selected-feature edges alongside the matched confirmation.
+Describe it as a rejected candidate carry circuit or a carry-associated
+discovery panel. Do not call it an abstract `carry 1` representation.
+
+
+Capital-city evidence
+---------------------
+
+The first Dallas/Oakland pair had low clean confidence. A high-confidence
+Zarqa/Amman and Basra/Baghdad pair was added to test that confound. Clean first
+prefix probabilities were 0.9844 for Amman and 0.9648 for Baghdad, but complete
+and sparse latent swaps still did not transfer the answer. This removes low
+confidence as a sufficient explanation while leaving open positional,
+component and multi-token retrieval explanations.
+
+Report capitals as a negative factual-recall reproduction. Do not claim that
+Qwen lacks geographic knowledge.
+
+
+SI-unit evidence
+----------------
+
+Original ReLU evidence:
+
+- A complete all-position force-to-energy latent patch flipped the first answer
+  prefix in one minimal pair: p(new) 0.0240 -> 0.4980 and p(j) 0.7969 -> 0.2354.
+- The corresponding sparse graph patch was much weaker.
+- On six baseline-qualified, graph-held-out, final-position pairs, the sparse
+  mean force-minus-energy gap delta was +0.2292, CI [+0.1458, +0.3333], with
+  six of six in the expected direction and no flips.
+
+TopK units selection:
+
+- Fixed candidates k = 128, 256, 512 with the same diagnostic rule as math.
+- k=128 was selected: mean FVE 0.9358, minimum layer FVE 0.8891, mean L0 99.8,
+  dead fraction 0.7989.
+- This is 35.5 times fewer active latents than the original units ReLU model,
+  with a mean FVE decrease of only 0.0233.
+
+Graph-held-out TopK benchmark:
+
+- 8 of 16 pairs passed both clean source and target eligibility.
+- Sparse positive graph swap: +0.5859, CI [+0.3516, +0.8828], 8/8 direction,
+  no top-token flips.
+- Complete latent: +1.3516; raw MLP: +1.6172.
+
+Final frozen feature screen:
+
+- One force graph supplied 73 positive-attribution candidate features.
+- Rank individual features on 8 discovery physical systems by
+  force-source delta minus matched mass-source delta.
+- Freeze the top-10 panel before confirmation.
+- Test on 16 disjoint physical systems; exact prompts were absent from the SAE
+  corpus and systems were disjoint from discovery.
+- Top 10 comprise eight layer-28 features, one layer-8 and one layer-4 feature.
+- Six of ten have force-related diagnostic decoder outputs.
+
+Primary result:
+
+  force-source shift      +1.2344, CI [+1.1484, +1.3320]
+  mass-control shift      -0.0898, CI [-0.1289, -0.0508]
+  paired specificity      +1.3242, CI [+1.2227, +1.4297]
+  force positive and force > mass in 16/16 cases
+  no top-token flips
+
+Progression and controls:
+
+  top 1 paired effect     +0.3516
+  top 3                   +0.8125
+  top 5                   +1.0547
+  top 10                  +1.3242
+  top 20                  +1.3477
+  all 73                  +1.3906
+  bottom 10               +0.0547, CI [+0.0078, +0.0977]
+  full latent             +2.8398
+  raw MLP                 +2.8906
+
+The top-10 force-source effect is 97.5% of the all-73 force-source effect and
+40.6% of the complete-latent force-source effect. These are effect ratios, not
+variance explained.
+
+Mean confirmation gaps:
+
+  clean energy target     -9.41
+  force-source swap       -8.17
+  mass-source control     -9.50
+
+Joules remains the top prediction. The result supports a compact
+force-associated transfer panel, not answer replacement.
+
+
+Protocol choices not obvious from code alone
+--------------------------------------------
+
+- The units feature screen first used indirect wording and yielded too few
+  clean, fully qualified systems. The prompt pool was changed before any
+  feature intervention, not after viewing a causal result. The final direct
+  wording was baseline-audited over 64 physical systems and four variants.
+- Discovery and confirmation are split by physical system, not merely by prompt
+  string, to reduce template leakage.
+- Arithmetic needs a no-carry control because a decrease in the 4-vs-3 gap can
+  reflect generic digit-state disruption.
+- Units needs a mass donor because any factual-recall donor could otherwise be
+  mistaken for a force-specific effect.
+- Final screens use the final token because that matches SAE training support.
+  Earlier all-position results remain exploratory distribution-mismatched
+  controls.
+- Decoder top-output labels are diagnostic evidence only. They do not name or
+  prove the semantics of a latent.
+- Bootstrap intervals use 5,000 seeded resamples and describe variation across
+  constructed prompt systems, not model-sampling or SAE-seed uncertainty.
+
+
+Infrastructure and fact-check
+------------------------------
+
+CSD3 became unavailable to the project for about two weeks during a late-June
+heatwave. A University of Cambridge notice explicitly attributes the incident
+to cooling failure during recent hot weather and lists CSD3 as unavailable. The
+CSD3 status page later lists post-incident recovery. Working activation and
+checkpoint artifacts were lost and regenerated. CSD3 documentation confirms
+that hpc-work/RDS is not backed up and node-local files are transient.
+
+Do not write that A100, L4 or H100 usage has a universal rate of 6.77 Colab
+compute units per hour. Google's official FAQ says runtime limits, hardware
+availability and usage conditions vary and are not published as fixed limits.
+The accurate statement is that paid Colab runtime was compute-unit-budgeted,
+which favoured targeted candidate sweeps and confirmation over multi-seed,
+all-layer or CLT-scale training.
+
+Recorded final notebook hardware includes T4 and NVIDIA A100-SXM4-80GB. There
+is no retained evidence that an H100 was used for the reported final runs.
+
+
+Reproducibility artifact map
+----------------------------
+
+Main report:
+  report/report.tex
+
+Executive summary:
+  report/executive_summary.tex
+
+Final arithmetic:
+  run_gpu_math_topk_retrain.ipynb
+  run_gpu_math_carry_feature_followup.ipynb
+  outputs/topk_math_retrain/
+  outputs/topk_math_followup/
+
+Final units:
+  run_gpu_units_topk_retrain.ipynb
+  outputs/topk_units_retrain/
+
+Retained capitals:
+  run_gpu_capitals_final.ipynb
+  outputs/capitals_final_*.json
+
+Core scripts:
+  src/capture_activations.py
+  src/train.py
+  src/sae_diagnostics.py
+  src/attribution_graph.py
+  src/intervention.py
+  src/heldout_validation.py
+  src/math_carry_feature_screen.py
+  src/units_feature_screen.py
+
+Central figures:
+  report/figures/fig_math_attribution_graph.pdf
+  report/figures/fig_sae_diagnostics.pdf
+  report/figures/fig_math_topk_tradeoff_specificity.pdf
+  report/figures/fig_math_carry_feature_screen.pdf
+  report/figures/fig_math_compact_carry_test.pdf
+  report/figures/fig_units_topk_selection_confirmation.pdf
+  report/figures/fig_units_compact_causal_circuit.pdf
+
+
+Submission checks still required
+--------------------------------
+
+1. Recalculate the final report word count after every substantive edit.
+2. Keep the main report at or below 7,000 words and executive summary below
+   1,000 words.
+3. Compile both TeX documents and inspect the final PDFs at normal zoom.
+4. Confirm candidate details and any prescribed declaration wording.
+5. Commit/push final code and outputs needed by the public reproducibility pack.
+6. Do not silently replace exploratory notebooks; README identifies their role.
