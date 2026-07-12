@@ -122,8 +122,9 @@ def main():
     add_arrow(ax, (0.80, row1_y + 0.01), (0.84, row1_y + 0.01), GOLD)
 
     # ========== ROW 2: Force-source swap ==========
-    row2_y = 0.22
-    ax.text(0.03, row2_y + 0.14, "(b) After force-source swap into panel", fontsize=10.5, weight="bold", color=INK)
+    row2_y = 0.14
+    row2_heading_y = 0.39
+    ax.text(0.03, row2_heading_y, "(b) After force-source swap into panel", fontsize=10.5, weight="bold", color=INK)
 
     # Input prompt (same)
     add_box(ax, 0.03, row2_y - 0.05, 0.17, 0.12, "#E7F0F8", INPUT_BLUE)

@@ -173,17 +173,17 @@ def draw_feature_node(
     )
     axis.text(
         x + 0.008,
-        y + height * 0.62,
+        y + height * 0.72,
         f"#{rank}",
         ha="left",
         va="center",
-        fontsize=6.8,
+        fontsize=6.4,
         color=MUTED,
         zorder=5,
     )
     axis.text(
-        x + width * 0.56,
-        y + height * 0.52,
+        x + width * 0.61,
+        y + height * 0.40,
         f"F{feature}",
         ha="center",
         va="center",
@@ -298,7 +298,7 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
               color=INK, va="center")
 
     # Graph prompt and objective.
-    add_round_box(axis, 0.055, 0.555, 0.14, 0.17, face="#F8FAFC", edge=GRID, radius=0.014)
+    add_round_box(axis, 0.055, 0.545, 0.150, 0.18, face="#F8FAFC", edge=GRID, radius=0.014)
     axis.text(0.068, 0.702, "GRAPH PROMPT", fontsize=7.2, weight="bold", color=MUTED, va="top")
     axis.text(0.068, 0.682, "Official SI unit for", fontsize=8.4, color=INK, va="top")
     add_round_box(axis, 0.067, 0.610, 0.055, 0.035, face=FORCE_LIGHT, edge=FORCE, radius=0.008)
@@ -310,9 +310,9 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
     # Frozen panel enclosure.
     add_round_box(
         axis,
-        0.215,
+        0.220,
         0.315,
-        0.345,
+        0.340,
         0.445,
         face="#FBFAFC",
         edge="#B9A4BF",
@@ -321,19 +321,19 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
         linestyle=(0, (4, 3)),
         zorder=1,
     )
-    axis.text(0.233, 0.736, "FROZEN SWAP PANEL", fontsize=7.2, weight="bold", color=PURPLE)
-    axis.text(0.233, 0.712, "10 of 73 positive graph features", fontsize=8.3, color=INK)
+    axis.text(0.238, 0.736, "FROZEN SWAP PANEL", fontsize=7.2, weight="bold", color=PURPLE)
+    axis.text(0.238, 0.712, "10 of 73 positive graph features", fontsize=8.3, color=INK)
 
-    axis.text(0.250, 0.675, "Layer 4", fontsize=7.2, color=MUTED, ha="center")
-    axis.text(0.340, 0.675, "Layer 8", fontsize=7.2, color=MUTED, ha="center")
-    axis.text(0.469, 0.675, "Layer 28", fontsize=7.2, color=MUTED, ha="center")
+    axis.text(0.269, 0.675, "Layer 4", fontsize=7.2, color=MUTED, ha="center")
+    axis.text(0.357, 0.675, "Layer 8", fontsize=7.2, color=MUTED, ha="center")
+    axis.text(0.475, 0.675, "Layer 28", fontsize=7.2, color=MUTED, ha="center")
 
     by_layer: Dict[int, List[Dict[str, Any]]] = {}
     for feature in features:
         by_layer.setdefault(int(feature["layer"]), []).append(feature)
 
     node_boxes: Dict[str, Tuple[float, float, float, float]] = {}
-    for layer, x, y in [(4, 0.225, 0.565), (8, 0.315, 0.565)]:
+    for layer, x, y in [(4, 0.232, 0.565), (8, 0.320, 0.565)]:
         feature = by_layer[layer][0]
         node_id = feature_node_id(feature)
         node_boxes[node_id] = draw_feature_node(
@@ -363,7 +363,7 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
         )
 
     # A compressed but explicit path from the highlighted input to the early features.
-    add_arrow(axis, (0.195, 0.635), (0.225, 0.591), colour="#8A949E", linewidth=1.1)
+    add_arrow(axis, (0.205, 0.635), (0.232, 0.591), colour="#8A949E", linewidth=1.1)
     l4_box = node_boxes[feature_node_id(by_layer[4][0])]
     l8_box = node_boxes[feature_node_id(by_layer[8][0])]
     add_arrow(
@@ -376,7 +376,7 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
     add_arrow(
         axis,
         (l8_box[0] + l8_box[2], l8_box[1] + l8_box[3] / 2),
-        (0.392, 0.591),
+        (0.397, 0.591),
         colour="#8A949E",
         linewidth=1.0,
         linestyle=(0, (3, 3)),
@@ -446,24 +446,23 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
     # Confirmation panel: donors, swap operation and unchanged top prediction.
     axis.text(0.692, 0.790, "ACTIVATION DONORS", fontsize=7.2, weight="bold", color=MUTED)
     add_round_box(axis, 0.692, 0.686, 0.112, 0.076, face=FORCE_LIGHT, edge=FORCE, radius=0.011)
-    axis.text(0.706, 0.739, "FORCE SOURCE", fontsize=6.8, color=FORCE, weight="bold", va="center")
-    axis.text(0.706, 0.710, "newtons-predicting", fontsize=8.0, color=INK, va="center")
+    axis.text(0.748, 0.739, "FORCE SOURCE", fontsize=6.8, color=FORCE, weight="bold", ha="center", va="center")
+    axis.text(0.748, 0.710, "newtons-predicting", fontsize=7.6, color=INK, ha="center", va="center")
     add_round_box(axis, 0.830, 0.686, 0.112, 0.076, face=MASS_LIGHT, edge=MASS, radius=0.011)
-    axis.text(0.844, 0.739, "MASS CONTROL", fontsize=6.8, color=MASS, weight="bold", va="center")
-    axis.text(0.844, 0.710, "kilograms-predicting", fontsize=8.0, color=INK, va="center")
-    axis.text(0.817, 0.669, "evaluated in separate runs", fontsize=6.8, color=MUTED, ha="center")
+    axis.text(0.886, 0.739, "MASS CONTROL", fontsize=6.8, color=MASS, weight="bold", ha="center", va="center")
+    axis.text(0.886, 0.710, "kilograms-predicting", fontsize=7.6, color=INK, ha="center", va="center")
 
     add_arrow(axis, (0.748, 0.686), (0.794, 0.627), colour=FORCE, linewidth=1.5)
     add_arrow(axis, (0.886, 0.686), (0.840, 0.627), colour=MASS, linewidth=1.5)
     add_round_box(axis, 0.764, 0.542, 0.106, 0.084, face=PURPLE_LIGHT, edge=PURPLE, radius=0.012)
     axis.text(0.817, 0.598, "SWAP-IN", fontsize=7.0, color=PURPLE, weight="bold", ha="center")
-    axis.text(0.817, 0.571, "same 10 latents\nat final token", fontsize=7.8, color=INK,
-              ha="center", va="center", linespacing=1.15)
+    axis.text(0.817, 0.565, "same 10 latents\nat final token\none donor per run", fontsize=6.8, color=INK,
+              ha="center", va="center", linespacing=1.05)
     add_arrow(axis, (0.817, 0.542), (0.817, 0.493), colour=ENERGY, linewidth=1.5)
     add_round_box(axis, 0.692, 0.416, 0.250, 0.077, face=ENERGY_LIGHT, edge=ENERGY, radius=0.011)
     axis.text(0.706, 0.469, "ENERGY RECIPIENT", fontsize=6.8, color=ENERGY, weight="bold", va="center")
-    axis.text(0.706, 0.440, "16 disjoint systems; clean answer remains joules", fontsize=8.0,
-              color=INK, va="center")
+    axis.text(0.817, 0.440, "16 disjoint systems\nclean answer remains joules", fontsize=7.4,
+              color=INK, ha="center", va="center", linespacing=1.12)
 
     # Mean logit-gap ruler. Separate tracks keep the nearly identical clean and
     # mass-control values legible rather than hiding one marker behind another.

@@ -1,37 +1,135 @@
-# Python bytecode and caches
+# Submission repository policy
+#
+# Intentionally retained:
+# - README, setup.py, environment.yml, configs/, src/, tests/
+# - data generators and generated prompt CSV/JSON files
+# - all notebooks, including exploratory provenance
+# - small machine-readable results and interactive graph HTML under outputs/
+# - SAE metadata JSON files (but not activations or checkpoints)
+# - report sources, final PDFs, and report-used vector figures
+
+# Python bytecode, test caches, and local tooling
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
 
-# Virtual environments and local environment metadata
+# Virtual environments, local environment state, and secrets
 .venv/
 venv/
 env/
-.env
 .conda/
-*.env
+.direnv/
+.env
+.env.*
+!.env.example
+.python-version
+.netrc
+*.pem
+*.key
 
-# Jupyter / editor noise
-.ipynb_checkpoints/
+# Editor, assistant, and notebook noise
 .vscode/
 .idea/
+.agents/
+.codex/
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+*.code-workspace
 
-# Package/build artifacts
+# Python package/build artifacts
 build/
 dist/
 *.egg-info/
 .eggs/
+pip-wheel-metadata/
 
-# Generated data and outputs
-*.csv
-!data/capitals_base.csv
-!data/generate_datasets.py
-
-# Large model and activation artifacts
+# Downloaded models and heavyweight ML artifacts
 models/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.zarr/
+wandb/
+lightning_logs/
 
-# OS files
+# Superseded local workspaces and data copies
+mechanistic_dataold/
+outputsold/
+data/*_old.*
+environment-condaforge.yml
+
+# Duplicate generated output visuals. Machine-readable JSON/CSV results and
+# interactive graph HTML remain included; final report figures live below.
+outputs/report_figures/
+outputs/**/*.png
+outputs/**/*.pdf
+outputs/**/*.svg
+outputs/**/*.md
+
+# LaTeX build products (the submitted PDFs are intentionally not ignored)
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.log
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+
+# Keep only editable TeX sources and the vector PDFs used by report.tex in the
+# report figure directory. Other rendered variants are reproducible from src/.
+report/figures/*
+!report/figures/*.tex
+!report/figures/fig_capitals_interventions.pdf
+!report/figures/fig_intervention_schematic.pdf
+!report/figures/fig_math_attribution_graph.pdf
+!report/figures/fig_math_balanced_carry_replication.pdf
+!report/figures/fig_math_carry_feature_screen.pdf
+!report/figures/fig_math_topk_tradeoff_specificity.pdf
+!report/figures/fig_pipeline.pdf
+!report/figures/fig_sae_diagnostics.pdf
+!report/figures/fig_units_attribution_panel.pdf
+!report/figures/fig_units_compact_causal_circuit.pdf
+!report/figures/fig_units_topk_selection_confirmation.pdf
+
+# Internal planning/assignment copies are not part of the authored submission
+Instructions.md
+project.txt
+report_notes.txt
+ai_handoff_summary.txt
+changes_summary.txt
+
+# Temporary files, archives, and OS metadata
+*.bak
+*.tmp
+*.temp
+*.swp
+*~
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
 .DS_Store
 Thumbs.db
-
-*old/

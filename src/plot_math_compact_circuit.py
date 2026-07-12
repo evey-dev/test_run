@@ -319,19 +319,19 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
     )
 
     # Prompt and graph objective.
-    add_round_box(axis, 0.055, 0.548, 0.142, 0.185, face="#F8FAFC", edge=GRID, radius=0.014)
+    add_round_box(axis, 0.055, 0.548, 0.150, 0.185, face="#F8FAFC", edge=GRID, radius=0.014)
     axis.text(0.068, 0.710, "GRAPH PROMPT", fontsize=7.2, weight="bold", color=MUTED, va="top")
-    axis.text(0.068, 0.681, "58 + 83 =", fontsize=11.0, color=INK, weight="bold", va="center")
-    add_round_box(axis, 0.139, 0.655, 0.028, 0.038, face=TARGET_LIGHT, edge=TARGET, radius=0.007)
-    axis.text(0.153, 0.674, "1", fontsize=11.0, color=TARGET, weight="bold", ha="center", va="center")
-    axis.text(0.169, 0.674, "_", fontsize=11.0, color=INK, weight="bold", va="center")
+    axis.text(0.068, 0.681, "58 + 83", fontsize=10.4, color=INK, weight="bold", va="center")
+    axis.text(0.128, 0.681, "=", fontsize=10.4, color=INK, weight="bold", va="center")
+    add_round_box(axis, 0.142, 0.655, 0.028, 0.038, face=TARGET_LIGHT, edge=TARGET, radius=0.007)
+    axis.text(0.156, 0.674, "1", fontsize=10.8, color=TARGET, weight="bold", ha="center", va="center")
     axis.text(0.068, 0.632, "teacher-forced prefix", fontsize=6.8, color=MUTED, va="center")
     axis.text(0.068, 0.600, "OBJECTIVE", fontsize=6.8, weight="bold", color=MUTED, va="center")
     axis.text(0.068, 0.578, "logit(4) - logit(3)", fontsize=7.5, color=INK, weight="bold", va="center")
     axis.text(0.068, 0.558, "clean value: 7.125", fontsize=7.1, color=MUTED, va="center")
 
     # Frozen feature panel.
-    panel_x, panel_y, panel_w, panel_h = 0.213, 0.303, 0.352, 0.467
+    panel_x, panel_y, panel_w, panel_h = 0.220, 0.303, 0.345, 0.467
     add_round_box(
         axis,
         panel_x,
@@ -344,14 +344,14 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
         radius=0.016,
         linestyle=(0, (4, 3)),
     )
-    axis.text(0.230, 0.746, "FROZEN INHIBITION PANEL", fontsize=7.2, weight="bold", color=PURPLE)
-    axis.text(0.230, 0.721, f"10 of {candidate_count} positive graph features", fontsize=8.3, color=INK)
+    axis.text(0.237, 0.746, "FROZEN INHIBITION PANEL", fontsize=7.2, weight="bold", color=PURPLE)
+    axis.text(0.237, 0.721, f"10 of {candidate_count} positive graph features", fontsize=8.3, color=INK)
 
     by_layer: Dict[int, List[Dict[str, Any]]] = {}
     for feature in features:
         by_layer.setdefault(int(feature["layer"]), []).append(feature)
 
-    layer_x = {4: 0.224, 12: 0.291, 20: 0.365, 24: 0.431, 28: 0.498}
+    layer_x = {4: 0.231, 12: 0.297, 20: 0.369, 24: 0.433, 28: 0.500}
     layer_y = {
         4: [0.579, 0.487],
         12: [0.620, 0.529, 0.438],
@@ -380,7 +380,7 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
         box = node_boxes[feature_node_id(feature)]
         add_arrow(
             axis,
-            (0.197, 0.641),
+            (0.205, 0.641),
             (box[0], box[1] + box[3] / 2),
             colour="#8A949E",
             linewidth=0.9,
@@ -463,12 +463,21 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
 
     # Matched confirmation protocol.
     axis.text(0.692, 0.790, "INTERVENTION", fontsize=7.2, weight="bold", color=MUTED)
-    add_round_box(axis, 0.692, 0.682, 0.250, 0.078, face=PURPLE_LIGHT, edge=PURPLE, radius=0.011)
-    axis.text(0.706, 0.736, "INHIBIT THE SAME 10 LATENTS", fontsize=6.8, color=PURPLE, weight="bold", va="center")
-    axis.text(0.706, 0.707, "z_j <- 0 at the final token; reconstruction error preserved", fontsize=7.7, color=INK, va="center")
+    add_round_box(axis, 0.692, 0.674, 0.250, 0.086, face=PURPLE_LIGHT, edge=PURPLE, radius=0.011)
+    axis.text(0.817, 0.739, "INHIBIT THE SAME 10 LATENTS", fontsize=6.8, color=PURPLE, weight="bold", ha="center", va="center")
+    axis.text(
+        0.817,
+        0.704,
+        "$z_j \\leftarrow 0$ at the final token\nclean reconstruction residual preserved",
+        fontsize=7.1,
+        color=INK,
+        ha="center",
+        va="center",
+        linespacing=1.15,
+    )
 
-    add_arrow(axis, (0.817, 0.682), (0.759, 0.625), colour=TARGET, linewidth=1.4)
-    add_arrow(axis, (0.817, 0.682), (0.875, 0.625), colour=CONTROL, linewidth=1.4)
+    add_arrow(axis, (0.817, 0.674), (0.759, 0.625), colour=TARGET, linewidth=1.4)
+    add_arrow(axis, (0.817, 0.674), (0.875, 0.625), colour=CONTROL, linewidth=1.4)
     add_round_box(axis, 0.692, 0.549, 0.112, 0.076, face=TARGET_LIGHT, edge=TARGET, radius=0.011)
     axis.text(0.706, 0.602, "CARRY TARGETS", fontsize=6.8, color=TARGET, weight="bold", va="center")
     axis.text(0.706, 0.573, "24 held-out cases", fontsize=8.0, color=INK, va="center")
@@ -510,7 +519,7 @@ def render(graph: Dict[str, Any], screen: Dict[str, Any], output_paths: Sequence
     axis.text(0.929, 0.246, "0 carry  |  0 control", fontsize=7.2, color=INK, weight="bold", ha="right")
 
     add_round_box(axis, 0.692, 0.155, 0.250, 0.052, face=AMBER_LIGHT, edge=AMBER, radius=0.011)
-    axis.text(0.817, 0.181, "PREDECLARED CARRY-SPECIFICITY RULE: NOT MET", fontsize=7.7, color=AMBER, weight="bold", ha="center", va="center")
+    axis.text(0.817, 0.181, "PREDECLARED CARRY-SPECIFICITY RULE: NOT MET", fontsize=7.3, color=AMBER, weight="bold", ha="center", va="center")
 
     axis.text(
         0.04,

@@ -1,0 +1,1001 @@
+Location,Type,Answer,DistractorAnswer,sentence
+Spain,country,Madrid,Baiona,Fact: The capital of the country containing Baiona is named
+Italy,country,Rome,Veleso,Fact: The capital of the country containing Veleso is named
+Honduras,country,Tegucigalpa,Mojimán,Fact: The capital of the country containing Mojimán is named
+Romania,country,Bucharest,Lovrin,Fact: The capital of the country containing Lovrin is named
+Denmark,country,Copenhagen,Viborg,Fact: The capital of the country containing Viborg is named
+Italy,country,Rome,Basaluzzo,Fact: The capital of the country containing Basaluzzo is named
+Japan,country,Tokyo,Suwa Shi,Fact: The capital of the country containing Suwa Shi is named
+Romania,country,Bucharest,Strejeștii de Sus,Fact: The capital of the country containing Strejeștii de Sus is named
+Jamaica,country,Kingston,New Denbigh,Fact: The capital of the country containing New Denbigh is named
+Germany,country,Berlin,Undenheim,Fact: The capital of the country containing Undenheim is named
+Nauru,country,Yaren,Meneng,Fact: The capital of the country containing Meneng is named
+Austria,country,Vienna,Schachen bei Vorau,Fact: The capital of the country containing Schachen bei Vorau is named
+Czech Republic,country,Prague,Velký Šenov,Fact: The capital of the country containing Velký Šenov is named
+Spain,country,Madrid,Villaescusa de Roa,Fact: The capital of the country containing Villaescusa de Roa is named
+Paraguay,country,Asunción,San Miguel,Fact: The capital of the country containing San Miguel is named
+Estonia,country,Tallinn,Tartu,Fact: The capital of the country containing Tartu is named
+Venezuela,country,Caracas,San Carlos de Río Negro,Fact: The capital of the country containing San Carlos de Río Negro is named
+France,country,Paris,Brioude,Fact: The capital of the country containing Brioude is named
+Bulgaria,country,Sofia,Obshtina Strumyani,Fact: The capital of the country containing Obshtina Strumyani is named
+North Korea,country,Pyongyang,Hamhung,Fact: The capital of the country containing Hamhung is named
+Gambia,country,Banjul,Serrekunda,Fact: The capital of the country containing Serrekunda is named
+Honduras,country,Tegucigalpa,Piraera,Fact: The capital of the country containing Piraera is named
+Japan,country,Tokyo,Isahaya,Fact: The capital of the country containing Isahaya is named
+Albania,country,Tirana,Bashkia Mallakastër,Fact: The capital of the country containing Bashkia Mallakastër is named
+Poland,country,Warsaw,Wilków,Fact: The capital of the country containing Wilków is named
+Netherlands,country,Amsterdam,Vleuten,Fact: The capital of the country containing Vleuten is named
+Ireland,country,Dublin,Cabra,Fact: The capital of the country containing Cabra is named
+Dominica,country,Roseau,Portsmouth,Fact: The capital of the country containing Portsmouth is named
+Germany,country,Berlin,Helferskirchen,Fact: The capital of the country containing Helferskirchen is named
+Romania,country,Bucharest,Misentea,Fact: The capital of the country containing Misentea is named
+Uzbekistan,country,Tashkent,Samarkand,Fact: The capital of the country containing Samarkand is named
+Morocco,country,Rabat,Casablanca,Fact: The capital of the country containing Casablanca is named
+Thailand,country,Bangkok,Pla Pak,Fact: The capital of the country containing Pla Pak is named
+Myanmar,country,Naypyidaw,Pyin Oo Lwin,Fact: The capital of the country containing Pyin Oo Lwin is named
+France,country,Paris,Vernet,Fact: The capital of the country containing Vernet is named
+Switzerland,country,Bern,Sigriswil,Fact: The capital of the country containing Sigriswil is named
+New Jersey,state,Trenton,Passaic,Fact: The capital of the state containing Passaic is named
+Russia,country,Moscow,Novogagatli,Fact: The capital of the country containing Novogagatli is named
+North Dakota,state,Bismarck,Fargo,Fact: The capital of the state containing Fargo is named
+Vanuatu,country,Port Vila,Espiritu Santo,Fact: The capital of the country containing Espiritu Santo is named
+Italy,country,Rome,Castellana,Fact: The capital of the country containing Castellana is named
+Canada,country,Ottawa,Saint-Pie,Fact: The capital of the country containing Saint-Pie is named
+Italy,country,Rome,Villa del Bosco,Fact: The capital of the country containing Villa del Bosco is named
+Germany,country,Berlin,Absberg,Fact: The capital of the country containing Absberg is named
+Serbia,country,Belgrade,Kraljevo,Fact: The capital of the country containing Kraljevo is named
+Turkey,country,Ankara,Merkez,Fact: The capital of the country containing Merkez is named
+China,country,Beijing,Wuhan,Fact: The capital of the country containing Wuhan is named
+Peru,country,Lima,Tambo Grande,Fact: The capital of the country containing Tambo Grande is named
+South Dakota,state,Pierre,Sioux Falls,Fact: The capital of the state containing Sioux Falls is named
+Honduras,country,Tegucigalpa,San Pedro Sula,Fact: The capital of the country containing San Pedro Sula is named
+Philippines,country,Manila,Luna,Fact: The capital of the country containing Luna is named
+Poland,country,Warsaw,Dąbrowa Białostocka,Fact: The capital of the country containing Dąbrowa Białostocka is named
+Italy,country,Rome,Casaletto Vaprio,Fact: The capital of the country containing Casaletto Vaprio is named
+Czech Republic,country,Prague,Halenkovice,Fact: The capital of the country containing Halenkovice is named
+Hungary,country,Budapest,Veresegyház,Fact: The capital of the country containing Veresegyház is named
+Germany,country,Berlin,Wohldorf-Ohlstedt,Fact: The capital of the country containing Wohldorf-Ohlstedt is named
+Uruguay,country,Montevideo,Estacion Chileno,Fact: The capital of the country containing Estacion Chileno is named
+Italy,country,Rome,San Felice del Benaco,Fact: The capital of the country containing San Felice del Benaco is named
+Poland,country,Warsaw,Myślenice,Fact: The capital of the country containing Myślenice is named
+Netherlands,country,Amsterdam,Dongen,Fact: The capital of the country containing Dongen is named
+Italy,country,Rome,Trichiana,Fact: The capital of the country containing Trichiana is named
+Senegal,country,Dakar,Kaffrine,Fact: The capital of the country containing Kaffrine is named
+Philippines,country,Manila,Taraka,Fact: The capital of the country containing Taraka is named
+Slovakia,country,Bratislava,Dobšiná,Fact: The capital of the country containing Dobšiná is named
+Italy,country,Rome,Lipomo,Fact: The capital of the country containing Lipomo is named
+Taiwan,country,Taipei,Kaohsiung,Fact: The capital of the country containing Kaohsiung is named
+Nicaragua,country,Managua,Ocotal,Fact: The capital of the country containing Ocotal is named
+Russia,country,Moscow,Saint Petersburg,Fact: The capital of the country containing Saint Petersburg is named
+Denmark,country,Copenhagen,Aarhus,Fact: The capital of the country containing Aarhus is named
+Botswana,country,Gaborone,Francistown,Fact: The capital of the country containing Francistown is named
+Niger,country,Niamey,Zinder,Fact: The capital of the country containing Zinder is named
+Cuba,country,Havana,Santiago,Fact: The capital of the country containing Santiago is named
+Spain,country,Madrid,Aguilar del Río Alhama,Fact: The capital of the country containing Aguilar del Río Alhama is named
+China,country,Beijing,Nanyue,Fact: The capital of the country containing Nanyue is named
+Russia,country,Moscow,Novopokrovka,Fact: The capital of the country containing Novopokrovka is named
+Equatorial Guinea,country,Malabo,Ayene,Fact: The capital of the country containing Ayene is named
+Vietnam,country,Hanoi,Huyện Quảng Ninh,Fact: The capital of the country containing Huyện Quảng Ninh is named
+Netherlands,country,Amsterdam,Pijnacker,Fact: The capital of the country containing Pijnacker is named
+Spain,country,Madrid,La Unión,Fact: The capital of the country containing La Unión is named
+Italy,country,Rome,Tetti Neirotti,Fact: The capital of the country containing Tetti Neirotti is named
+Philippines,country,Manila,Busilak,Fact: The capital of the country containing Busilak is named
+Swaziland,country,Mbabane,Manzini,Fact: The capital of the country containing Manzini is named
+Spain,country,Madrid,Grandes y San Martín,Fact: The capital of the country containing Grandes y San Martín is named
+Norway,country,Oslo,Steinkjer,Fact: The capital of the country containing Steinkjer is named
+Chile,country,Santiago,Nueva Imperial,Fact: The capital of the country containing Nueva Imperial is named
+France,country,Paris,Champagney,Fact: The capital of the country containing Champagney is named
+Italy,country,Rome,Venaus,Fact: The capital of the country containing Venaus is named
+France,country,Paris,Septème,Fact: The capital of the country containing Septème is named
+Sweden,country,Stockholm,Viken,Fact: The capital of the country containing Viken is named
+France,country,Paris,Mormant,Fact: The capital of the country containing Mormant is named
+Romania,country,Bucharest,Lunca Cernii de Jos,Fact: The capital of the country containing Lunca Cernii de Jos is named
+Uruguay,country,Montevideo,Lago de los Cisnes,Fact: The capital of the country containing Lago de los Cisnes is named
+Russia,country,Moscow,Iksha,Fact: The capital of the country containing Iksha is named
+Romania,country,Bucharest,Isaccea,Fact: The capital of the country containing Isaccea is named
+Peru,country,Lima,Provincia de Huallaga,Fact: The capital of the country containing Provincia de Huallaga is named
+Angola,country,Luanda,Huambo,Fact: The capital of the country containing Huambo is named
+Japan,country,Tokyo,Nagaokakyō Shi,Fact: The capital of the country containing Nagaokakyō Shi is named
+Senegal,country,Dakar,Khombole,Fact: The capital of the country containing Khombole is named
+Nepal,country,Kathmandu,Bhojpur,Fact: The capital of the country containing Bhojpur is named
+Romania,country,Bucharest,Comuna Vulcana Băi,Fact: The capital of the country containing Comuna Vulcana Băi is named
+Romania,country,Bucharest,Municipiul Giurgiu,Fact: The capital of the country containing Municipiul Giurgiu is named
+Qatar,country,Doha,Al Rayyan,Fact: The capital of the country containing Al Rayyan is named
+Germany,country,Berlin,Friedrichshain,Fact: The capital of the country containing Friedrichshain is named
+Ukraine,country,Kyiv,Bronitsia,Fact: The capital of the country containing Bronitsia is named
+Wisconsin,state,Madison,Racine,Fact: The capital of the state containing Racine is named
+Philippines,country,Manila,Malbug,Fact: The capital of the country containing Malbug is named
+Spain,country,Madrid,Arnuero,Fact: The capital of the country containing Arnuero is named
+Spain,country,Madrid,Casas Altas,Fact: The capital of the country containing Casas Altas is named
+Romania,country,Bucharest,Comuna Iacobeni,Fact: The capital of the country containing Comuna Iacobeni is named
+Iran,country,Tehran,Nashtifan,Fact: The capital of the country containing Nashtifan is named
+Sweden,country,Stockholm,Sturkö,Fact: The capital of the country containing Sturkö is named
+Belarus,country,Minsk,Astrashytski Haradok,Fact: The capital of the country containing Astrashytski Haradok is named
+China,country,Beijing,Zhoucun,Fact: The capital of the country containing Zhoucun is named
+Austria,country,Vienna,Warth,Fact: The capital of the country containing Warth is named
+Wyoming,state,Cheyenne,Casper,Fact: The capital of the state containing Casper is named
+Croatia,country,Zagreb,Sibinj,Fact: The capital of the country containing Sibinj is named
+Connecticut,state,Hartford,Bridgeport,Fact: The capital of the state containing Bridgeport is named
+Spain,country,Madrid,Benimarfull,Fact: The capital of the country containing Benimarfull is named
+Kazakhstan,country,Astana,Almaty,Fact: The capital of the country containing Almaty is named
+France,country,Paris,Béthelainville,Fact: The capital of the country containing Béthelainville is named
+Saudi Arabia,country,Riyadh,Thuwal,Fact: The capital of the country containing Thuwal is named
+Bangladesh,country,Dhaka,Chittagong,Fact: The capital of the country containing Chittagong is named
+Germany,country,Berlin,Hatzenbühl,Fact: The capital of the country containing Hatzenbühl is named
+Bolivia,country,Sucre,Provincia Capinota,Fact: The capital of the country containing Provincia Capinota is named
+Poland,country,Warsaw,Głuchołazy,Fact: The capital of the country containing Głuchołazy is named
+Germany,country,Berlin,Rettenbach,Fact: The capital of the country containing Rettenbach is named
+Romania,country,Bucharest,Caşin,Fact: The capital of the country containing Caşin is named
+Vermont,state,Montpelier,Burlington,Fact: The capital of the state containing Burlington is named
+Algeria,country,Algiers,Balidat Ameur,Fact: The capital of the country containing Balidat Ameur is named
+Moldova,country,Chisinau,Balti,Fact: The capital of the country containing Balti is named
+Romania,country,Bucharest,Săpoca,Fact: The capital of the country containing Săpoca is named
+Switzerland,country,Bern,Corsier,Fact: The capital of the country containing Corsier is named
+Kyrgyzstan,country,Bishkek,Osh,Fact: The capital of the country containing Osh is named
+Germany,country,Berlin,Lauenhagen,Fact: The capital of the country containing Lauenhagen is named
+Slovenia,country,Ljubljana,Maribor,Fact: The capital of the country containing Maribor is named
+Romania,country,Bucharest,Igneşti,Fact: The capital of the country containing Igneşti is named
+Slovenia,country,Ljubljana,Lucija,Fact: The capital of the country containing Lucija is named
+Spain,country,Madrid,Vilaxoán,Fact: The capital of the country containing Vilaxoán is named
+Spain,country,Madrid,Moral de Hornuez,Fact: The capital of the country containing Moral de Hornuez is named
+Norway,country,Oslo,Fedje,Fact: The capital of the country containing Fedje is named
+Cyprus,country,Nicosia,Larnaca,Fact: The capital of the country containing Larnaca is named
+Italy,country,Rome,Jenne,Fact: The capital of the country containing Jenne is named
+Vermont,state,Montpelier,Bennington,Fact: The capital of the state containing Bennington is named
+Liechtenstein,country,Vaduz,Schaan,Fact: The capital of the country containing Schaan is named
+Romania,country,Bucharest,Burzuc,Fact: The capital of the country containing Burzuc is named
+Italy,country,Rome,Andora,Fact: The capital of the country containing Andora is named
+Spain,country,Madrid,Maján,Fact: The capital of the country containing Maján is named
+China,country,Beijing,Daofu,Fact: The capital of the country containing Daofu is named
+Japan,country,Tokyo,Sakurai-shi,Fact: The capital of the country containing Sakurai-shi is named
+Norway,country,Oslo,Skiptvet,Fact: The capital of the country containing Skiptvet is named
+Russia,country,Moscow,Baranchinskiy,Fact: The capital of the country containing Baranchinskiy is named
+Switzerland,country,Bern,Bürglen,Fact: The capital of the country containing Bürglen is named
+China,country,Beijing,Zhangjiakou Shi Xuanhua Qu,Fact: The capital of the country containing Zhangjiakou Shi Xuanhua Qu is named
+China,country,Beijing,Taxkorgan,Fact: The capital of the country containing Taxkorgan is named
+Uruguay,country,Montevideo,Punta del Este,Fact: The capital of the country containing Punta del Este is named
+Spain,country,Madrid,Villamuera de la Cueza,Fact: The capital of the country containing Villamuera de la Cueza is named
+China,country,Beijing,Chao'an,Fact: The capital of the country containing Chao'an is named
+France,country,Paris,Parempuyre,Fact: The capital of the country containing Parempuyre is named
+Ethiopia,country,Addis Ababa,Dire Dawa,Fact: The capital of the country containing Dire Dawa is named
+Spain,country,Madrid,Andorra,Fact: The capital of the country containing Andorra is named
+South Africa,country,Pretoria,Johannesburg,Fact: The capital of the country containing Johannesburg is named
+Italy,country,Rome,Colosimi,Fact: The capital of the country containing Colosimi is named
+Philippines,country,Manila,Lucban,Fact: The capital of the country containing Lucban is named
+Romania,country,Bucharest,Comuna Fundeni,Fact: The capital of the country containing Comuna Fundeni is named
+Belgium,country,Brussels,Antwerp,Fact: The capital of the country containing Antwerp is named
+South Carolina,state,Columbia,Charleston,Fact: The capital of the state containing Charleston is named
+Portugal,country,Lisbon,Rapoula do Côa,Fact: The capital of the country containing Rapoula do Côa is named
+France,country,Paris,Parçay-les-Pins,Fact: The capital of the country containing Parçay-les-Pins is named
+Germany,country,Berlin,Bernried,Fact: The capital of the country containing Bernried is named
+China,country,Beijing,Yuanyang,Fact: The capital of the country containing Yuanyang is named
+Italy,country,Rome,Osoppo,Fact: The capital of the country containing Osoppo is named
+Australia,country,Canberra,Freemans Reach,Fact: The capital of the country containing Freemans Reach is named
+Saudi Arabia,country,Riyadh,Rayyis,Fact: The capital of the country containing Rayyis is named
+Spain,country,Madrid,Turre,Fact: The capital of the country containing Turre is named
+Spain,country,Madrid,Estivella,Fact: The capital of the country containing Estivella is named
+Japan,country,Tokyo,Ōmachi,Fact: The capital of the country containing Ōmachi is named
+Denmark,country,Copenhagen,Tarm,Fact: The capital of the country containing Tarm is named
+Czech Republic,country,Prague,Heřmanova Huť,Fact: The capital of the country containing Heřmanova Huť is named
+Poland,country,Warsaw,Radzanów,Fact: The capital of the country containing Radzanów is named
+Austria,country,Vienna,Neuzeug,Fact: The capital of the country containing Neuzeug is named
+Germany,country,Berlin,Aschersleben,Fact: The capital of the country containing Aschersleben is named
+Pakistan,country,Islamabad,Shinpokh,Fact: The capital of the country containing Shinpokh is named
+Romania,country,Bucharest,Comuna Vermeş,Fact: The capital of the country containing Comuna Vermeş is named
+Ecuador,country,Quito,Cayambe,Fact: The capital of the country containing Cayambe is named
+France,country,Paris,Richebourg-l'Avoué,Fact: The capital of the country containing Richebourg-l'Avoué is named
+Australia,country,Canberra,Mossman,Fact: The capital of the country containing Mossman is named
+Australia,country,Canberra,Lismore Municipality,Fact: The capital of the country containing Lismore Municipality is named
+Austria,country,Vienna,Wernberg,Fact: The capital of the country containing Wernberg is named
+China,country,Beijing,Chengguan,Fact: The capital of the country containing Chengguan is named
+Australia,country,Canberra,West Busselton,Fact: The capital of the country containing West Busselton is named
+Spain,country,Madrid,Navalcarnero,Fact: The capital of the country containing Navalcarnero is named
+Sudan,country,Khartoum,Al Ḩawātah,Fact: The capital of the country containing Al Ḩawātah is named
+Alaska,state,Juneau,Anchorage,Fact: The capital of the state containing Anchorage is named
+Morocco,country,Rabat,Aknoul,Fact: The capital of the country containing Aknoul is named
+Russia,country,Moscow,Pyatnitskoye,Fact: The capital of the country containing Pyatnitskoye is named
+China,country,Beijing,Zhenghe,Fact: The capital of the country containing Zhenghe is named
+Zambia,country,Lusaka,Ndola,Fact: The capital of the country containing Ndola is named
+Switzerland,country,Bern,Apples,Fact: The capital of the country containing Apples is named
+China,country,Beijing,Wuzhai,Fact: The capital of the country containing Wuzhai is named
+Ghana,country,Accra,Kumasi,Fact: The capital of the country containing Kumasi is named
+Croatia,country,Zagreb,Donja Lomnica,Fact: The capital of the country containing Donja Lomnica is named
+Iraq,country,Baghdad,Basra,Fact: The capital of the country containing Basra is named
+Russia,country,Moscow,Povedniki,Fact: The capital of the country containing Povedniki is named
+Guinea,country,Conakry,Kindia,Fact: The capital of the country containing Kindia is named
+France,country,Paris,Coron,Fact: The capital of the country containing Coron is named
+Germany,country,Berlin,Meuselwitz,Fact: The capital of the country containing Meuselwitz is named
+Australia,country,Canberra,Alexandra Hills,Fact: The capital of the country containing Alexandra Hills is named
+Sweden,country,Stockholm,Säter,Fact: The capital of the country containing Säter is named
+Austria,country,Vienna,Steinfeld,Fact: The capital of the country containing Steinfeld is named
+Poland,country,Warsaw,Krasnosielc,Fact: The capital of the country containing Krasnosielc is named
+Norway,country,Oslo,Kvam,Fact: The capital of the country containing Kvam is named
+Romania,country,Bucharest,Unirea,Fact: The capital of the country containing Unirea is named
+Austria,country,Vienna,Obervogau,Fact: The capital of the country containing Obervogau is named
+Russia,country,Moscow,Karpovsky,Fact: The capital of the country containing Karpovsky is named
+Indonesia,country,Jakarta,Humbang Hasundutan,Fact: The capital of the country containing Humbang Hasundutan is named
+Indonesia,country,Jakarta,Karo,Fact: The capital of the country containing Karo is named
+Tajikistan,country,Dushanbe,Nohiyai Konibodom,Fact: The capital of the country containing Nohiyai Konibodom is named
+Russia,country,Moscow,Pravokubanskiy,Fact: The capital of the country containing Pravokubanskiy is named
+Germany,country,Berlin,Munich,Fact: The capital of the country containing Munich is named
+Spain,country,Madrid,Feria,Fact: The capital of the country containing Feria is named
+Czech Republic,country,Prague,Svratka,Fact: The capital of the country containing Svratka is named
+Netherlands,country,Amsterdam,Kesteren,Fact: The capital of the country containing Kesteren is named
+Gabon,country,Libreville,Ndjolé,Fact: The capital of the country containing Ndjolé is named
+Monaco,country,Monaco,La Rousse,Fact: The capital of the country containing La Rousse is named
+Russia,country,Moscow,Susuman,Fact: The capital of the country containing Susuman is named
+Germany,country,Berlin,Frankenstein,Fact: The capital of the country containing Frankenstein is named
+Australia,country,Canberra,Caloundra West,Fact: The capital of the country containing Caloundra West is named
+Cape Verde,country,Praia,Mindelo,Fact: The capital of the country containing Mindelo is named
+France,country,Paris,Marseille,Fact: The capital of the country containing Marseille is named
+Australia,country,Canberra,Coombs,Fact: The capital of the country containing Coombs is named
+Australia,country,Canberra,Thornbury,Fact: The capital of the country containing Thornbury is named
+Portugal,country,Lisbon,Porto,Fact: The capital of the country containing Porto is named
+Romania,country,Bucharest,Comuna Noşlac,Fact: The capital of the country containing Comuna Noşlac is named
+Illinois,state,Springfield,Chicago,Fact: The capital of the state containing Chicago is named
+Romania,country,Bucharest,Râu Sadului,Fact: The capital of the country containing Râu Sadului is named
+Japan,country,Tokyo,Kitami,Fact: The capital of the country containing Kitami is named
+Russia,country,Moscow,Altukhovo,Fact: The capital of the country containing Altukhovo is named
+Canada,country,Ottawa,La Malbaie,Fact: The capital of the country containing La Malbaie is named
+Kiribati,country,Tarawa,Betio,Fact: The capital of the country containing Betio is named
+Bhutan,country,Thimphu,Paro,Fact: The capital of the country containing Paro is named
+France,country,Paris,Saint-Hilaire-de-Brethmas,Fact: The capital of the country containing Saint-Hilaire-de-Brethmas is named
+China,country,Beijing,Changling,Fact: The capital of the country containing Changling is named
+Uruguay,country,Montevideo,Bizcocho,Fact: The capital of the country containing Bizcocho is named
+Lebanon,country,Beirut,Tripoli,Fact: The capital of the country containing Tripoli is named
+Virginia,state,Richmond,Virginia Beach,Fact: The capital of the state containing Virginia Beach is named
+Germany,country,Berlin,Hafenlohr,Fact: The capital of the country containing Hafenlohr is named
+Spain,country,Madrid,La Almunia de Doña Godina,Fact: The capital of the country containing La Almunia de Doña Godina is named
+Egypt,country,Cairo,Alexandria,Fact: The capital of the country containing Alexandria is named
+Germany,country,Berlin,Olfen,Fact: The capital of the country containing Olfen is named
+Djibouti,country,Djibouti,Arta,Fact: The capital of the country containing Arta is named
+China,country,Beijing,Sai Kung,Fact: The capital of the country containing Sai Kung is named
+Sudan,country,Khartoum,Port Sudan,Fact: The capital of the country containing Port Sudan is named
+Serbia,country,Belgrade,Umka,Fact: The capital of the country containing Umka is named
+Romania,country,Bucharest,Buda,Fact: The capital of the country containing Buda is named
+Switzerland,country,Bern,Langrickenbach,Fact: The capital of the country containing Langrickenbach is named
+France,country,Paris,Pélissanne,Fact: The capital of the country containing Pélissanne is named
+Bosnia and Herzegovina,country,Sarajevo,Banja Luka,Fact: The capital of the country containing Banja Luka is named
+Jamaica,country,Kingston,Duanvale,Fact: The capital of the country containing Duanvale is named
+Russia,country,Moscow,Remontnoye,Fact: The capital of the country containing Remontnoye is named
+Germany,country,Berlin,Korschenbroich,Fact: The capital of the country containing Korschenbroich is named
+France,country,Paris,Foix,Fact: The capital of the country containing Foix is named
+Japan,country,Tokyo,Kaga Shi,Fact: The capital of the country containing Kaga Shi is named
+Montana,state,Helena,Billings,Fact: The capital of the state containing Billings is named
+Uruguay,country,Montevideo,Pueblo Pintos,Fact: The capital of the country containing Pueblo Pintos is named
+Nevada,state,Carson City,Las Vegas,Fact: The capital of the state containing Las Vegas is named
+Canada,country,Ottawa,Toronto,Fact: The capital of the country containing Toronto is named
+Spain,country,Madrid,Nulles,Fact: The capital of the country containing Nulles is named
+Spain,country,Madrid,Almàssera,Fact: The capital of the country containing Almàssera is named
+Sweden,country,Stockholm,Nyköping,Fact: The capital of the country containing Nyköping is named
+Seychelles,country,Victoria,Praslin,Fact: The capital of the country containing Praslin is named
+France,country,Paris,Saint-Sever-Calvados,Fact: The capital of the country containing Saint-Sever-Calvados is named
+Romania,country,Bucharest,Comuna Pătulele,Fact: The capital of the country containing Comuna Pătulele is named
+Burkina Faso,country,Ouagadougou,Gorom-Gorom,Fact: The capital of the country containing Gorom-Gorom is named
+Germany,country,Berlin,Töging am Inn,Fact: The capital of the country containing Töging am Inn is named
+Spain,country,Madrid,Pozoamargo,Fact: The capital of the country containing Pozoamargo is named
+Japan,country,Tokyo,Osaka,Fact: The capital of the country containing Osaka is named
+Philippines,country,Manila,Siguinon,Fact: The capital of the country containing Siguinon is named
+Vietnam,country,Hanoi,Phủ Lý,Fact: The capital of the country containing Phủ Lý is named
+Norway,country,Oslo,Bjørkelangen,Fact: The capital of the country containing Bjørkelangen is named
+Idaho,state,Boise,Nampa,Fact: The capital of the state containing Nampa is named
+Australia,country,Canberra,Wulkuraka,Fact: The capital of the country containing Wulkuraka is named
+Jamaica,country,Kingston,Hopeton,Fact: The capital of the country containing Hopeton is named
+Spain,country,Madrid,Lemoiz,Fact: The capital of the country containing Lemoiz is named
+Malta,country,Valletta,Birkirkara,Fact: The capital of the country containing Birkirkara is named
+Portugal,country,Lisbon,Gonçalo,Fact: The capital of the country containing Gonçalo is named
+Indonesia,country,Jakarta,Kupang,Fact: The capital of the country containing Kupang is named
+Romania,country,Bucharest,Comuna Cãlmãţuiu De Sus,Fact: The capital of the country containing Comuna Cãlmãţuiu De Sus is named
+Uruguay,country,Montevideo,Villa Juana,Fact: The capital of the country containing Villa Juana is named
+Russia,country,Moscow,Germenchik,Fact: The capital of the country containing Germenchik is named
+Indonesia,country,Jakarta,Surabaya,Fact: The capital of the country containing Surabaya is named
+Germany,country,Berlin,Wechselburg,Fact: The capital of the country containing Wechselburg is named
+Jordan,country,Amman,Irbid,Fact: The capital of the country containing Irbid is named
+Italy,country,Rome,Zoagli,Fact: The capital of the country containing Zoagli is named
+France,country,Paris,Millau,Fact: The capital of the country containing Millau is named
+Serbia,country,Belgrade,Niš,Fact: The capital of the country containing Niš is named
+Georgia,country,Tbilisi,Step’antsminda,Fact: The capital of the country containing Step’antsminda is named
+Bahamas,country,Nassau,Freeport,Fact: The capital of the country containing Freeport is named
+Australia,country,Canberra,Babinda,Fact: The capital of the country containing Babinda is named
+Texas,state,Austin,Houston,Fact: The capital of the state containing Houston is named
+Thailand,country,Bangkok,Lat Yao,Fact: The capital of the country containing Lat Yao is named
+Italy,country,Rome,Rocca San Felice,Fact: The capital of the country containing Rocca San Felice is named
+China,country,Beijing,Chicheng,Fact: The capital of the country containing Chicheng is named
+Australia,country,Canberra,Gowanbrae,Fact: The capital of the country containing Gowanbrae is named
+Canada,country,Ottawa,Angus,Fact: The capital of the country containing Angus is named
+Spain,country,Madrid,Atapuerca,Fact: The capital of the country containing Atapuerca is named
+Japan,country,Tokyo,Karasuyama,Fact: The capital of the country containing Karasuyama is named
+Peru,country,Lima,Arequipa,Fact: The capital of the country containing Arequipa is named
+Norway,country,Oslo,Kvæfjord,Fact: The capital of the country containing Kvæfjord is named
+Spain,country,Madrid,Puente la Reina/Gares,Fact: The capital of the country containing Puente la Reina/Gares is named
+Delaware,state,Dover,Wilmington,Fact: The capital of the state containing Wilmington is named
+Russia,country,Moscow,Bagramovo,Fact: The capital of the country containing Bagramovo is named
+Greece,country,Athens,Thessaloniki,Fact: The capital of the country containing Thessaloniki is named
+Philippines,country,Manila,Boroon,Fact: The capital of the country containing Boroon is named
+Germany,country,Berlin,Lochau,Fact: The capital of the country containing Lochau is named
+France,country,Paris,Pinsaguel,Fact: The capital of the country containing Pinsaguel is named
+France,country,Paris,Billy-Montigny,Fact: The capital of the country containing Billy-Montigny is named
+Turkey,country,Ankara,Doğankent,Fact: The capital of the country containing Doğankent is named
+California,state,Sacramento,Los Angeles,Fact: The capital of the state containing Los Angeles is named
+Romania,country,Bucharest,Comuna Drăguşeni,Fact: The capital of the country containing Comuna Drăguşeni is named
+Nigeria,country,Abuja,Kurunduma,Fact: The capital of the country containing Kurunduma is named
+Fiji,country,Suva,Nadi,Fact: The capital of the country containing Nadi is named
+France,country,Paris,Saint-André-sur-Vieux-Jonc,Fact: The capital of the country containing Saint-André-sur-Vieux-Jonc is named
+China,country,Beijing,Nêdong,Fact: The capital of the country containing Nêdong is named
+Austria,country,Vienna,Gleinstätten,Fact: The capital of the country containing Gleinstätten is named
+Samoa,country,Apia,Gataivai,Fact: The capital of the country containing Gataivai is named
+Germany,country,Berlin,Speichersdorf,Fact: The capital of the country containing Speichersdorf is named
+Czech Republic,country,Prague,Šumperk,Fact: The capital of the country containing Šumperk is named
+Austria,country,Vienna,Sankt Marein bei Knittelfeld,Fact: The capital of the country containing Sankt Marein bei Knittelfeld is named
+Belarus,country,Minsk,Yalizava,Fact: The capital of the country containing Yalizava is named
+France,country,Paris,Aussonne,Fact: The capital of the country containing Aussonne is named
+Russia,country,Moscow,Yaroslavskiy,Fact: The capital of the country containing Yaroslavskiy is named
+Croatia,country,Zagreb,Pregrada,Fact: The capital of the country containing Pregrada is named
+Philippines,country,Manila,San Isidro,Fact: The capital of the country containing San Isidro is named
+Italy,country,Rome,Rosarno,Fact: The capital of the country containing Rosarno is named
+Czech Republic,country,Prague,Poříčí nad Sázavou,Fact: The capital of the country containing Poříčí nad Sázavou is named
+South Korea,country,Seoul,Kwangyang,Fact: The capital of the country containing Kwangyang is named
+Russia,country,Moscow,Yakovlevskoye,Fact: The capital of the country containing Yakovlevskoye is named
+France,country,Paris,Sauvigny-les-Bois,Fact: The capital of the country containing Sauvigny-les-Bois is named
+Uruguay,country,Montevideo,Cuchilla de Sierra,Fact: The capital of the country containing Cuchilla de Sierra is named
+Iran,country,Tehran,Jiroft,Fact: The capital of the country containing Jiroft is named
+Denmark,country,Copenhagen,Ishøj Kommune,Fact: The capital of the country containing Ishøj Kommune is named
+Romania,country,Bucharest,Araci,Fact: The capital of the country containing Araci is named
+France,country,Paris,Soultz-Haut-Rhin,Fact: The capital of the country containing Soultz-Haut-Rhin is named
+Australia,country,Canberra,Edmondson Park,Fact: The capital of the country containing Edmondson Park is named
+Philippines,country,Manila,Luna,Fact: The capital of the country containing Luna is named
+Bolivia,country,Sucre,Independencia,Fact: The capital of the country containing Independencia is named
+Australia,country,Canberra,Port Kennedy,Fact: The capital of the country containing Port Kennedy is named
+Russia,country,Moscow,Magdagachinskiy Rayon,Fact: The capital of the country containing Magdagachinskiy Rayon is named
+Germany,country,Berlin,Zinna,Fact: The capital of the country containing Zinna is named
+Iran,country,Tehran,Harand,Fact: The capital of the country containing Harand is named
+Nepal,country,Kathmandu,Pokhara,Fact: The capital of the country containing Pokhara is named
+Italy,country,Rome,Samarate,Fact: The capital of the country containing Samarate is named
+Spain,country,Madrid,Pradell de la Teixeta,Fact: The capital of the country containing Pradell de la Teixeta is named
+Russia,country,Moscow,Dubrovskiy Rayon,Fact: The capital of the country containing Dubrovskiy Rayon is named
+Sweden,country,Stockholm,Jörlanda,Fact: The capital of the country containing Jörlanda is named
+Netherlands,country,Amsterdam,Uithuizermeeden,Fact: The capital of the country containing Uithuizermeeden is named
+Ukraine,country,Kyiv,Slavske,Fact: The capital of the country containing Slavske is named
+Italy,country,Rome,Casali-San Potito,Fact: The capital of the country containing Casali-San Potito is named
+Germany,country,Berlin,Overath,Fact: The capital of the country containing Overath is named
+Italy,country,Rome,Campitello,Fact: The capital of the country containing Campitello is named
+France,country,Paris,Couches,Fact: The capital of the country containing Couches is named
+Italy,country,Rome,Bergolo,Fact: The capital of the country containing Bergolo is named
+Belarus,country,Minsk,Brest,Fact: The capital of the country containing Brest is named
+Greece,country,Athens,Kastélli,Fact: The capital of the country containing Kastélli is named
+Philippines,country,Manila,Tudela,Fact: The capital of the country containing Tudela is named
+Hungary,country,Budapest,Bakonyszentlászló,Fact: The capital of the country containing Bakonyszentlászló is named
+Burundi,country,Bujumbura,Gitega,Fact: The capital of the country containing Gitega is named
+Germany,country,Berlin,Pilsach,Fact: The capital of the country containing Pilsach is named
+France,country,Paris,Voulangis,Fact: The capital of the country containing Voulangis is named
+Philippines,country,Manila,Santa Ana,Fact: The capital of the country containing Santa Ana is named
+Spain,country,Madrid,Castil de Vela,Fact: The capital of the country containing Castil de Vela is named
+Finland,country,Helsinki,Kuhmalahti,Fact: The capital of the country containing Kuhmalahti is named
+Australia,country,Canberra,Sydney,Fact: The capital of the country containing Sydney is named
+Jamaica,country,Kingston,Cotterwood,Fact: The capital of the country containing Cotterwood is named
+Sweden,country,Stockholm,Gothenburg,Fact: The capital of the country containing Gothenburg is named
+Sweden,country,Stockholm,Skattkärr,Fact: The capital of the country containing Skattkärr is named
+Belgium,country,Brussels,Turnhout,Fact: The capital of the country containing Turnhout is named
+Denmark,country,Copenhagen,Søften,Fact: The capital of the country containing Søften is named
+Russia,country,Moscow,Salmi,Fact: The capital of the country containing Salmi is named
+Rhode Island,state,Providence,East Providence,Fact: The capital of the state containing East Providence is named
+Spain,country,Madrid,La Carrera,Fact: The capital of the country containing La Carrera is named
+Ireland,country,Dublin,Gweedore,Fact: The capital of the country containing Gweedore is named
+Italy,country,Rome,Clavesana,Fact: The capital of the country containing Clavesana is named
+Germany,country,Berlin,Masburg,Fact: The capital of the country containing Masburg is named
+Thailand,country,Bangkok,Chiang Mai,Fact: The capital of the country containing Chiang Mai is named
+Greece,country,Athens,Karítsa,Fact: The capital of the country containing Karítsa is named
+France,country,Paris,Bouin,Fact: The capital of the country containing Bouin is named
+Austria,country,Vienna,Pöllau,Fact: The capital of the country containing Pöllau is named
+Italy,country,Rome,Rionero Sannitico,Fact: The capital of the country containing Rionero Sannitico is named
+Bahrain,country,Manama,Muharraq,Fact: The capital of the country containing Muharraq is named
+Germany,country,Berlin,Bretten,Fact: The capital of the country containing Bretten is named
+Philippines,country,Manila,Recodo,Fact: The capital of the country containing Recodo is named
+Ukraine,country,Kyiv,Novodnistrovs’k,Fact: The capital of the country containing Novodnistrovs’k is named
+France,country,Paris,Les Allues,Fact: The capital of the country containing Les Allues is named
+Russia,country,Moscow,Adygeysk,Fact: The capital of the country containing Adygeysk is named
+Ukraine,country,Kyiv,Liubar,Fact: The capital of the country containing Liubar is named
+China,country,Beijing,Kaiyuan,Fact: The capital of the country containing Kaiyuan is named
+Belgium,country,Brussels,Beloeil,Fact: The capital of the country containing Beloeil is named
+France,country,Paris,Sartilly,Fact: The capital of the country containing Sartilly is named
+France,country,Paris,Montmacq,Fact: The capital of the country containing Montmacq is named
+Italy,country,Rome,Crocefieschi,Fact: The capital of the country containing Crocefieschi is named
+Sweden,country,Stockholm,Ingared,Fact: The capital of the country containing Ingared is named
+Spain,country,Madrid,Masalavés,Fact: The capital of the country containing Masalavés is named
+Uruguay,country,Montevideo,Paso de Ramos,Fact: The capital of the country containing Paso de Ramos is named
+Montenegro,country,Podgorica,Kotor,Fact: The capital of the country containing Kotor is named
+Moldova,country,Chisinau,Iargara,Fact: The capital of the country containing Iargara is named
+Scotland,country,Edinburgh,Glasgow,Fact: The capital of the country containing Glasgow is named
+Singapore,country,Singapore,Jurong,Fact: The capital of the country containing Jurong is named
+Netherlands,country,Amsterdam,Rotterdam,Fact: The capital of the country containing Rotterdam is named
+Romania,country,Bucharest,Comuna Valea Mare,Fact: The capital of the country containing Comuna Valea Mare is named
+Philippines,country,Manila,Tabonoc,Fact: The capital of the country containing Tabonoc is named
+Ukraine,country,Kyiv,Belogorskiy rayon,Fact: The capital of the country containing Belogorskiy rayon is named
+Russia,country,Moscow,Medvedevskiy Rayon,Fact: The capital of the country containing Medvedevskiy Rayon is named
+Romania,country,Bucharest,Vânători-Neamţ,Fact: The capital of the country containing Vânători-Neamţ is named
+Netherlands,country,Amsterdam,Terwinselen,Fact: The capital of the country containing Terwinselen is named
+Iran,country,Tehran,Lordegan,Fact: The capital of the country containing Lordegan is named
+Italy,country,Rome,Cairate,Fact: The capital of the country containing Cairate is named
+France,country,Paris,Hourtin,Fact: The capital of the country containing Hourtin is named
+Philippines,country,Manila,Cebu City,Fact: The capital of the country containing Cebu City is named
+Australia,country,Canberra,West Hobart,Fact: The capital of the country containing West Hobart is named
+Japan,country,Tokyo,Maibara-shi,Fact: The capital of the country containing Maibara-shi is named
+Uruguay,country,Montevideo,Brisas del Plata,Fact: The capital of the country containing Brisas del Plata is named
+Belgium,country,Brussels,Tubize,Fact: The capital of the country containing Tubize is named
+Russia,country,Moscow,Abramovka,Fact: The capital of the country containing Abramovka is named
+Rwanda,country,Kigali,Butare,Fact: The capital of the country containing Butare is named
+Germany,country,Berlin,Werben,Fact: The capital of the country containing Werben is named
+Poland,country,Warsaw,Ryjewo,Fact: The capital of the country containing Ryjewo is named
+Hungary,country,Budapest,Sükösd,Fact: The capital of the country containing Sükösd is named
+Russia,country,Moscow,Grayvoronskiy Rayon,Fact: The capital of the country containing Grayvoronskiy Rayon is named
+Germany,country,Berlin,Hosenfeld,Fact: The capital of the country containing Hosenfeld is named
+Poland,country,Warsaw,Dąbrówno,Fact: The capital of the country containing Dąbrówno is named
+Bulgaria,country,Sofia,Obshtina Perushtitsa,Fact: The capital of the country containing Obshtina Perushtitsa is named
+France,country,Paris,Herserange,Fact: The capital of the country containing Herserange is named
+Germany,country,Berlin,Oettingen in Bayern,Fact: The capital of the country containing Oettingen in Bayern is named
+Greece,country,Athens,Lávara,Fact: The capital of the country containing Lávara is named
+Albania,country,Tirana,Durrës,Fact: The capital of the country containing Durrës is named
+Jamaica,country,Kingston,Lacovia,Fact: The capital of the country containing Lacovia is named
+Russia,country,Moscow,Sinodskoye,Fact: The capital of the country containing Sinodskoye is named
+China,country,Beijing,Lixian,Fact: The capital of the country containing Lixian is named
+Hungary,country,Budapest,Mátraderecske,Fact: The capital of the country containing Mátraderecske is named
+Afghanistan,country,Kabul,Kandahar,Fact: The capital of the country containing Kandahar is named
+Tajikistan,country,Dushanbe,Khujand,Fact: The capital of the country containing Khujand is named
+Thailand,country,Bangkok,Chai Badan,Fact: The capital of the country containing Chai Badan is named
+Romania,country,Bucharest,Comuna Lisa,Fact: The capital of the country containing Comuna Lisa is named
+Italy,country,Rome,Bizzarone,Fact: The capital of the country containing Bizzarone is named
+Iran,country,Tehran,Sangan,Fact: The capital of the country containing Sangan is named
+Oman,country,Muscat,Sur,Fact: The capital of the country containing Sur is named
+Italy,country,Rome,San Mauro Forte,Fact: The capital of the country containing San Mauro Forte is named
+Greece,country,Athens,Néa Pélla,Fact: The capital of the country containing Néa Pélla is named
+Australia,country,Canberra,Para Hills West,Fact: The capital of the country containing Para Hills West is named
+France,country,Paris,Oudon,Fact: The capital of the country containing Oudon is named
+Germany,country,Berlin,Reeßum,Fact: The capital of the country containing Reeßum is named
+Philippines,country,Manila,Ganapi,Fact: The capital of the country containing Ganapi is named
+Indonesia,country,Jakarta,Kubu Raya,Fact: The capital of the country containing Kubu Raya is named
+Latvia,country,Riga,Daugavpils,Fact: The capital of the country containing Daugavpils is named
+Tunisia,country,Tunis,Sfax,Fact: The capital of the country containing Sfax is named
+Portugal,country,Lisbon,Estarreja,Fact: The capital of the country containing Estarreja is named
+France,country,Paris,Les Rosiers-sur-Loire,Fact: The capital of the country containing Les Rosiers-sur-Loire is named
+Uganda,country,Kampala,Gulu,Fact: The capital of the country containing Gulu is named
+Czech Republic,country,Prague,Vlašim,Fact: The capital of the country containing Vlašim is named
+Spain,country,Madrid,Triacastela,Fact: The capital of the country containing Triacastela is named
+Romania,country,Bucharest,Merișani,Fact: The capital of the country containing Merișani is named
+Germany,country,Berlin,Nörvenich,Fact: The capital of the country containing Nörvenich is named
+Japan,country,Tokyo,Gotō Shi,Fact: The capital of the country containing Gotō Shi is named
+Spain,country,Madrid,Betanzos,Fact: The capital of the country containing Betanzos is named
+Mauritania,country,Nouakchott,Nouadhibou,Fact: The capital of the country containing Nouadhibou is named
+Russia,country,Moscow,Orël-Izumrud,Fact: The capital of the country containing Orël-Izumrud is named
+Russia,country,Moscow,Eveno-Bytantaysky National,Fact: The capital of the country containing Eveno-Bytantaysky National is named
+Japan,country,Tokyo,Tachikawa-shi,Fact: The capital of the country containing Tachikawa-shi is named
+Mali,country,Bamako,Timbuktu,Fact: The capital of the country containing Timbuktu is named
+Russia,country,Moscow,Kostomuksha,Fact: The capital of the country containing Kostomuksha is named
+Cape Verde,country,Praia,Igreja,Fact: The capital of the country containing Igreja is named
+Spain,country,Madrid,Villoldo,Fact: The capital of the country containing Villoldo is named
+Bolivia,country,Sucre,La Paz,Fact: The capital of the country containing La Paz is named
+Ecuador,country,Quito,Guayaquil,Fact: The capital of the country containing Guayaquil is named
+Poland,country,Warsaw,Nidzica,Fact: The capital of the country containing Nidzica is named
+France,country,Paris,Saint-Savournin,Fact: The capital of the country containing Saint-Savournin is named
+Austria,country,Vienna,Ardning,Fact: The capital of the country containing Ardning is named
+Italy,country,Rome,Cesarolo,Fact: The capital of the country containing Cesarolo is named
+Poland,country,Warsaw,Wohyń,Fact: The capital of the country containing Wohyń is named
+Poland,country,Warsaw,Bystra,Fact: The capital of the country containing Bystra is named
+Zimbabwe,country,Harare,Bulawayo,Fact: The capital of the country containing Bulawayo is named
+Nicaragua,country,Managua,La Concordia,Fact: The capital of the country containing La Concordia is named
+Romania,country,Bucharest,Comuna Măluşteni,Fact: The capital of the country containing Comuna Măluşteni is named
+Thailand,country,Bangkok,Si Mueang Mai,Fact: The capital of the country containing Si Mueang Mai is named
+Israel,country,Jerusalem,Tel Aviv,Fact: The capital of the country containing Tel Aviv is named
+Spain,country,Madrid,Barcelona,Fact: The capital of the country containing Barcelona is named
+Czech Republic,country,Prague,Šluknov,Fact: The capital of the country containing Šluknov is named
+Norway,country,Oslo,Bergen,Fact: The capital of the country containing Bergen is named
+Switzerland,country,Bern,Bezirk Lebern,Fact: The capital of the country containing Bezirk Lebern is named
+Italy,country,Rome,Villaguattera,Fact: The capital of the country containing Villaguattera is named
+Italy,country,Rome,Cerza,Fact: The capital of the country containing Cerza is named
+Serbia,country,Belgrade,Senta,Fact: The capital of the country containing Senta is named
+Romania,country,Bucharest,Găneasa,Fact: The capital of the country containing Găneasa is named
+Spain,country,Madrid,Campos del Paraíso,Fact: The capital of the country containing Campos del Paraíso is named
+Philippines,country,Manila,Manoc-Manoc,Fact: The capital of the country containing Manoc-Manoc is named
+France,country,Paris,Armissan,Fact: The capital of the country containing Armissan is named
+Philippines,country,Manila,Las Nieves,Fact: The capital of the country containing Las Nieves is named
+China,country,Beijing,Encheng,Fact: The capital of the country containing Encheng is named
+Philippines,country,Manila,San Jose,Fact: The capital of the country containing San Jose is named
+Poland,country,Warsaw,Gomunice,Fact: The capital of the country containing Gomunice is named
+Nepal,country,Kathmandu,Manang,Fact: The capital of the country containing Manang is named
+Italy,country,Rome,Cantalupa,Fact: The capital of the country containing Cantalupa is named
+Italy,country,Rome,Ca' Rainati,Fact: The capital of the country containing Ca' Rainati is named
+Bulgaria,country,Sofia,Obshtina Gulyantsi,Fact: The capital of the country containing Obshtina Gulyantsi is named
+Iran,country,Tehran,Hasanabad Yasukand,Fact: The capital of the country containing Hasanabad Yasukand is named
+Sweden,country,Stockholm,Bergnäset,Fact: The capital of the country containing Bergnäset is named
+Czech Republic,country,Prague,Kozlovice,Fact: The capital of the country containing Kozlovice is named
+Comoros,country,Moroni,Mutsamudu,Fact: The capital of the country containing Mutsamudu is named
+Myanmar,country,Naypyidaw,Yangon,Fact: The capital of the country containing Yangon is named
+China,country,Beijing,Pingdu,Fact: The capital of the country containing Pingdu is named
+Austria,country,Vienna,Kematen in Tirol,Fact: The capital of the country containing Kematen in Tirol is named
+Italy,country,Rome,Sant'Agata Bolognese,Fact: The capital of the country containing Sant'Agata Bolognese is named
+Portugal,country,Lisbon,Vila Boa,Fact: The capital of the country containing Vila Boa is named
+France,country,Paris,Lourches,Fact: The capital of the country containing Lourches is named
+Poland,country,Warsaw,Godziszów Pierwszy,Fact: The capital of the country containing Godziszów Pierwszy is named
+Australia,country,Canberra,Glenfield Park,Fact: The capital of the country containing Glenfield Park is named
+North Carolina,state,Raleigh,Charlotte,Fact: The capital of the state containing Charlotte is named
+China,country,Beijing,Yuxi,Fact: The capital of the country containing Yuxi is named
+Germany,country,Berlin,Bergheim,Fact: The capital of the country containing Bergheim is named
+Italy,country,Rome,Gairo Sant'Elena,Fact: The capital of the country containing Gairo Sant'Elena is named
+Portugal,country,Lisbon,Amares,Fact: The capital of the country containing Amares is named
+Iran,country,Tehran,Doraneh,Fact: The capital of the country containing Doraneh is named
+Italy,country,Rome,San Gimignano,Fact: The capital of the country containing San Gimignano is named
+China,country,Beijing,Shimen,Fact: The capital of the country containing Shimen is named
+Saudi Arabia,country,Riyadh,Jeddah,Fact: The capital of the country containing Jeddah is named
+Bulgaria,country,Sofia,Plovdiv,Fact: The capital of the country containing Plovdiv is named
+Germany,country,Berlin,Fraureuth,Fact: The capital of the country containing Fraureuth is named
+Italy,country,Rome,Malles Venosta,Fact: The capital of the country containing Malles Venosta is named
+France,country,Paris,Saint-Laurent-en-Grandvaux,Fact: The capital of the country containing Saint-Laurent-en-Grandvaux is named
+Florida,state,Tallahassee,Jacksonville,Fact: The capital of the state containing Jacksonville is named
+Romania,country,Bucharest,Lupşanu,Fact: The capital of the country containing Lupşanu is named
+Kansas,state,Topeka,Overland Park,Fact: The capital of the state containing Overland Park is named
+Sweden,country,Stockholm,Malå,Fact: The capital of the country containing Malå is named
+Spain,country,Madrid,Otxandio,Fact: The capital of the country containing Otxandio is named
+Uruguay,country,Montevideo,Cipa Cebollati,Fact: The capital of the country containing Cipa Cebollati is named
+Pakistan,country,Islamabad,Karachi,Fact: The capital of the country containing Karachi is named
+Pakistan,country,Islamabad,Khairpur,Fact: The capital of the country containing Khairpur is named
+Switzerland,country,Bern,Zurich,Fact: The capital of the country containing Zurich is named
+Poland,country,Warsaw,Kraków,Fact: The capital of the country containing Kraków is named
+Russia,country,Moscow,Tommot,Fact: The capital of the country containing Tommot is named
+Pakistan,country,Islamabad,Pasrur,Fact: The capital of the country containing Pasrur is named
+Spain,country,Madrid,San Antonio de Benagéber,Fact: The capital of the country containing San Antonio de Benagéber is named
+Chile,country,Santiago,San Gregorio,Fact: The capital of the country containing San Gregorio is named
+France,country,Paris,Osches,Fact: The capital of the country containing Osches is named
+Russia,country,Moscow,Mrakovo,Fact: The capital of the country containing Mrakovo is named
+France,country,Paris,Pavilly,Fact: The capital of the country containing Pavilly is named
+Philippines,country,Manila,Puting Kahoy,Fact: The capital of the country containing Puting Kahoy is named
+Armenia,country,Yerevan,Drakhtik,Fact: The capital of the country containing Drakhtik is named
+Ukraine,country,Kyiv,Stari Bohorodchany,Fact: The capital of the country containing Stari Bohorodchany is named
+Netherlands,country,Amsterdam,Peij,Fact: The capital of the country containing Peij is named
+Rhode Island,state,Providence,Warwick,Fact: The capital of the state containing Warwick is named
+Lesotho,country,Maseru,Teyateyaneng,Fact: The capital of the country containing Teyateyaneng is named
+Malawi,country,Lilongwe,Blantyre,Fact: The capital of the country containing Blantyre is named
+Romania,country,Bucharest,Răcăşdia,Fact: The capital of the country containing Răcăşdia is named
+Austria,country,Vienna,Untertilliach,Fact: The capital of the country containing Untertilliach is named
+Nicaragua,country,Managua,Municipio de Belén,Fact: The capital of the country containing Municipio de Belén is named
+Namibia,country,Windhoek,Walvis Bay,Fact: The capital of the country containing Walvis Bay is named
+Italy,country,Rome,Mirabella Imbaccari,Fact: The capital of the country containing Mirabella Imbaccari is named
+Philippines,country,Manila,Zamboanga,Fact: The capital of the country containing Zamboanga is named
+Italy,country,Rome,Mondragone,Fact: The capital of the country containing Mondragone is named
+Russia,country,Moscow,Marksovskiy Rayon,Fact: The capital of the country containing Marksovskiy Rayon is named
+Italy,country,Rome,Castelnuovo di Val di Cecina,Fact: The capital of the country containing Castelnuovo di Val di Cecina is named
+Uzbekistan,country,Tashkent,Wobkent Tumani,Fact: The capital of the country containing Wobkent Tumani is named
+Romania,country,Bucharest,Vatra Dornei,Fact: The capital of the country containing Vatra Dornei is named
+Spain,country,Madrid,Montorio,Fact: The capital of the country containing Montorio is named
+Germany,country,Berlin,Weidhausen bei Coburg,Fact: The capital of the country containing Weidhausen bei Coburg is named
+Austria,country,Vienna,Gmünd,Fact: The capital of the country containing Gmünd is named
+Spain,country,Madrid,Villalba de Rioja,Fact: The capital of the country containing Villalba de Rioja is named
+Russia,country,Moscow,Kuybyshevo,Fact: The capital of the country containing Kuybyshevo is named
+Romania,country,Bucharest,Coţofăneşti,Fact: The capital of the country containing Coţofăneşti is named
+Thailand,country,Bangkok,Phrai Bueng,Fact: The capital of the country containing Phrai Bueng is named
+Czech Republic,country,Prague,Velká Hleďsebe,Fact: The capital of the country containing Velká Hleďsebe is named
+Maine,state,Augusta,Portland,Fact: The capital of the state containing Portland is named
+Germany,country,Berlin,Bürgel,Fact: The capital of the country containing Bürgel is named
+Indonesia,country,Jakarta,Buton,Fact: The capital of the country containing Buton is named
+Italy,country,Rome,Mason Vicentino,Fact: The capital of the country containing Mason Vicentino is named
+Hungary,country,Budapest,Debrecen,Fact: The capital of the country containing Debrecen is named
+Peru,country,Lima,Provincia de Castilla,Fact: The capital of the country containing Provincia de Castilla is named
+Spain,country,Madrid,Adsubia,Fact: The capital of the country containing Adsubia is named
+Portugal,country,Lisbon,Ramela,Fact: The capital of the country containing Ramela is named
+France,country,Paris,Saultain,Fact: The capital of the country containing Saultain is named
+Indiana,state,Indianapolis,Fort Wayne,Fact: The capital of the state containing Fort Wayne is named
+Denmark,country,Copenhagen,Kongens Lyngby,Fact: The capital of the country containing Kongens Lyngby is named
+Indonesia,country,Jakarta,Bintan,Fact: The capital of the country containing Bintan is named
+Iran,country,Tehran,Soomar,Fact: The capital of the country containing Soomar is named
+Spain,country,Madrid,Casasimarro,Fact: The capital of the country containing Casasimarro is named
+Switzerland,country,Bern,Oberdorf,Fact: The capital of the country containing Oberdorf is named
+Nicaragua,country,Managua,León,Fact: The capital of the country containing León is named
+Slovakia,country,Bratislava,Košice,Fact: The capital of the country containing Košice is named
+China,country,Beijing,Huangpi,Fact: The capital of the country containing Huangpi is named
+France,country,Paris,Font-Romeu-Odeillo-Via,Fact: The capital of the country containing Font-Romeu-Odeillo-Via is named
+Thailand,country,Bangkok,Ban Khok,Fact: The capital of the country containing Ban Khok is named
+Mississippi,state,Jackson,Gulfport,Fact: The capital of the state containing Gulfport is named
+Spain,country,Madrid,Borox,Fact: The capital of the country containing Borox is named
+Tajikistan,country,Dushanbe,Chubek,Fact: The capital of the country containing Chubek is named
+France,country,Paris,Lexy,Fact: The capital of the country containing Lexy is named
+Iran,country,Tehran,Naghan,Fact: The capital of the country containing Naghan is named
+Poland,country,Warsaw,Ożarów,Fact: The capital of the country containing Ożarów is named
+Chile,country,Santiago,Quilaco,Fact: The capital of the country containing Quilaco is named
+Austria,country,Vienna,Linz Stadt,Fact: The capital of the country containing Linz Stadt is named
+Australia,country,Canberra,Truganina,Fact: The capital of the country containing Truganina is named
+Russia,country,Moscow,Tselinnoye,Fact: The capital of the country containing Tselinnoye is named
+Nigeria,country,Abuja,Gummi,Fact: The capital of the country containing Gummi is named
+Gabon,country,Libreville,Port-Gentil,Fact: The capital of the country containing Port-Gentil is named
+Japan,country,Tokyo,Ōme-shi,Fact: The capital of the country containing Ōme-shi is named
+Kazakhstan,country,Astana,Batamshinskiy,Fact: The capital of the country containing Batamshinskiy is named
+Germany,country,Berlin,Schifferstadt,Fact: The capital of the country containing Schifferstadt is named
+Philippines,country,Manila,Calero,Fact: The capital of the country containing Calero is named
+Philippines,country,Manila,Mapalacsiao,Fact: The capital of the country containing Mapalacsiao is named
+Germany,country,Berlin,Miltach,Fact: The capital of the country containing Miltach is named
+Philippines,country,Manila,Lope de Vega,Fact: The capital of the country containing Lope de Vega is named
+Switzerland,country,Bern,Leuk District,Fact: The capital of the country containing Leuk District is named
+Germany,country,Berlin,Dachwig,Fact: The capital of the country containing Dachwig is named
+Jordan,country,Amman,Zarqa,Fact: The capital of the country containing Zarqa is named
+France,country,Paris,La Frénaye,Fact: The capital of the country containing La Frénaye is named
+Switzerland,country,Bern,Seon,Fact: The capital of the country containing Seon is named
+France,country,Paris,Département de l'Eure,Fact: The capital of the country containing Département de l'Eure is named
+Spain,country,Madrid,Aldeasoña,Fact: The capital of the country containing Aldeasoña is named
+Libya,country,Tripoli,Benghazi,Fact: The capital of the country containing Benghazi is named
+Russia,country,Moscow,Rebrikhinskiy Rayon,Fact: The capital of the country containing Rebrikhinskiy Rayon is named
+Ukraine,country,Kyiv,Tukhlia,Fact: The capital of the country containing Tukhlia is named
+Italy,country,Rome,Gallarate,Fact: The capital of the country containing Gallarate is named
+Netherlands,country,Amsterdam,Surhuisterveen,Fact: The capital of the country containing Surhuisterveen is named
+Nigeria,country,Abuja,Owerri,Fact: The capital of the country containing Owerri is named
+Luxembourg,country,Luxembourg,Esch-sur-Alzette,Fact: The capital of the country containing Esch-sur-Alzette is named
+Tanzania,country,Dodoma,Kibara,Fact: The capital of the country containing Kibara is named
+Pennsylvania,state,Harrisburg,Philadelphia,Fact: The capital of the state containing Philadelphia is named
+Italy,country,Rome,Esporlatu,Fact: The capital of the country containing Esporlatu is named
+Ecuador,country,Quito,Puerto Villamil,Fact: The capital of the country containing Puerto Villamil is named
+Switzerland,country,Bern,Teufen,Fact: The capital of the country containing Teufen is named
+Spain,country,Madrid,Santa Eufemia,Fact: The capital of the country containing Santa Eufemia is named
+Romania,country,Bucharest,Oarţa de Jos,Fact: The capital of the country containing Oarţa de Jos is named
+Tanzania,country,Dodoma,Dar es Salaam,Fact: The capital of the country containing Dar es Salaam is named
+Italy,country,Rome,Calestano,Fact: The capital of the country containing Calestano is named
+Poland,country,Warsaw,Białobrzegi,Fact: The capital of the country containing Białobrzegi is named
+Russia,country,Moscow,Kurmanayevka,Fact: The capital of the country containing Kurmanayevka is named
+Nigeria,country,Abuja,Lagos,Fact: The capital of the country containing Lagos is named
+Austria,country,Vienna,Raabau,Fact: The capital of the country containing Raabau is named
+Germany,country,Berlin,Bodnegg,Fact: The capital of the country containing Bodnegg is named
+France,country,Paris,Parfondrupt,Fact: The capital of the country containing Parfondrupt is named
+France,country,Paris,Saint-Brice-sur-Vienne,Fact: The capital of the country containing Saint-Brice-sur-Vienne is named
+Philippines,country,Manila,Pitogo,Fact: The capital of the country containing Pitogo is named
+Spain,country,Madrid,Santa Amalia,Fact: The capital of the country containing Santa Amalia is named
+Turkey,country,Ankara,Istanbul,Fact: The capital of the country containing Istanbul is named
+Philippines,country,Manila,Alamada,Fact: The capital of the country containing Alamada is named
+Germany,country,Berlin,Kessin,Fact: The capital of the country containing Kessin is named
+France,country,Paris,Sarbazan,Fact: The capital of the country containing Sarbazan is named
+Germany,country,Berlin,Obergünzburg,Fact: The capital of the country containing Obergünzburg is named
+Australia,country,Canberra,Abbotsford,Fact: The capital of the country containing Abbotsford is named
+Ukraine,country,Kyiv,Ishun’,Fact: The capital of the country containing Ishun’ is named
+France,country,Paris,Lesparre-Médoc,Fact: The capital of the country containing Lesparre-Médoc is named
+Arizona,state,Phoenix,Mesa,Fact: The capital of the state containing Mesa is named
+Macedonia,country,Skopje,Bitola,Fact: The capital of the country containing Bitola is named
+Madagascar,country,Antananarivo,Toliara,Fact: The capital of the country containing Toliara is named
+Tennessee,state,Nashville,Memphis,Fact: The capital of the state containing Memphis is named
+Italy,country,Rome,Santo Stefano Belbo,Fact: The capital of the country containing Santo Stefano Belbo is named
+Honduras,country,Tegucigalpa,El Tránsito,Fact: The capital of the country containing El Tránsito is named
+Russia,country,Moscow,Krasny Yar Volgograd,Fact: The capital of the country containing Krasny Yar Volgograd is named
+Colorado,state,Denver,Colorado Springs,Fact: The capital of the state containing Colorado Springs is named
+Laos,country,Vientiane,Ban Houayxay,Fact: The capital of the country containing Ban Houayxay is named
+Germany,country,Berlin,Wallwitz,Fact: The capital of the country containing Wallwitz is named
+Italy,country,Rome,Pianfei,Fact: The capital of the country containing Pianfei is named
+Chile,country,Santiago,Tirúa,Fact: The capital of the country containing Tirúa is named
+Czech Republic,country,Prague,Radslavice,Fact: The capital of the country containing Radslavice is named
+Uruguay,country,Montevideo,Goñi,Fact: The capital of the country containing Goñi is named
+Kenya,country,Nairobi,Mombasa,Fact: The capital of the country containing Mombasa is named
+Ukraine,country,Kyiv,Zapadnia,Fact: The capital of the country containing Zapadnia is named
+Romania,country,Bucharest,Comuna Căpâlniţa,Fact: The capital of the country containing Comuna Căpâlniţa is named
+Philippines,country,Manila,Butag,Fact: The capital of the country containing Butag is named
+Italy,country,Rome,Portobuffolè,Fact: The capital of the country containing Portobuffolè is named
+Guinea,country,Conakry,Tougué,Fact: The capital of the country containing Tougué is named
+Austria,country,Vienna,Laahen,Fact: The capital of the country containing Laahen is named
+Lithuania,country,Vilnius,Kaunas,Fact: The capital of the country containing Kaunas is named
+Russia,country,Moscow,Turgoyak,Fact: The capital of the country containing Turgoyak is named
+Australia,country,Canberra,Bellamack,Fact: The capital of the country containing Bellamack is named
+Japan,country,Tokyo,Kokubunji-shi,Fact: The capital of the country containing Kokubunji-shi is named
+Iran,country,Tehran,Satar,Fact: The capital of the country containing Satar is named
+Philippines,country,Manila,Siempre Viva,Fact: The capital of the country containing Siempre Viva is named
+Philippines,country,Manila,Sanga-Sanga,Fact: The capital of the country containing Sanga-Sanga is named
+Czech Republic,country,Prague,Soběslav,Fact: The capital of the country containing Soběslav is named
+China,country,Beijing,Shuangta,Fact: The capital of the country containing Shuangta is named
+Romania,country,Bucharest,Comuna Cosmeşti,Fact: The capital of the country containing Comuna Cosmeşti is named
+France,country,Paris,Arrou,Fact: The capital of the country containing Arrou is named
+Austria,country,Vienna,Sankt Martin,Fact: The capital of the country containing Sankt Martin is named
+France,country,Paris,Canteleu,Fact: The capital of the country containing Canteleu is named
+China,country,Beijing,Zhongshan Prefecture,Fact: The capital of the country containing Zhongshan Prefecture is named
+Philippines,country,Manila,Gitagum,Fact: The capital of the country containing Gitagum is named
+Oregon,state,Salem,Portland,Fact: The capital of the state containing Portland is named
+Philippines,country,Manila,Mabini,Fact: The capital of the country containing Mabini is named
+Austria,country,Vienna,Schrattenberg,Fact: The capital of the country containing Schrattenberg is named
+Spain,country,Madrid,Torre Val de San Pedro,Fact: The capital of the country containing Torre Val de San Pedro is named
+Turkey,country,Ankara,Bozkurt,Fact: The capital of the country containing Bozkurt is named
+Slovenia,country,Ljubljana,Turnišče,Fact: The capital of the country containing Turnišče is named
+Portugal,country,Lisbon,Aljubarrota,Fact: The capital of the country containing Aljubarrota is named
+Romania,country,Bucharest,Comuna Blejoi,Fact: The capital of the country containing Comuna Blejoi is named
+Burkina Faso,country,Ouagadougou,Bobo-Dioulasso,Fact: The capital of the country containing Bobo-Dioulasso is named
+Philippines,country,Manila,Linaon,Fact: The capital of the country containing Linaon is named
+Spain,country,Madrid,Valtajeros,Fact: The capital of the country containing Valtajeros is named
+Romania,country,Bucharest,Bozieni,Fact: The capital of the country containing Bozieni is named
+Germany,country,Berlin,Güsten,Fact: The capital of the country containing Güsten is named
+Hungary,country,Budapest,Szomor,Fact: The capital of the country containing Szomor is named
+Philippines,country,Manila,Gigaquit,Fact: The capital of the country containing Gigaquit is named
+Nauru,country,Yaren,Baiti,Fact: The capital of the country containing Baiti is named
+Spain,country,Madrid,Carballedo,Fact: The capital of the country containing Carballedo is named
+Philippines,country,Manila,Maygatasan,Fact: The capital of the country containing Maygatasan is named
+Netherlands,country,Amsterdam,Lochem,Fact: The capital of the country containing Lochem is named
+Russia,country,Moscow,Gavrilov-Yam,Fact: The capital of the country containing Gavrilov-Yam is named
+Bangladesh,country,Dhaka,Joypurhat,Fact: The capital of the country containing Joypurhat is named
+Indonesia,country,Jakarta,Bogor,Fact: The capital of the country containing Bogor is named
+Sweden,country,Stockholm,Horndal,Fact: The capital of the country containing Horndal is named
+Czech Republic,country,Prague,Nechanice,Fact: The capital of the country containing Nechanice is named
+Poland,country,Warsaw,Żerniki Wrocławskie,Fact: The capital of the country containing Żerniki Wrocławskie is named
+Norway,country,Oslo,Balestrand,Fact: The capital of the country containing Balestrand is named
+Germany,country,Berlin,Handewitt,Fact: The capital of the country containing Handewitt is named
+Honduras,country,Tegucigalpa,San José de Las Conchas,Fact: The capital of the country containing San José de Las Conchas is named
+Philippines,country,Manila,Kansipati,Fact: The capital of the country containing Kansipati is named
+France,country,Paris,Carignan-de-Bordeaux,Fact: The capital of the country containing Carignan-de-Bordeaux is named
+Australia,country,Canberra,Sunshine North,Fact: The capital of the country containing Sunshine North is named
+France,country,Paris,Saint-André-de-Lancize,Fact: The capital of the country containing Saint-André-de-Lancize is named
+Germany,country,Berlin,Neudrossenfeld,Fact: The capital of the country containing Neudrossenfeld is named
+Vietnam,country,Hanoi,Huyện Chợ Đồn,Fact: The capital of the country containing Huyện Chợ Đồn is named
+Uruguay,country,Montevideo,Parada Herreria,Fact: The capital of the country containing Parada Herreria is named
+Peru,country,Lima,Tinyahuarco,Fact: The capital of the country containing Tinyahuarco is named
+Ohio,state,Columbus,Cleveland,Fact: The capital of the state containing Cleveland is named
+Denmark,country,Copenhagen,Sønderborg,Fact: The capital of the country containing Sønderborg is named
+China,country,Beijing,Shanghai,Fact: The capital of the country containing Shanghai is named
+Uruguay,country,Montevideo,Fagundez,Fact: The capital of the country containing Fagundez is named
+Mozambique,country,Maputo,Beira,Fact: The capital of the country containing Beira is named
+Philippines,country,Manila,Pando,Fact: The capital of the country containing Pando is named
+Guyana,country,Georgetown,Linden,Fact: The capital of the country containing Linden is named
+China,country,Beijing,Haidong,Fact: The capital of the country containing Haidong is named
+Italy,country,Rome,Bagni di Lucca,Fact: The capital of the country containing Bagni di Lucca is named
+Romania,country,Bucharest,Comuna Oraşu Nou,Fact: The capital of the country containing Comuna Oraşu Nou is named
+New York,state,Albany,New York City,Fact: The capital of the state containing New York City is named
+Australia,country,Canberra,Alexander Heights,Fact: The capital of the country containing Alexander Heights is named
+Romania,country,Bucharest,Cluj-Napoca,Fact: The capital of the country containing Cluj-Napoca is named
+Romania,country,Bucharest,Ioneşti,Fact: The capital of the country containing Ioneşti is named
+Germany,country,Berlin,Horn,Fact: The capital of the country containing Horn is named
+Italy,country,Rome,Torregrotta,Fact: The capital of the country containing Torregrotta is named
+Uruguay,country,Montevideo,Cuchilla de Peralta,Fact: The capital of the country containing Cuchilla de Peralta is named
+Iran,country,Tehran,Qaen,Fact: The capital of the country containing Qaen is named
+France,country,Paris,Rousses,Fact: The capital of the country containing Rousses is named
+Iran,country,Tehran,Sarijlu,Fact: The capital of the country containing Sarijlu is named
+Sierra Leone,country,Freetown,Kono,Fact: The capital of the country containing Kono is named
+Italy,country,Rome,Masi,Fact: The capital of the country containing Masi is named
+Spain,country,Madrid,Campo de Criptana,Fact: The capital of the country containing Campo de Criptana is named
+Hungary,country,Budapest,Ópályi,Fact: The capital of the country containing Ópályi is named
+Georgia,state,Atlanta,Augusta,Fact: The capital of the state containing Augusta is named
+Germany,country,Berlin,Julbach,Fact: The capital of the country containing Julbach is named
+Mongolia,country,Ulaanbaatar,Darkhan,Fact: The capital of the country containing Darkhan is named
+Jamaica,country,Kingston,Aenon Town,Fact: The capital of the country containing Aenon Town is named
+Australia,country,Canberra,Ironbark,Fact: The capital of the country containing Ironbark is named
+Chile,country,Santiago,Petorca,Fact: The capital of the country containing Petorca is named
+France,country,Paris,Darney,Fact: The capital of the country containing Darney is named
+Belize,country,Belmopan,Belize City,Fact: The capital of the country containing Belize City is named
+Armenia,country,Yerevan,Arzni,Fact: The capital of the country containing Arzni is named
+Uruguay,country,Montevideo,Cerro de las Armas,Fact: The capital of the country containing Cerro de las Armas is named
+Honduras,country,Tegucigalpa,Nueva Frontera,Fact: The capital of the country containing Nueva Frontera is named
+Vietnam,country,Hanoi,Bỉm Sơn,Fact: The capital of the country containing Bỉm Sơn is named
+France,country,Paris,Saint-Simon,Fact: The capital of the country containing Saint-Simon is named
+Spain,country,Madrid,Congosto,Fact: The capital of the country containing Congosto is named
+Romania,country,Bucharest,Ştiuca,Fact: The capital of the country containing Ştiuca is named
+France,country,Paris,Montbizot,Fact: The capital of the country containing Montbizot is named
+Philippines,country,Manila,San Roque,Fact: The capital of the country containing San Roque is named
+Italy,country,Rome,Bonferraro,Fact: The capital of the country containing Bonferraro is named
+France,country,Paris,Pianello,Fact: The capital of the country containing Pianello is named
+China,country,Beijing,Bayan,Fact: The capital of the country containing Bayan is named
+Australia,country,Canberra,Regents Park,Fact: The capital of the country containing Regents Park is named
+Jamaica,country,Kingston,Newport,Fact: The capital of the country containing Newport is named
+Turkmenistan,country,Ashgabat,Turkmenbashi,Fact: The capital of the country containing Turkmenbashi is named
+France,country,Paris,Challes-les-Eaux,Fact: The capital of the country containing Challes-les-Eaux is named
+Somalia,country,Mogadishu,Kismayo,Fact: The capital of the country containing Kismayo is named
+Romania,country,Bucharest,Crevenicu,Fact: The capital of the country containing Crevenicu is named
+Uruguay,country,Montevideo,Colonia Sanchez,Fact: The capital of the country containing Colonia Sanchez is named
+Moldova,country,Chisinau,Vulcăneşti,Fact: The capital of the country containing Vulcăneşti is named
+Senegal,country,Dakar,Saint-Louis,Fact: The capital of the country containing Saint-Louis is named
+Georgia,country,Tbilisi,Kutaisi,Fact: The capital of the country containing Kutaisi is named
+Suriname,country,Paramaribo,Lelydorp,Fact: The capital of the country containing Lelydorp is named
+Uruguay,country,Montevideo,Perico Perez,Fact: The capital of the country containing Perico Perez is named
+Thailand,country,Bangkok,Mae Ai,Fact: The capital of the country containing Mae Ai is named
+Spain,country,Madrid,Fuensalida,Fact: The capital of the country containing Fuensalida is named
+Sweden,country,Stockholm,Nolvik,Fact: The capital of the country containing Nolvik is named
+Czech Republic,country,Prague,Brodek u Přerova,Fact: The capital of the country containing Brodek u Přerova is named
+Iraq,country,Baghdad,Ar Rumaythah,Fact: The capital of the country containing Ar Rumaythah is named
+Germany,country,Berlin,Schwandorf in Bayern,Fact: The capital of the country containing Schwandorf in Bayern is named
+Romania,country,Bucharest,Comuna Holod,Fact: The capital of the country containing Comuna Holod is named
+France,country,Paris,Pleumeleuc,Fact: The capital of the country containing Pleumeleuc is named
+France,country,Paris,Bourgvallées,Fact: The capital of the country containing Bourgvallées is named
+Armenia,country,Yerevan,Dzoraghbyur,Fact: The capital of the country containing Dzoraghbyur is named
+Netherlands,country,Amsterdam,Teteringen,Fact: The capital of the country containing Teteringen is named
+Albania,country,Tirana,Skrapar,Fact: The capital of the country containing Skrapar is named
+Hungary,country,Budapest,Ricse,Fact: The capital of the country containing Ricse is named
+Alabama,state,Montgomery,Birmingham,Fact: The capital of the state containing Birmingham is named
+Albania,country,Tirana,Bashkia Durrës,Fact: The capital of the country containing Bashkia Durrës is named
+Portugal,country,Lisbon,Cabouco,Fact: The capital of the country containing Cabouco is named
+Iran,country,Tehran,Choobar,Fact: The capital of the country containing Choobar is named
+Iran,country,Tehran,Shahrud,Fact: The capital of the country containing Shahrud is named
+Spain,country,Madrid,El Bodón,Fact: The capital of the country containing El Bodón is named
+Algeria,country,Algiers,Oran,Fact: The capital of the country containing Oran is named
+Romania,country,Bucharest,Săucești,Fact: The capital of the country containing Săucești is named
+Germany,country,Berlin,Ruhpolding,Fact: The capital of the country containing Ruhpolding is named
+Hungary,country,Budapest,Budapest IV. kerület,Fact: The capital of the country containing Budapest IV. kerület is named
+Venezuela,country,Caracas,Valencia,Fact: The capital of the country containing Valencia is named
+Australia,country,Canberra,Fairfield,Fact: The capital of the country containing Fairfield is named
+Romania,country,Bucharest,Nicoreşti,Fact: The capital of the country containing Nicoreşti is named
+Russia,country,Moscow,Port-Katon,Fact: The capital of the country containing Port-Katon is named
+Germany,country,Berlin,Ellenberg,Fact: The capital of the country containing Ellenberg is named
+Equatorial Guinea,country,Malabo,Bata,Fact: The capital of the country containing Bata is named
+Uruguay,country,Montevideo,Puntas de Tacuari,Fact: The capital of the country containing Puntas de Tacuari is named
+Spain,country,Madrid,Lamasón,Fact: The capital of the country containing Lamasón is named
+West Virginia,state,Charleston,Huntington,Fact: The capital of the state containing Huntington is named
+Greece,country,Athens,Aiánteio,Fact: The capital of the country containing Aiánteio is named
+Romania,country,Bucharest,Conceşti,Fact: The capital of the country containing Conceşti is named
+Spain,country,Madrid,Paradas,Fact: The capital of the country containing Paradas is named
+Germany,country,Berlin,Ladelund,Fact: The capital of the country containing Ladelund is named
+Australia,country,Canberra,Kingston,Fact: The capital of the country containing Kingston is named
+Syria,country,Damascus,Ad Dānā,Fact: The capital of the country containing Ad Dānā is named
+Poland,country,Warsaw,Mierzęcice,Fact: The capital of the country containing Mierzęcice is named
+Iran,country,Tehran,Hafshejan,Fact: The capital of the country containing Hafshejan is named
+Spain,country,Madrid,Ledesma,Fact: The capital of the country containing Ledesma is named
+Uruguay,country,Montevideo,Arroyo Monzon,Fact: The capital of the country containing Arroyo Monzon is named
+France,country,Paris,Lisieux,Fact: The capital of the country containing Lisieux is named
+Slovenia,country,Ljubljana,Lokavec,Fact: The capital of the country containing Lokavec is named
+Uzbekistan,country,Tashkent,Urganch,Fact: The capital of the country containing Urganch is named
+China,country,Beijing,Jinghong,Fact: The capital of the country containing Jinghong is named
+Italy,country,Rome,Milan,Fact: The capital of the country containing Milan is named
+Croatia,country,Zagreb,Rezovac,Fact: The capital of the country containing Rezovac is named
+New Jersey,state,Trenton,Newark,Fact: The capital of the state containing Newark is named
+Germany,country,Berlin,Leisnig,Fact: The capital of the country containing Leisnig is named
+Germany,country,Berlin,Wonsees,Fact: The capital of the country containing Wonsees is named
+Paraguay,country,Asunción,Ciudad del Este,Fact: The capital of the country containing Ciudad del Este is named
+Ireland,country,Dublin,Cork,Fact: The capital of the country containing Cork is named
+Poland,country,Warsaw,Swarzędz,Fact: The capital of the country containing Swarzędz is named
+Spain,country,Madrid,Alhambra,Fact: The capital of the country containing Alhambra is named
+Sierra Leone,country,Freetown,Simbakoro,Fact: The capital of the country containing Simbakoro is named
+Spain,country,Madrid,Neves As,Fact: The capital of the country containing Neves As is named
+Italy,country,Rome,Gazzo,Fact: The capital of the country containing Gazzo is named
+Washington,state,Olympia,Seattle,Fact: The capital of the state containing Seattle is named
+Philippines,country,Manila,Mantang,Fact: The capital of the country containing Mantang is named
+Romania,country,Bucharest,Ceanu Mare,Fact: The capital of the country containing Ceanu Mare is named
+Algeria,country,Algiers,Bordj el Kiffan,Fact: The capital of the country containing Bordj el Kiffan is named
+Hawaii,state,Honolulu,Kailua,Fact: The capital of the state containing Kailua is named
+Rhode Island,state,Providence,North Providence,Fact: The capital of the state containing North Providence is named
+Laos,country,Vientiane,Savannakhet,Fact: The capital of the country containing Savannakhet is named
+Maryland,state,Annapolis,Baltimore,Fact: The capital of the state containing Baltimore is named
+Latvia,country,Riga,Kandava,Fact: The capital of the country containing Kandava is named
+Switzerland,country,Bern,Langnau am Albis,Fact: The capital of the country containing Langnau am Albis is named
+Philippines,country,Manila,Macabebe,Fact: The capital of the country containing Macabebe is named
+Czech Republic,country,Prague,Uhlířské Janovice,Fact: The capital of the country containing Uhlířské Janovice is named
+Philippines,country,Manila,Tuhian,Fact: The capital of the country containing Tuhian is named
+Ukraine,country,Kyiv,Chornukhyne,Fact: The capital of the country containing Chornukhyne is named
+South Africa,country,Pretoria,Cape Winelands,Fact: The capital of the country containing Cape Winelands is named
+Spain,country,Madrid,Escurial de la Sierra,Fact: The capital of the country containing Escurial de la Sierra is named
+Italy,country,Rome,Sedrina,Fact: The capital of the country containing Sedrina is named
+Jamaica,country,Kingston,Montego Bay,Fact: The capital of the country containing Montego Bay is named
+Bosnia and Herzegovina,country,Sarajevo,Gacko,Fact: The capital of the country containing Gacko is named
+Spain,country,Madrid,Tírig,Fact: The capital of the country containing Tírig is named
+Belarus,country,Minsk,Cherykawski Rayon,Fact: The capital of the country containing Cherykawski Rayon is named
+Vietnam,country,Hanoi,Ho Chi Minh City,Fact: The capital of the country containing Ho Chi Minh City is named
+Portugal,country,Lisbon,Tondela,Fact: The capital of the country containing Tondela is named
+Uruguay,country,Montevideo,Arroyo Grande,Fact: The capital of the country containing Arroyo Grande is named
+France,country,Paris,L'Île-Bouchard,Fact: The capital of the country containing L'Île-Bouchard is named
+Iran,country,Tehran,Mashhad,Fact: The capital of the country containing Mashhad is named
+Croatia,country,Zagreb,Split,Fact: The capital of the country containing Split is named
+Croatia,country,Zagreb,Korenica,Fact: The capital of the country containing Korenica is named
+Italy,country,Rome,Montiglio,Fact: The capital of the country containing Montiglio is named
+Australia,country,Canberra,Upper Gascoyne,Fact: The capital of the country containing Upper Gascoyne is named
+Syria,country,Damascus,Aleppo,Fact: The capital of the country containing Aleppo is named
+Romania,country,Bucharest,Başcov,Fact: The capital of the country containing Başcov is named
+Russia,country,Moscow,Kholm-Zhirkovskiy,Fact: The capital of the country containing Kholm-Zhirkovskiy is named
+Romania,country,Bucharest,Comuna Dorobanţu,Fact: The capital of the country containing Comuna Dorobanţu is named
+Philippines,country,Manila,Tambulig,Fact: The capital of the country containing Tambulig is named
+Massachusetts,state,Boston,Worcester,Fact: The capital of the state containing Worcester is named
+Bulgaria,country,Sofia,Obshtina Haskovo,Fact: The capital of the country containing Obshtina Haskovo is named
+Romania,country,Bucharest,Plopu,Fact: The capital of the country containing Plopu is named
+Iran,country,Tehran,Gushalan,Fact: The capital of the country containing Gushalan is named
+Uruguay,country,Montevideo,Paso Real de Carpinteria,Fact: The capital of the country containing Paso Real de Carpinteria is named
+Michigan,state,Lansing,Detroit,Fact: The capital of the state containing Detroit is named
+Germany,country,Berlin,Eitorf,Fact: The capital of the country containing Eitorf is named
+Iraq,country,Baghdad,Balad,Fact: The capital of the country containing Balad is named
+Australia,country,Canberra,Moorebank,Fact: The capital of the country containing Moorebank is named
+Norway,country,Oslo,Ulsteinvik,Fact: The capital of the country containing Ulsteinvik is named
+France,country,Paris,Courtry,Fact: The capital of the country containing Courtry is named
+Croatia,country,Zagreb,Slobodnica,Fact: The capital of the country containing Slobodnica is named
+Uzbekistan,country,Tashkent,Ohangaron,Fact: The capital of the country containing Ohangaron is named
+Ukraine,country,Kyiv,Kharkiv,Fact: The capital of the country containing Kharkiv is named
+Switzerland,country,Bern,Meisterschwanden,Fact: The capital of the country containing Meisterschwanden is named
+China,country,Beijing,Huadian,Fact: The capital of the country containing Huadian is named
+Austria,country,Vienna,Batschuns,Fact: The capital of the country containing Batschuns is named
+Jamaica,country,Kingston,Hopeton,Fact: The capital of the country containing Hopeton is named
+Indonesia,country,Jakarta,Bone Bolango,Fact: The capital of the country containing Bone Bolango is named
+Ireland,country,Dublin,Mount Merrion,Fact: The capital of the country containing Mount Merrion is named
+Spain,country,Madrid,Vilaverd,Fact: The capital of the country containing Vilaverd is named
+Czech Republic,country,Prague,Brno,Fact: The capital of the country containing Brno is named
+Romania,country,Bucharest,Oraş Anina,Fact: The capital of the country containing Oraş Anina is named
+Armenia,country,Yerevan,Gyumri,Fact: The capital of the country containing Gyumri is named
+Bermuda,country,Hamilton,St. George's,Fact: The capital of the country containing St. George's is named
+Germany,country,Berlin,Oberried,Fact: The capital of the country containing Oberried is named
+Greece,country,Athens,Sérvia,Fact: The capital of the country containing Sérvia is named
+Philippines,country,Manila,Alibug,Fact: The capital of the country containing Alibug is named
+France,country,Paris,La Fouillouse,Fact: The capital of the country containing La Fouillouse is named
+Germany,country,Berlin,Hemer,Fact: The capital of the country containing Hemer is named
+Sudan,country,Khartoum,Umm Ruwaba,Fact: The capital of the country containing Umm Ruwaba is named
+Spain,country,Madrid,Mos,Fact: The capital of the country containing Mos is named
+Switzerland,country,Bern,Bezirk Bucheggberg,Fact: The capital of the country containing Bezirk Bucheggberg is named
+Ukraine,country,Kyiv,Novyi Yarychiv,Fact: The capital of the country containing Novyi Yarychiv is named
+Portugal,country,Lisbon,Cabanas de Torres,Fact: The capital of the country containing Cabanas de Torres is named
+Canada,country,Ottawa,Cowansville,Fact: The capital of the country containing Cowansville is named
+Russia,country,Moscow,Mama,Fact: The capital of the country containing Mama is named
+Romania,country,Bucharest,Ciocotiș,Fact: The capital of the country containing Ciocotiș is named
+Tuvalu,country,Funafuti,Nui,Fact: The capital of the country containing Nui is named
+Kiribati,country,Tarawa,Kuria,Fact: The capital of the country containing Kuria is named
+Poland,country,Warsaw,Baranowo,Fact: The capital of the country containing Baranowo is named
+Spain,country,Madrid,Ahillones,Fact: The capital of the country containing Ahillones is named
+China,country,Beijing,Kangmar,Fact: The capital of the country containing Kangmar is named
+Iran,country,Tehran,Hesami,Fact: The capital of the country containing Hesami is named
+South Korea,country,Seoul,Busan,Fact: The capital of the country containing Busan is named
+Germany,country,Berlin,Dahme,Fact: The capital of the country containing Dahme is named
+Philippines,country,Manila,Abilay,Fact: The capital of the country containing Abilay is named
+Romania,country,Bucharest,Breazu,Fact: The capital of the country containing Breazu is named
+Jamaica,country,Kingston,Retrieve,Fact: The capital of the country containing Retrieve is named
+Uruguay,country,Montevideo,Empalme Nicolich,Fact: The capital of the country containing Empalme Nicolich is named
+Hungary,country,Budapest,Mezőcsát,Fact: The capital of the country containing Mezőcsát is named
+Poland,country,Warsaw,Brzeziny,Fact: The capital of the country containing Brzeziny is named
+Germany,country,Berlin,Niederelbert,Fact: The capital of the country containing Niederelbert is named
+Italy,country,Rome,Este,Fact: The capital of the country containing Este is named
+Peru,country,Lima,Provincia de Antonio Raymondi,Fact: The capital of the country containing Provincia de Antonio Raymondi is named
+Nebraska,state,Lincoln,Omaha,Fact: The capital of the state containing Omaha is named
+Samoa,country,Apia,Savai'i,Fact: The capital of the country containing Savai'i is named
+France,country,Paris,Sainte-Anastasie-sur-Issole,Fact: The capital of the country containing Sainte-Anastasie-sur-Issole is named
+Hungary,country,Budapest,Nyírlugos,Fact: The capital of the country containing Nyírlugos is named
+Wisconsin,state,Madison,Milwaukee,Fact: The capital of the state containing Milwaukee is named
+Comoros,country,Moroni,Mavingouni,Fact: The capital of the country containing Mavingouni is named
+Philippines,country,Manila,Nagsaing,Fact: The capital of the country containing Nagsaing is named
+Gibraltar,country,Gibraltar,San Roque,Fact: The capital of the country containing San Roque is named
+Italy,country,Rome,Serre,Fact: The capital of the country containing Serre is named
+Hungary,country,Budapest,Ács,Fact: The capital of the country containing Ács is named
+Australia,country,Canberra,East Killara,Fact: The capital of the country containing East Killara is named
+Poland,country,Warsaw,Lewin Kłodzki,Fact: The capital of the country containing Lewin Kłodzki is named
+Finland,country,Helsinki,Tampere,Fact: The capital of the country containing Tampere is named
+France,country,Paris,Plancher-les-Mines,Fact: The capital of the country containing Plancher-les-Mines is named
+France,country,Paris,Aydoilles,Fact: The capital of the country containing Aydoilles is named
+Spain,country,Madrid,Venta de Baños,Fact: The capital of the country containing Venta de Baños is named
+Philippines,country,Manila,Parabcan,Fact: The capital of the country containing Parabcan is named
+Germany,country,Berlin,Bordesholm,Fact: The capital of the country containing Bordesholm is named
+Turkey,country,Ankara,Kemah,Fact: The capital of the country containing Kemah is named
+Germany,country,Berlin,Irsch,Fact: The capital of the country containing Irsch is named
+Philippines,country,Manila,Inayagan,Fact: The capital of the country containing Inayagan is named
+Iran,country,Tehran,Khorramabad,Fact: The capital of the country containing Khorramabad is named
+Algeria,country,Algiers,Oued el Alleug,Fact: The capital of the country containing Oued el Alleug is named
+Romania,country,Bucharest,Bolboşi,Fact: The capital of the country containing Bolboşi is named
+Spain,country,Madrid,Selva del Camp,Fact: The capital of the country containing Selva del Camp is named
+Philippines,country,Manila,Liloan,Fact: The capital of the country containing Liloan is named
+Uruguay,country,Montevideo,Migliaro - Colonia Lavalleja,Fact: The capital of the country containing Migliaro - Colonia Lavalleja is named
+Ethiopia,country,Addis Ababa,Ādīgrat,Fact: The capital of the country containing Ādīgrat is named
+Italy,country,Rome,San Mango Piemonte,Fact: The capital of the country containing San Mango Piemonte is named
+Netherlands,country,Amsterdam,Vrieheide,Fact: The capital of the country containing Vrieheide is named
+Kyrgyzstan,country,Bishkek,Ala-Buka,Fact: The capital of the country containing Ala-Buka is named
+Philippines,country,Manila,Jiabong,Fact: The capital of the country containing Jiabong is named
+Germany,country,Berlin,Kulmbach,Fact: The capital of the country containing Kulmbach is named
+Italy,country,Rome,Grottaglie,Fact: The capital of the country containing Grottaglie is named
+Japan,country,Tokyo,Onoda,Fact: The capital of the country containing Onoda is named
+Philippines,country,Manila,Palian,Fact: The capital of the country containing Palian is named
+Ethiopia,country,Addis Ababa,Āsbe Teferī,Fact: The capital of the country containing Āsbe Teferī is named
+China,country,Beijing,Lüliang,Fact: The capital of the country containing Lüliang is named
+Uruguay,country,Montevideo,Asencio,Fact: The capital of the country containing Asencio is named
+Austria,country,Vienna,Graz,Fact: The capital of the country containing Graz is named
+Liberia,country,Monrovia,Kakata,Fact: The capital of the country containing Kakata is named
+France,country,Paris,Vars,Fact: The capital of the country containing Vars is named
+Iran,country,Tehran,Nehenjeh,Fact: The capital of the country containing Nehenjeh is named
+Netherlands,country,Amsterdam,Kop van Zuid,Fact: The capital of the country containing Kop van Zuid is named
+France,country,Paris,Quettehou,Fact: The capital of the country containing Quettehou is named
+Canada,country,Ottawa,Okanagan Falls,Fact: The capital of the country containing Okanagan Falls is named
+Poland,country,Warsaw,Grzechynia,Fact: The capital of the country containing Grzechynia is named
+Spain,country,Madrid,Amés,Fact: The capital of the country containing Amés is named
+Poland,country,Warsaw,Iłów,Fact: The capital of the country containing Iłów is named
+Kentucky,state,Frankfort,Louisville,Fact: The capital of the state containing Louisville is named
+Austria,country,Vienna,Steinerkirchen an der Traun,Fact: The capital of the country containing Steinerkirchen an der Traun is named
+Russia,country,Moscow,Selty,Fact: The capital of the country containing Selty is named
+Senegal,country,Dakar,Mékhé,Fact: The capital of the country containing Mékhé is named
+France,country,Paris,Crottet,Fact: The capital of the country containing Crottet is named
+Afghanistan,country,Kabul,Qalāt,Fact: The capital of the country containing Qalāt is named
+Eritrea,country,Asmara,Keren,Fact: The capital of the country containing Keren is named
+Philippines,country,Manila,Buenavista,Fact: The capital of the country containing Buenavista is named
+Poland,country,Warsaw,Moszczanka,Fact: The capital of the country containing Moszczanka is named
+Barbados,country,Bridgetown,Speightstown,Fact: The capital of the country containing Speightstown is named
+New Hampshire,state,Concord,Manchester,Fact: The capital of the state containing Manchester is named
+France,country,Paris,Sollacaro,Fact: The capital of the country containing Sollacaro is named
+Canada,country,Ottawa,Fox Creek,Fact: The capital of the country containing Fox Creek is named
+Azerbaijan,country,Baku,Ganja,Fact: The capital of the country containing Ganja is named
+Japan,country,Tokyo,Yono,Fact: The capital of the country containing Yono is named
+Romania,country,Bucharest,Călăraşi,Fact: The capital of the country containing Călăraşi is named
+Russia,country,Moscow,Asbestovskiy,Fact: The capital of the country containing Asbestovskiy is named
+Finland,country,Helsinki,Kalvola,Fact: The capital of the country containing Kalvola is named
+Romania,country,Bucharest,Vărbilău,Fact: The capital of the country containing Vărbilău is named
+Chile,country,Santiago,Valparaiso,Fact: The capital of the country containing Valparaiso is named
+Austria,country,Vienna,Politischer Bezirk Eferding,Fact: The capital of the country containing Politischer Bezirk Eferding is named
+Italy,country,Rome,Montalto Uffugo,Fact: The capital of the country containing Montalto Uffugo is named
+Germany,country,Berlin,Immenreuth,Fact: The capital of the country containing Immenreuth is named

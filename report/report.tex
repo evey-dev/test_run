@@ -23,7 +23,7 @@
 \newcommand{\code}[1]{\nolinkurl{#1}}
 \newcommand{\prompt}[1]{\texttt{#1}}
 \newcommand{\FVE}{\mathrm{FVE}} % Recalculate after final textual and figure revisions.
-\newcommand{\reportwordcount}{6,982}
+\newcommand{\reportwordcount}{6,540}
 
 \begin{document}
 \onehalfspacing
@@ -32,7 +32,7 @@
 \begin{titlepage}
     \centering
     \vspace*{2.0cm}
-    {\LARGE\bfseries Tracing Sparse Causal Features in an Open Language Model\par}
+    {\LARGE\bfseries Tracing Sparse Causal Features\\in an Open Language Model\par}
     \vspace{0.5cm}
     {\Large A Small-Scale Reproducibility Study of Attribution Graphs\par}
     \vspace{2.0cm}
@@ -68,9 +68,9 @@
 
     Large language models can produce correct outputs without revealing the internal computations that generated them. Mechanistic interpretability seeks causal accounts of those computations in terms of internal representations and their interactions. A central obstacle is superposition as described by Elhage et al.: a model may encode more features than it has individual neurons, so a neuron need not correspond to one human-interpretable concept \cite{elhage2022superposition}. Sparse autoencoders (SAEs) attempt to recover a more useful basis by reconstructing model activations from a small number of active learned directions \cite{cunningham2023sae,bricken2023monosemanticity}.
 
-    Lindsey et al. applied this programme at scale in \emph{On the Biology of a Large Language Model} \cite{lindsey2025biology}. Their cross-layer transcoder (CLT) approximates Claude 3.5 Haiku's MLP outputs using sparse features that may align with interpretable concepts. Attribution graphs trace locally important paths from prompt tokens through those features to output logits, yielding hypotheses about mechanisms such as addition and factual recall. The companion methods study defines an attribution graph as a local replacement model and hypothesis generator \cite{ameisen2025circuit}. Causal intervention in the underlying model therefore provides the criterion for evaluating graph-derived hypotheses.
+    Lindsey et al. applied this programme at scale in \emph{On the Biology of a Large Language Model} \cite{lindsey2025biology}. Their cross-layer transcoder (CLT) approximates Claude 3.5 Haiku's MLP outputs using sparse features that may align with interpretable concepts. Attribution graphs trace locally important paths from prompt tokens through those features to output logits, yielding hypotheses about mechanisms such as addition, multi-step thinking, and physics-based reasoning. The companion methods study defines an attribution graph as a local replacement model and hypothesis generator \cite{ameisen2025circuit}. Causal intervention in the underlying model therefore provides the criterion for evaluating graph-derived hypotheses. Because a plausibly labelled attribution graph need not faithfully describe the underlying computation, independent reproduction on a different model tests whether the method's conclusions travel rather than merely re-confirming a single system.
 
-    This study independently reproduces that methodology in \model, an open-weight causal language model with 4.0 billion parameters, 36 transformer layers and hidden width 2,560 \cite{yang2025qwen3,qwenmodelcard}. The implementation uses small synthetic prompt sets, per-layer SAEs, pruned attribution-style graphs, and validation by inhibition or swap-in intervention. The principal behaviours are addition with emphasis on decimal carry, capital-city reasoning, and SI-unit factual reasoning. Addition and capital-city prompts parallel examples in the target study, while controlled force, energy and mass prompts extend the analysis into a scientific domain.
+    This study independently reproduces that methodology in \model, an open-weight causal language model with 4.0 billion parameters, 36 transformer layers and hidden width 2,560 \cite{yang2025qwen3,qwenmodelcard}. The implementation uses small synthetic prompt sets, per-layer SAEs, pruned attribution-style graphs, and validation by inhibition or swap-in intervention. The principal behaviours are addition with emphasis on decimal carry, capital-city reasoning, and SI-unit reasoning. Addition and capital-city prompts parallel examples in the target study, while controlled force, energy and mass prompts extend the analysis into a scientific domain.
 
     Three research questions organise the analysis:
 
@@ -391,7 +391,7 @@
     \end{figure}
     \clearpage
 
-    Figure~\ref{fig:units-compact} makes the intervention explicit: the same ten coordinates receive values from either a force donor or a mass-control donor before the energy target is evaluated. This result satisfies the predeclared causal criterion and is the strongest reproduction in the study. It identifies a small, attribution-guided, layer-28-dominated group that carries force-associated information and selectively shifts unit-token preference across new physical systems. Its measured scope is causal sufficiency for the logit shift; unique necessity, coordinate-level monosemanticity and complete factual-recall computation were not tested.
+    Figure~\ref{fig:units-compact} integrates panel membership, retained graph relations and the force-versus-mass comparison. Figure~\ref{fig:intervention-schematic} isolates the intervention operation: force-source values replace the same ten coordinates while the energy target remains fixed. The result satisfies the predeclared causal criterion and identifies a small, attribution-guided, layer-28-dominated group that carries force-associated information and selectively shifts unit-token preference across new physical systems. Its measured scope is causal sufficiency for the logit shift; unique necessity, coordinate-level monosemanticity and complete factual-recall computation were not tested.
 
     \begin{figure}[tbp]
     \centering
@@ -435,7 +435,7 @@ Confirmation sample sizes are 24 pairs (graph-derived arithmetic screen), 32 pai
 
 CSD3, the intended high-performance computing environment, became unavailable during an extended cooling failure in late June 2026 \cite{csd3incident}. CSD3's high-performance working storage (\texttt{hpc-work}) is explicitly documented as non-backed-up, and node-local scratch is purged between jobs \cite{csd3storage}. The project's activation matrices, SAE checkpoints and intermediate outputs were lost and had to be regenerated from source code and the original model weights.
 
-The replacement Google Colab environment provided paid GPU access (T4 and A100 hardware) under a finite compute-unit allocation. Colab's resource model allocates units dynamically at a rate of approximately 6.77 units per GPU-hour, giving roughly 89 GPU-hours from the available 600-unit balance \cite{colabfaq}. Model weights could not be uploaded as persistent storage due to file-size constraints, requiring re-download at the start of each session and adding approximately 15 minutes of overhead per run. The slower iterative cycle relative to a persistent cluster environment meant that experimental decisions had to be more targeted: compute was allocated to the predeclared candidate sweeps, held-out controls and frozen confirmations rather than exploratory multi-seed or all-layer investigations.
+The replacement Google Colab environment provided paid GPU access (T4, A100, and H100 hardware) under a finite compute-unit allocation. Colab's resource model allocates units dynamically at a rate of approximately 6.77 units per GPU-hour, giving roughly 89 GPU-hours from the available 600-unit balance \cite{colabfaq}. Model weights could not be uploaded as persistent storage due to file-size constraints, requiring re-download at the start of each session and adding significant overhead per run. The slower iterative cycle relative to a persistent cluster environment meant that experimental decisions had to be more targeted: compute was allocated to the predeclared candidate sweeps, held-out controls and frozen confirmations rather than exploratory multi-seed or all-layer investigations.
 
 As a concrete consequence, the original ReLU SAE diagnostics, the TopK candidate training, and the attribution graphs all had to be recomputed from scratch after the CSD3 incident. Each full behaviour-specific TopK sweep (training three candidate SAEs across seven layers, building the attribution graph, and running the feature screen) required approximately four hours of continuous A100 time. The total regeneration cost was approximately 20 GPU-hours, which accounts for roughly a quarter of the available budget and directly constrained the number of SAE seeds and additional conditions that could be explored.
 
@@ -506,6 +506,7 @@ The study provides a small-scale methodological reproduction with domain-depende
 \section*{Declaration of use of autogeneration tools}
 \addcontentsline{toc}{section}{Declaration of use of autogeneration tools}
 
-Generative AI tools, including OpenAI Codex, were used during software development to assist with tasks that do not require significant logical thinking, such as code review, debugging, experimental documentation, figure generation, and proofreading of report. All meaningful parts of the study were conducted by Evelyn Paskhaver, including developing and running all code, and writing the report.
+Generative AI tools were used during software development to assist with tasks that do not require significant project-related decisoin making, such as code review, debugging, experimental documentation, figure generation, and proofreading of report. All meaningful parts of the study were conducted by Evelyn Paskhaver, including developing and running all code, and writing the report.
 
+%TC:endignore
 \end{document}

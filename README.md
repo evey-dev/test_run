@@ -39,6 +39,16 @@ The model path defaults to `models/Qwen3-4B-Instruct` via
 `configs/model_config.yaml`. Scripts fall back to Hugging Face Hub if the
 local copy is absent.
 
+Run the CPU-only test suite from the repository root:
+
+```bash
+python -m pytest -q
+```
+
+The suite exercises SAE behaviour, discovery/confirmation logic, prompt and
+configuration validation, activation-file handling, and attribution-graph
+selection without loading model weights.
+
 ## Colab notebooks
 
 The Colab notebooks were used after CSD3 became unavailable during the final

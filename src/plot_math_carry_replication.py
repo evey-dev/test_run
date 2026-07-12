@@ -359,28 +359,6 @@ def render(data: Dict[str, Any], output_paths: Sequence[Path]) -> None:
         color=MUTED,
         va="center",
     )
-    feature_axis.add_patch(
-        FancyBboxPatch(
-            (0.02, 0.015),
-            0.96,
-            0.13,
-            boxstyle="round,pad=0.012,rounding_size=0.02",
-            facecolor="#F9E7EA",
-            edgecolor=TARGET,
-            linewidth=1.3,
-        )
-    )
-    feature_axis.text(0.065, 0.08, "X", color=TARGET, fontsize=14, weight="bold", ha="center", va="center")
-    feature_axis.text(0.115, 0.102, "INHIBIT THE FROZEN PANEL", color=TARGET, fontsize=8.1, weight="bold", va="center")
-    feature_axis.text(
-        0.115,
-        0.055,
-        r"$z_S \leftarrow 0$ at the final token; clean reconstruction residual preserved",
-        color=INK,
-        fontsize=7.7,
-        va="center",
-    )
-
     primary = data["primary"]
     exploratory = data["exploratory"]
     replicated = data["replication"]
