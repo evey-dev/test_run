@@ -14,7 +14,7 @@ from tqdm import tqdm
 from src.config_utils import ensure_output_dir, load_yaml_config
 from src.data_utils import get_repo_root, resolve_path
 from src.model_loader import load_model_and_tokenizer, set_seed
-from src.prompts.prompt_utils import load_prompts, format_prompt
+from src.prompts.prompt_utils import format_prompt, load_prompts, load_prompts_from_csv
 
 DEFAULT_LAYERS = (4, 8, 12, 16, 20, 24, 28, 32)
 DEFAULT_BEHAVIOURS = ("capitals", "addition", "units")
@@ -34,6 +34,8 @@ def capture_activations(
     layers: Sequence[int] = DEFAULT_LAYERS,
     copy_model: bool = False,
     seed: int = 787,
+    prompt_csv: str | Path | None = None,
+    prompt_behaviour: str = "custom",
 ) -> Path:
     set_seed(seed)
     repo_root = get_repo_root()
@@ -52,19 +54,33 @@ def capture_activations(
 
     # 2. Load and merge prompts for chosen behaviours
     prompt_rows: List[Dict[str, Any]] = []
-    for behaviour in behaviours:
-        print(f"Loading prompts for behaviour: {behaviour}")
-        try:
-            p_data = load_prompts(behaviour)
-            for idx, p in enumerate(p_data["prompts"]):
-                prompt_rows.append({
-                    "id": p["id"],
-                    "behaviour": behaviour,
-                    "sentence": format_prompt(p),
-                    "prompt_idx": idx,
-                })
-        except Exception as e:
-            print(f"Warning: Failed to load prompts for {behaviour}: {e}")
+    if prompt_csv is not None:
+        prompt_path = resolve_path(prompt_csv, repo_root)
+        print(f"Loading custom prompt corpus: {prompt_path}")
+        for idx, prompt in enumerate(load_prompts_from_csv(prompt_path)):
+            row_id = prompt.get("PromptID", prompt.get("id"))
+            if row_id is None or pd.isna(row_id) or not str(row_id).strip():
+                row_id = f"{prompt_behaviour}-{idx}"
+            prompt_rows.append({
+                "id": str(row_id),
+                "behaviour": prompt_behaviour,
+                "sentence": format_prompt(prompt),
+                "prompt_idx": idx,
+            })
+    else:
+        for behaviour in behaviours:
+            print(f"Loading prompts for behaviour: {behaviour}")
+            try:
+                p_data = load_prompts(behaviour)
+                for idx, p in enumerate(p_data["prompts"]):
+                    prompt_rows.append({
+                        "id": p["id"],
+                        "behaviour": behaviour,
+                        "sentence": format_prompt(p),
+                        "prompt_idx": idx,
+                    })
+            except Exception as e:
+                print(f"Warning: Failed to load prompts for {behaviour}: {e}")
 
     if not prompt_rows:
         raise ValueError("No prompts loaded! Make sure data files exist in the data/ directory.")
@@ -176,6 +192,16 @@ def main() -> None:
     parser.add_argument("--layers", nargs="+", type=int, default=list(DEFAULT_LAYERS), help="Layers to capture")
     parser.add_argument("--copy-model", action="store_true", help="Copy the model directory into the output folder")
     parser.add_argument("--seed", type=int, default=787)
+    parser.add_argument(
+        "--prompt-csv",
+        default=None,
+        help="Optional custom prompt CSV. When supplied, --behaviours is not used.",
+    )
+    parser.add_argument(
+        "--prompt-behaviour",
+        default="custom",
+        help="Behaviour label stored in metadata for rows loaded with --prompt-csv.",
+    )
     args = parser.parse_args()
 
     capture_activations(
@@ -185,6 +211,8 @@ def main() -> None:
         layers=args.layers,
         copy_model=args.copy_model,
         seed=args.seed,
+        prompt_csv=args.prompt_csv,
+        prompt_behaviour=args.prompt_behaviour,
     )
     print("Activation capture completed successfully!")
 

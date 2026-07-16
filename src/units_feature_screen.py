@@ -581,7 +581,7 @@ def serialise_panel(panel: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def protocol_signature(args: argparse.Namespace) -> Dict[str, Any]:
-    return {
+    signature = {
         "protocol_version": PROTOCOL_VERSION,
         "context_pool_version": CONTEXT_POOL_VERSION,
         "one_prompt_per_physical_system": True,
@@ -597,12 +597,22 @@ def protocol_signature(args: argparse.Namespace) -> Dict[str, Any]:
         "primary_panel_size": args.primary_panel_size,
         "random_panels": args.random_panels,
     }
+    # Preserve resume compatibility with completed outputs from the original
+    # default-corpus protocol while binding custom-corpus runs to their corpus.
+    if str(args.sae_corpus_csv) != "data/units_data.csv":
+        signature["sae_corpus_csv"] = str(args.sae_corpus_csv)
+    return signature
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Force-selective TopK SAE discovery and confirmation")
     parser.add_argument("--model-config", default="configs/model_config.yaml")
     parser.add_argument("--sae-config", required=True)
+    parser.add_argument(
+        "--sae-corpus-csv",
+        default="data/units_data.csv",
+        help="Prompt CSV used to train the evaluated SAE; used for held-out overlap auditing.",
+    )
     parser.add_argument("--graph", required=True)
     parser.add_argument("--positions", default="last")
     parser.add_argument("--discovery-cases", type=int, default=8)
@@ -627,6 +637,7 @@ def main() -> None:
     repo_root = get_repo_root()
     graph_path = resolve_path(args.graph, repo_root)
     config_path = resolve_path(args.sae_config, repo_root)
+    sae_corpus_path = resolve_path(args.sae_corpus_csv, repo_root)
     output_path = resolve_path(args.output, repo_root)
     signature = protocol_signature(args)
     started = time.time()
@@ -689,7 +700,7 @@ def main() -> None:
     payload["candidate_layer_counts"] = dict(Counter(layer for layer, _ in candidate_features))
 
     case_pool = generated_context_cases(args.seed)
-    with (repo_root / "data/units_data.csv").open("r", encoding="utf-8", newline="") as handle:
+    with sae_corpus_path.open("r", encoding="utf-8", newline="") as handle:
         sae_corpus_prompts = {row["sentence"] for row in csv.DictReader(handle)}
     prompt_overlap = [
         prompt
@@ -732,6 +743,9 @@ def main() -> None:
     payload["baseline_audit"] = {
         "summary": qualification_summary,
         "completed_before_any_feature_intervention": True,
+        "sae_corpus_csv": str(sae_corpus_path),
+        "sae_corpus_prompt_count": len(sae_corpus_prompts),
+        "exact_prompt_overlap_count": len(prompt_overlap),
     }
     checkpoint_payload(payload, output_path)
     system_order = list(SYSTEMS)

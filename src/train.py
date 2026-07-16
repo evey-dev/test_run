@@ -229,6 +229,7 @@ def save_metadata(layer: int, cfg: Dict[str, Any], history: List[Dict[str, float
         "activation_type": str(cfg.get("activation_type", "relu")).lower(),
         "top_k": int(cfg["top_k"]) if cfg.get("top_k") is not None else None,
         "normalize_decoder": bool(cfg.get("normalize_decoder", False)),
+        "save_latents": bool(cfg.get("save_latents", True)),
         "seed": int(cfg.get("seed", 787)),
         "best_val_loss": float(best_val_loss),
         "activation_scaling_factor": float(scaling_factor),
@@ -238,27 +239,40 @@ def save_metadata(layer: int, cfg: Dict[str, Any], history: List[Dict[str, float
         json.dump(metadata, fh, indent=2)
 
 
-def _layer_artifacts(layer: int) -> List[str]:
-    """File names written for a single layer's SAE (checkpoint, latents, metadata)."""
-    return [f"sae_layer{layer}.pt", f"latents_layer{layer}.npy", f"sae_layer{layer}_metadata.json"]
+def _layer_artifacts(layer: int, include_latents: bool = True) -> List[str]:
+    """File names required for a complete layer checkpoint."""
+    artifacts = [f"sae_layer{layer}.pt", f"sae_layer{layer}_metadata.json"]
+    if include_latents:
+        artifacts.insert(1, f"latents_layer{layer}.npy")
+    return artifacts
 
 
-def _copy_layer_to_drive(layer: int, out_dir: Path, drive_dir: Path) -> None:
+def _copy_layer_to_drive(
+    layer: int,
+    out_dir: Path,
+    drive_dir: Path,
+    include_latents: bool = True,
+) -> None:
     """Copy a finished layer's artifacts to a persistent (Drive) directory."""
     drive_dir.mkdir(parents=True, exist_ok=True)
-    for name in _layer_artifacts(layer):
+    for name in _layer_artifacts(layer, include_latents=include_latents):
         src = out_dir / name
         if src.exists():
             shutil.copy2(src, drive_dir / name)
     print(f"[drive] Backed up layer {layer} artifacts to {drive_dir}")
 
 
-def _restore_layer_from_drive(layer: int, out_dir: Path, drive_dir: Path) -> bool:
+def _restore_layer_from_drive(
+    layer: int,
+    out_dir: Path,
+    drive_dir: Path,
+    include_latents: bool = True,
+) -> bool:
     """If a layer is already trained in Drive, copy it back locally and report True.
 
     A layer counts as complete only when all of its artifacts are present in Drive.
     """
-    names = _layer_artifacts(layer)
+    names = _layer_artifacts(layer, include_latents=include_latents)
     if not all((drive_dir / name).exists() for name in names):
         return False
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -325,12 +339,18 @@ def main() -> None:
         print("CUDA not available; using CPU")
 
     drive_dir = Path(args.drive_dir).expanduser() if args.drive_dir else None
+    save_latent_arrays = bool(cfg.get("save_latents", True))
 
     for layer in cfg.get("layers", [8, 16, 24, 32]):
         layer = int(layer)
 
         # Resume: if this layer was already trained and backed up to Drive, restore and skip.
-        if drive_dir is not None and _restore_layer_from_drive(layer, out_dir, drive_dir):
+        if drive_dir is not None and _restore_layer_from_drive(
+            layer,
+            out_dir,
+            drive_dir,
+            include_latents=save_latent_arrays,
+        ):
             print(f"[resume] Layer {layer} already complete in {drive_dir}; skipping training.")
             continue
 
@@ -340,14 +360,22 @@ def main() -> None:
         torch.save(model.state_dict(), out_dir / f"sae_layer{layer}.pt")
         save_metadata(layer, cfg, training_info["history"], training_info["best_val_loss"], training_info["scaling_factor"], out_dir)
 
-        x_full = torch.cat([x_train, x_val], dim=0)
-        x_full_norm = x_full / training_info["scaling_factor"]
-        save_latents(model, x_full_norm, layer, out_dir, device)
-        print(f"Saved SAE + latents for layer {layer}")
+        if save_latent_arrays:
+            x_full = torch.cat([x_train, x_val], dim=0)
+            x_full_norm = x_full / training_info["scaling_factor"]
+            save_latents(model, x_full_norm, layer, out_dir, device)
+            print(f"Saved SAE + latents for layer {layer}")
+        else:
+            print(f"Saved SAE for layer {layer}; dense latent export disabled by config")
 
         # Persist this layer immediately so a later crash doesn't lose it.
         if drive_dir is not None:
-            _copy_layer_to_drive(layer, out_dir, drive_dir)
+            _copy_layer_to_drive(
+                layer,
+                out_dir,
+                drive_dir,
+                include_latents=save_latent_arrays,
+            )
 
 
 if __name__ == "__main__":
