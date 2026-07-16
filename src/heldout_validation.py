@@ -588,6 +588,11 @@ def main() -> None:
     parser.add_argument("--units-sae-config", default="configs/sae_units_final_train_config.yaml")
     parser.add_argument("--math-graph", default="outputs/math_final_carry_58_83_4v3_graph.json")
     parser.add_argument("--units-graph", default="outputs/units_final_force_graph.json")
+    parser.add_argument(
+        "--units-csv",
+        default="data/units_data.csv",
+        help="Units prompt corpus whose row indices match the configured SAE activation split.",
+    )
     parser.add_argument("--math-cases", type=int, default=12)
     parser.add_argument("--unit-cases", type=int, default=12)
     parser.add_argument("--skip-math", action="store_true")
@@ -618,6 +623,7 @@ def main() -> None:
             "graph_features": "positive-attribution nodes selected on one original graph prompt",
             "literal_edit_strength": 1.0,
             "math_specificity_control": args.math_specificity_control,
+            "units_csv": args.units_csv,
             "important_scope_note": (
                 "Graph-held-out means the evaluation prompt was not used to construct the graph. "
                 "The units source prompts may occur in the SAE validation corpus; target energy variants do not."
@@ -680,7 +686,7 @@ def main() -> None:
         unit_features = load_graph_features(units_graph, LAYERS, sign="positive")
         unit_cases = generated_unit_cases(
             args.unit_cases,
-            repo_root / "data/units_data.csv",
+            resolve_path(args.units_csv, repo_root),
             units_config_path,
             args.seed,
         )
