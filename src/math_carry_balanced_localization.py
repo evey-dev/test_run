@@ -811,6 +811,7 @@ def protocol_signature(
         "protocol_version": 1,
         "model_config": str(args.model_config),
         "sae_config": str(args.sae_config),
+        "addition_csv": str(args.addition_csv),
         "candidate_pairs": args.candidate_pairs,
         "discovery_pairs": args.discovery_pairs,
         "confirmation_pairs": args.confirmation_pairs,
@@ -832,6 +833,11 @@ def main() -> None:
     )
     parser.add_argument("--model-config", default="configs/model_config.yaml")
     parser.add_argument("--sae-config", default="configs/sae_math_topk256_config.yaml")
+    parser.add_argument(
+        "--addition-csv",
+        default="data/addition_data.csv",
+        help="Arithmetic prompt corpus used to train the evaluated SAE.",
+    )
     parser.add_argument("--candidate-pairs", type=int, default=149)
     parser.add_argument("--discovery-pairs", type=int, default=32)
     parser.add_argument("--confirmation-pairs", type=int, default=32)
@@ -924,7 +930,11 @@ def main() -> None:
         discovery_keys = set(payload["split"]["discovery_case_keys"])
         confirmation_keys = set(payload["split"]["confirmation_case_keys"])
     else:
-        generated = generated_math_cases(args.candidate_pairs, repo_root / "data/addition_data.csv", args.seed)
+        generated = generated_math_cases(
+            args.candidate_pairs,
+            resolve_path(args.addition_csv, repo_root),
+            args.seed,
+        )
         fresh = [case for case in generated if arithmetic_case_key(case) not in excluded_keys]
         print(
             f"Generated {len(generated)} candidate pairs; {len(fresh)} remain after "

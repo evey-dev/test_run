@@ -11,21 +11,31 @@ def test_candidate_cases_are_country_grouped_and_exclude_graph_entity():
     rows = [
         {
             "Location": "France",
+            "Type": "country",
             "Answer": "Paris",
             "DistractorAnswer": "Lyon",
             "sentence": "Fact: The capital of the country containing Lyon is named",
         },
         {
             "Location": "France",
+            "Type": "country",
             "Answer": "Paris",
             "DistractorAnswer": "Nice",
             "sentence": "Fact: The capital of the country containing Nice is named",
         },
         {
             "Location": "Jordan",
+            "Type": "country",
             "Answer": "Amman",
             "DistractorAnswer": "Zarqa",
             "sentence": "Fact: The capital of the country containing Zarqa is named",
+        },
+        {
+            "Location": "Illinois",
+            "Type": "state",
+            "Answer": "Springfield",
+            "DistractorAnswer": "Chicago",
+            "sentence": "Fact: The capital of the state containing Chicago is named",
         },
     ]
 
@@ -35,6 +45,28 @@ def test_candidate_cases_are_country_grouped_and_exclude_graph_entity():
     assert {row["country"] for row in cases} == {"France"}
     assert all(row["capital_prompt_absent_from_sae_corpus"] for row in cases)
     assert all(row["country_prompt_absent_from_sae_corpus"] for row in cases)
+
+
+def test_candidate_cases_audit_the_actual_sae_corpus():
+    rows = [
+        {
+            "Location": "France",
+            "Type": "country",
+            "Answer": "Paris",
+            "DistractorAnswer": "Lyon",
+            "sentence": "Fact: The capital of the country containing Lyon is named",
+        }
+    ]
+    overlapping = {"Fact: The country containing Lyon has a capital named"}
+
+    cases = candidate_cases(
+        rows,
+        seed=1,
+        excluded_countries=[],
+        sae_corpus_prompts=overlapping,
+    )
+
+    assert any(not row["capital_prompt_absent_from_sae_corpus"] for row in cases)
 
 
 def test_feature_ranking_prefers_negative_capital_effect_then_specificity():

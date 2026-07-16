@@ -420,6 +420,7 @@ def protocol_signature(args: argparse.Namespace) -> Dict[str, Any]:
         "protocol_version": 1,
         "model_config": str(args.model_config),
         "sae_config": str(args.sae_config),
+        "addition_csv": str(args.addition_csv),
         "graph": str(args.graph),
         "positions": args.positions,
         "discovery_seed": args.seed,
@@ -437,6 +438,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Carry-selective SAE feature discovery and confirmation")
     parser.add_argument("--model-config", default="configs/model_config.yaml")
     parser.add_argument("--sae-config", default="configs/sae_math_topk256_config.yaml")
+    parser.add_argument(
+        "--addition-csv",
+        default="data/addition_data.csv",
+        help="Arithmetic prompt corpus used to train the evaluated SAE.",
+    )
     parser.add_argument(
         "--graph",
         default="outputs/topk_math_retrain/math_topk256_carry_58_83_4v3_graph.json",
@@ -469,6 +475,7 @@ def main() -> None:
     repo_root = get_repo_root()
     graph_path = resolve_path(args.graph, repo_root)
     config_path = resolve_path(args.sae_config, repo_root)
+    addition_path = resolve_path(args.addition_csv, repo_root)
     output_path = resolve_path(args.output, repo_root)
     signature = protocol_signature(args)
     started = time.time()
@@ -515,7 +522,7 @@ def main() -> None:
 
     required = args.discovery_cases + args.confirmation_cases
     case_pool, excluded_keys = select_fresh_case_pool(
-        repo_root / "data/addition_data.csv",
+        addition_path,
         args.seed,
         required=required,
         excluded_seed=args.exclude_seed,

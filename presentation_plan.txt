@@ -1,788 +1,947 @@
 ========================================================================
 PRESENTATION PLAN
 Tracing Sparse Causal Features in an Open Language Model
-A Small-Scale Reproducibility Study of Attribution Graphs
 ========================================================================
 
-Format:        Short conference talk, 25 min + 10 min questions
-Audience:      Scientifically literate cohort peers. Familiar with core
-               MPhil modules (ML, statistics, data analysis), NOT with
-               mechanistic interpretability specifically.
-Target length: ~22 content slides (~1 min each), leaving buffer + Q&A.
-               Backup slides at the end for anticipated questions.
+Purpose: professional thesis presentation to the project assessor
+Target duration: 23-25 minutes, followed by questions
+Main deck: 21 slides
+Core claim: reconstruction, decodability and causal control are distinct
+standards of evidence. A mechanistic claim requires the third.
 
-Guiding principle for delivery:
-  Slides carry ONE visual idea each. Most of the content lives in the
-  figures and in what you SAY, not in bullet text. Bullets below marked
-  "SLIDE TEXT" are the maximum that should appear; "SPEAK" is your script.
+The wording under ON-SCREEN TEXT is the exact text to place on each slide.
+The wording under SPOKEN SCRIPT is intended to be spoken word for word. Do
+not put the script on the slide. Use the PDF assets for vector-quality slides;
+PNG versions are available in the same directories for software that does not
+render PDF reliably.
 
-Narrative arc (keep this in mind for cohesion):
-  Motivation -> what the target paper did -> can it travel to an open
-  model? -> pipeline -> the pivotal discovery that reconstruction is not
-  sparsity -> the fix (TopK) -> one strong positive (units), one honest
-  mixed result (arithmetic), one clean null (capitals) -> what this
-  teaches us about the method -> limits -> next steps.
+IMPORTANT BEFORE BUILDING THE FINAL DECK
 
-The intellectual spine is a single sentence, repeat it 2-3 times:
-  "High reconstruction fidelity, held-out decodability, and sparse causal
-   control are three DIFFERENT things, and only the last one supports a
-   mechanistic claim."
+1. Run `run_gpu_math_large_data_test.ipynb` and
+   `run_gpu_capitals_relation_pilot.ipynb`.
+2. Copy their output directories into this repository:
+   `outputs/math_large_data_test/` and `outputs/capitals_large_data_test/`.
+3. Replace only the bracketed run-dependent fields on Slides 16 and 17. Do
+   not infer success from a graph or from activation AUC. Use the explicit
+   success fields and confidence intervals in the JSON outputs.
+4. If either run is incomplete, retain the submitted-report result and omit
+   the unfinished extension. Never show a provisional number as a result.
+5. The report was completed using the original and TopK experiments. The 10k
+   extensions should be described as post-report scale controls added after
+   CSD3 availability returned.
 
 
 ========================================================================
-SECTION 0 — OPENING
+SLIDE 1 - TITLE                                                    0:30
 ========================================================================
 
-------------------------------------------------------------------------
-SLIDE 1 — Title
-------------------------------------------------------------------------
 TITLE:
   Tracing Sparse Causal Features in an Open Language Model
-  (subtitle) A small-scale reproducibility study of Anthropic's
-  attribution graphs, applied to Qwen3-4B-Instruct
 
-SLIDE TEXT:
-  - Name, MPhil in Data Intensive Science, Project 28
-  - Supervisor: Miles Cranmer
-  - Reproducing: Lindsey, Gurnee et al. (2025), "On the Biology of a
-    Large Language Model"
+SUBTITLE:
+  A small-scale reproduction of attribution graphs in
+  Qwen3-4B-Instruct
 
-FIGURE/DIAGRAM:
-  Single clean hero image. Recommended: a cropped, visually striking
-  version of the units attribution panel (report/figures/
-  fig_units_attribution_panel.pdf) OR the intervention schematic
-  (report/figures/fig_intervention_schematic.pdf) faded as a background.
-  Keep it decorative — no need to explain it yet.
+FOOTER:
+  [YOUR NAME] | MPhil in Data Intensive Science | Project 28
+  Supervisor: Miles Cranmer
 
-SPEAK:
-  - "Large language models give us the right answer without telling us
-    how they got there. My project asks whether a specific set of tools
-    for opening up that black box — Anthropic's attribution graphs —
-    actually transfer to a different, open model."
-  - One-line personal framing: "This is a reproducibility study, so I'll
-    be as interested in what failed to reproduce as in what did."
+FIGURE:
+  `presentation/figures/fig_units_10k_force_panel.pdf`
 
+LAYOUT:
+  Put the title and subtitle on the left. Crop the figure to its feature-panel
+  schematic and use it on the right; do not show its numerical result yet.
 
-------------------------------------------------------------------------
-SLIDE 2 — Why this matters (motivation)
-------------------------------------------------------------------------
-TITLE:
-  The problem: models that work but can't be read
-
-SLIDE TEXT (max 3 bullets):
-  - Interpretability = causal account of the internal computation
-  - Obstacle: superposition — more features than neurons, so one
-    neuron != one concept (Elhage et al. 2022)
-  - Reproducibility of interpretability methods is itself under-tested
-
-FIGURE/DIAGRAM:
-  Simple custom schematic (create): a box "Prompt -> [ Transformer ??? ]
-  -> Answer" with the middle box opaque/black, and a small inset showing
-  "1 neuron responding to 3 unrelated concepts" (three tiny icons feeding
-  one node). Illustrates superposition intuitively.
-
-SPEAK:
-  - Frame the field for non-specialists: mechanistic interpretability
-    wants a causal, not just correlational, story of what happens inside.
-  - Explain superposition in one breath [stuff like this should be gone... why do i need to know "in one breath"]: because models pack more
-    concepts than they have neurons, you can't just read off single
-    neurons — you need to recover a better basis.
-  - Land the meta-point: methods papers in this area are compelling but
-    rarely independently reproduced on a different model. That gap is
-    exactly what a reproducibility project should probe.
-
-
-------------------------------------------------------------------------
-SLIDE 3 — The target study: attribution graphs
-------------------------------------------------------------------------
-TITLE:
-  What "On the Biology of a Large Language Model" did
-
-SLIDE TEXT (max 3 bullets):
-  - Train sparse features on model activations (a cross-layer transcoder)
-  - Build an attribution graph: prompt tokens -> features -> output logit
-  - The graph is a HYPOTHESIS; causal intervention is the test
-
-FIGURE/DIAGRAM:
-  Two-panel conceptual diagram (create, or adapt a schematic from the
-  Anthropic paper style): left = a small attribution graph (nodes =
-  features, edges = influence, ending at a logit); right = the same graph
-  with one node "knocked out" and an arrow showing the output changing.
-  Caption: "Plausible graph -> must be checked by perturbing the model."
-
-SPEAK:
-  - Describe the pipeline at a level peers can follow: sparse features are
-    interpretable directions; the graph traces which features locally
-    matter for a particular output.
-  - CRITICAL conceptual point to state clearly: an attribution graph is a
-    local replacement model and a hypothesis generator. A nicely-labelled
-    graph can still be wrong about the underlying computation — so the
-    real evidence is what happens when you intervene.
-  - This sets up my whole evaluation philosophy.
-
-
-------------------------------------------------------------------------
-SLIDE 4 — My research questions
-------------------------------------------------------------------------
-TITLE:
-  Does the method travel? Three questions
-
-SLIDE TEXT (the three RQs, verbatim-ish, short form):
-  1. Can a lightweight per-layer SAE pipeline find compact feature sets
-     whose interventions move a pre-specified output contrast?
-  2. Do those effects GENERALISE and distinguish the intended concept
-     from matched alternatives?
-  3. When a sparse intervention fails, can diagnostics tell us WHERE the
-     reproducibility chain breaks?
-
-FIGURE/DIAGRAM:
-  Minimal — three numbered questions, each with a small icon
-  (magnifying glass / arrows-out / broken-chain). No heavy figure.
-
-SPEAK:
-  - Stress the reproducibility framing from the project brief: the goal is
-    NOT to match Anthropic's numbers. It's to independently implement the
-    workflow on an open model and see whether the conclusions hold.
-  - Note explicitly: a rigorous FAILURE to reproduce is a valid, valuable
-    outcome. This licenses the honest negative results later.
-  - Q3 is the methodological contribution: turning failures into
-    localisation of where things break.
+SPOKEN SCRIPT:
+  "Language models can produce correct answers while leaving the computation
+  that produced them opaque. This project asks whether a prominent method for
+  exposing that computation, Anthropic's attribution-graph workflow, transfers
+  to an independently implemented pipeline and a different open-weight model.
+  I will show one controlled positive result in physics-based reasoning, a
+  smaller but independently replicated arithmetic effect, and a capital-city
+  experiment that defines the boundary of what this pipeline supports."
 
 
 ========================================================================
-SECTION 1 — SETUP AND METHODS
+SLIDE 2 - THE REPRODUCIBILITY QUESTION                              0:55
 ========================================================================
 
-------------------------------------------------------------------------
-SLIDE 5 — The model and the three behaviours
-------------------------------------------------------------------------
 TITLE:
-  Qwen3-4B-Instruct + three probe behaviours
+  The question is methodological, not numerical
 
-SLIDE TEXT:
-  - Model: Qwen3-4B-Instruct-2507 (open weights, 36 layers, width 2560)
-  - Behaviours:
-      Arithmetic  — two-digit addition, focus on CARRY
-      Capitals    — capital-city factual recall
-      SI units    — force / energy / mass reasoning (my extension)
+ON-SCREEN TEXT:
+  Can a lightweight per-layer SAE pipeline recover compact,
+  causally validated mechanisms in Qwen3-4B-Instruct?
 
-FIGURE/DIAGRAM:
-  A small 3-column table/card layout, one card per behaviour, each with a
-  representative prompt and the target contrast:
-    Arithmetic: "What is 58 + 83? Answer: 1_"  -> 4 (carry) vs 3 (no carry)
-    Capitals:   "The capital of [country] is"  -> correct city prefix
-    Units:      "...the SI unit to measure force is named"  -> newtons vs joules
+  Reproduction criterion
+  A frozen feature set must change a pre-specified output contrast on
+  disjoint prompts, relative to a matched control.
 
-SPEAK:
-  - Why these three: arithmetic and capitals mirror examples in the target
-    paper; units is my science-reasoning extension (per the brief's
-    encouragement to probe numeracy / scientific reasoning).
-  - Why carry: it's a clean, well-defined sub-computation to hunt for — a
-    good stress test of "can we find a specific mechanism, not just a
-    generic answer signal."
-  - Everything is deterministic: fixed seeds (787), non-thinking mode,
-    greedy next-token evaluation. Reproducibility starts here.
+FIGURE:
+  None. Use the reproduction criterion as the visual centre of the slide.
 
-
-------------------------------------------------------------------------
-SLIDE 6 — The pipeline (the map for the rest of the talk)
-------------------------------------------------------------------------
-TITLE:
-  The reproduction pipeline
-
-SLIDE TEXT:
-  - One line: "Capture activations -> train SAEs -> build graph ->
-    intervene -> control"
-
-FIGURE/DIAGRAM:
-  report/figures/fig_pipeline.pdf   (THE main object on this slide)
-  Point out the lower branch that separates sparse feature tests from
-  broad positive controls.
-
-SPEAK:
-  - Walk the pipeline left to right in ~30 s. This is the roadmap; tell
-    the audience "every result later is one box in this diagram."
-  - Emphasise the fork at the bottom: sparse interventions (the actual
-    scientific claim) vs. broad positive controls (sanity checks that the
-    information is even present). This distinction is what makes the
-    negative results interpretable.
-
-
-------------------------------------------------------------------------
-SLIDE 7 — Step 1: Sparse autoencoders (how they work)
-------------------------------------------------------------------------
-TITLE:
-  Recovering interpretable features with SAEs
-
-SLIDE TEXT (max):
-  - Encode MLP activation u -> sparse code z (ReLU), decode -> u-hat
-  - Overcomplete (8192 latents > 2560 dims): sparsity, not compression
-  - Quality = Fraction of Variance Explained (FVE); FVE=1 is perfect
-
-FIGURE/DIAGRAM:
-  Custom schematic (create): u (dense vector, 2560) -> encoder -> z
-  (tall sparse bar chart, mostly zeros, 8192) -> decoder -> u-hat
-  (dense, 2560). Annotate "each active coordinate = a learned direction /
-  candidate feature." Show the two key equations (ReLU-SAE + FVE)
-  compactly beside it.
-
-SPEAK:
-  - Explain the autoencoder plainly for peers: reconstruct the activation
-    from a few active learned directions; those directions are our
-    candidate features.
-  - Define FVE quickly (variance-explained, like R^2) so the diagnostics
-    later land.
-  - IMPORTANT foreshadow: say out loud "high FVE means good
-    reconstruction — hold that thought, because it will NOT mean what you
-    expect." Plants the pivotal result.
-  - Training detail worth one sentence: independent per-layer SAEs at
-    layers {4,8,12,16,20,24,28}, 800 train / 200 val vectors each.
-
-
-------------------------------------------------------------------------
-SLIDE 8 — Step 2: Attribution graphs (how I build them)
-------------------------------------------------------------------------
-TITLE:
-  From features to a causal hypothesis: the contrast graph
-
-SLIDE TEXT:
-  - Objective J = logit(target) - logit(contrast)   e.g. logit(4)-logit(3)
-  - Rank features by first-order attribution; keep top nodes per layer
-  - Straight-through splice: graph gradients WITHOUT changing the output
-
-FIGURE/DIAGRAM:
-  report/figures/fig_math_attribution_graph.pdf  (the arithmetic graph,
-  logit(4) vs logit(3)). Red/blue = positive/negative attribution.
-  Note in caption: this is a backward-connected visual SUBSET.
-
-SPEAK:
-  - Explain the contrast objective concretely with 58+83: we score how
-    much each feature pushes "4" (correct, carry) over "3" (dropped carry).
-  - One design-rationale sentence on the straight-through splice: it lets
-    me attribute gradients through the SAE while keeping the model's
-    actual forward pass unchanged — so reconstruction error doesn't
-    contaminate the baseline. (This is a deliberate, defensible design
-    choice — good for the "rationale for design choices" criterion.)
-  - Reiterate: the graph is still just a hypothesis. Next slide: the test.
-
-
-------------------------------------------------------------------------
-SLIDE 9 — Step 3: Interventions + the discipline that makes them credible
-------------------------------------------------------------------------
-TITLE:
-  Testing the hypothesis: interventions & pre-registration
-
-SLIDE TEXT:
-  - Inhibition: remove selected features' contribution to the MLP output
-  - Swap: inject a donor prompt's feature values into the target
-  - Discovery/confirmation split; panels FROZEN before confirmation
-  - Matched control decides specificity (no-carry / mass donor)
-
-FIGURE/DIAGRAM:
-  report/figures/fig_intervention_schematic.pdf
-  (clean forward pass vs. same prompt after editing only the frozen
-  panel latents). This is the cleanest single picture of "what an
-  intervention is."
-
-SPEAK:
-  - Two intervention types in plain terms: turn features off (inhibition),
-    or paste features from another prompt (swap).
-  - THE methodological backbone — spell it out slowly, this earns depth
-    marks: features are ranked on a DISCOVERY set, the panel is frozen,
-    then tested ONCE on a disjoint CONFIRMATION set. Confirmation data
-    never influence which features are chosen.
-  - Matched controls define specificity: for carry, a no-carry pair that
-    should NOT move if the feature is truly carry-specific; for units, a
-    mass donor that should NOT transfer a "newtons" preference.
-  - Success criteria were pre-declared (sign + bootstrap interval wholly
-    past zero). This is what separates a real effect from a story.
+SPOKEN SCRIPT:
+  "The project specification asks for an independent investigation of
+  reproducibility, rather than a numerical match to the original paper. I
+  therefore define reproduction operationally. A visually plausible graph is
+  not enough, and a feature that predicts the label is not enough. The feature
+  set must be selected without using the confirmation prompts, frozen, and
+  then causally change a pre-specified logit contrast more than an appropriate
+  matched control. This definition allows positive, partial and null outcomes
+  to be assessed by the same standard."
 
 
 ========================================================================
-SECTION 2 — RESULTS
+SLIDE 3 - TARGET STUDY AND METHOD CORRESPONDENCE                     1:20
 ========================================================================
 
-------------------------------------------------------------------------
-SLIDE 10 — Baselines: the model can do the tasks
-------------------------------------------------------------------------
 TITLE:
-  Baseline competence (before we touch anything)
+  Reproducing a workflow, not claiming architectural identity
 
-SLIDE TEXT:
-  - Addition: 100% top-1
-  - SI units: 67% top-1 (96.5% in top-k)
-  - Capitals: 50% top-1 (84% in top-k)
+ON-SCREEN TEXT:
+  Lindsey, Gurnee et al. (2025)        This reproduction
+  Cross-layer transcoder               Independent per-layer MLP SAEs
+  Claude-family model                  Qwen3-4B-Instruct-2507
+  Attribution graph                    Contrastive SAE attribution graph
+  Feature intervention                 Inhibition and source-to-target swap
 
-FIGURE/DIAGRAM:
-  Small bar chart (create from Table tab:baseline) — three behaviours,
-  top-1 vs in-top-k. Keep it tiny; it's a sanity check, not a headline.
+  Shared scientific test: does intervention support the graph's explanation?
 
-SPEAK:
-  - Quick: the model is competent, so any failure to find a mechanism
-    isn't just the model being bad at the task.
-  - Note the wrinkle that drove a design choice: units/capitals have
-    multi-token answers, so every downstream causal test re-applies a
-    "clean baseline" eligibility filter per prompt. Shows care.
+FIGURE:
+  `presentation/figures/fig_presentation_reproduction_pipeline.pdf`
+  Use only the upper pipeline strip as a small footer. The comparison table is
+  the main object.
 
-
-------------------------------------------------------------------------
-SLIDE 11 — The pivotal diagnostic: reconstruction is NOT sparsity
-------------------------------------------------------------------------
-TITLE:
-  A surprise: great reconstruction, terrible sparsity
-
-SLIDE TEXT:
-  - Original ReLU SAEs: FVE 0.91-0.96  (reconstruct beautifully)
-  - ...but 2,000-3,500 of 8,192 latents active PER example (~26-43%)
-  - "Interpretable feature" claim needs sparsity, not just fidelity
-
-FIGURE/DIAGRAM:
-  report/figures/fig_sae_diagnostics.pdf  (THE main object — layerwise
-  FVE high, active-latent count also high). This is the turning point of
-  the whole talk; give it space.
-
-SPEAK:
-  - This is the heart of the talk. Deliver the spine sentence: "High
-    reconstruction fidelity and sparse, interpretable features are
-    different things."
-  - The initial sparse interventions were weak. Rather than give up, I
-    measured WHY — and found the SAEs were reconstructive but dense.
-  - This is Research Question 3 in action: diagnostics localise where the
-    chain breaks. The break was in the representation, not (necessarily)
-    in the model.
-
-
-------------------------------------------------------------------------
-SLIDE 12 — Sanity check: the causal information IS there
-------------------------------------------------------------------------
-TITLE:
-  Broad controls: the signal exists, it's just not concentrated
-
-SLIDE TEXT:
-  - Units: all-position complete-latent force->energy patch flips top
-    token j -> new  (p(new): 0.02 -> 0.50)
-  - Arithmetic: raw MLP patch makes the dropped-carry digit win; but a
-    44+83 donor transfers ITS digit (2) -> source-digit copying, not
-    abstract carry
-
-FIGURE/DIAGRAM:
-  Custom before/after bar pair (create): two small probability bar charts
-  for the units minimal pair (clean vs broad patch), showing joules
-  collapsing and newtons rising. Optionally cite fig_units_interventions/
-  fig_math_interventions as backup provenance (not shown).
-
-SPEAK:
-  - Establish the logical structure: broad patches are POSITIVE CONTROLS.
-    They prove the relevant causal information lives at these sites.
-  - So when a SPARSE intervention is weak, it's a concentration problem,
-    not an absence problem.
-  - Flag the arithmetic subtlety that shaped later design: the broad patch
-    transfers the source's digit, i.e. copying, not an abstract "carry"
-    variable. This is why I later had to control for the output digit.
-
-
-------------------------------------------------------------------------
-SLIDE 13 — The fix: fixed-sparsity TopK SAEs
-------------------------------------------------------------------------
-TITLE:
-  The correction: TopK sparse autoencoders
-
-SLIDE TEXT:
-  - Replace L1 penalty (scale-degenerate) with hard TopK: keep k active
-  - Pre-declared candidates k in {128, 256, 512}; decoder norms fixed to 1
-  - Selection rule set BEFORE seeing any intervention result
-
-FIGURE/DIAGRAM:
-  Custom small diagram (create): the same tall sparse-code bar from
-  slide 7, but now with a horizontal "keep top-k" cut line — everything
-  below is zeroed. Side note box: selection thresholds (FVE>=0.90,
-  min-layer FVE>=0.85, dead-fraction<=0.80; pick sparsest eligible).
-
-SPEAK:
-  - Design rationale (depth marks): the L1 objective is scale-degenerate —
-    you can rescale encoder/decoder and cheat the penalty, so it doesn't
-    truly control sparsity. TopK controls the support SIZE directly.
-  - Stress the pre-registration again: candidate ks and the selection
-    thresholds were fixed before any causal outcome was seen. Selection
-    used only reconstruction/sparsity diagnostics.
-  - This is the same fix applied identically to arithmetic and units —
-    enabling a fair comparison between them.
-
-
-------------------------------------------------------------------------
-SLIDE 14 — Headline positive result: the compact units panel
-------------------------------------------------------------------------
-TITLE:
-  Units: a compact, specific, force-associated panel
-
-SLIDE TEXT:
-  - Selected TopK-128: FVE 0.936, only ~100 active latents (35x sparser)
-  - Frozen 10-feature panel, tested on 16 DISJOINT systems
-  - Force-source swap: +1.234 logits;  mass control: -0.090
-  - Specificity +1.324 [1.223, 1.430]; correct sign in ALL 16 systems
-
-FIGURE/DIAGRAM:
-  report/figures/fig_units_topk_selection_confirmation.pdf  (4-panel:
-  selection, discovery ranking, cumulative panel sizes, 16-system paired
-  confirmation). This is the strongest evidence — give it the most time.
-
-SPEAK:
-  - This is the win. Walk the four panels: (a) selection before
-    intervention, (b) discovery ranking, (c) effect grows monotonically
-    with panel size, (d) every one of 16 systems moves the right way and
-    beats its mass control.
-  - Emphasise generalisation: chosen from ONE force graph + 8 discovery
-    systems, confirmed on 16 UNSEEN systems. That's RQ2 satisfied.
-  - CRITICAL honesty caveat (say it, don't hide it): joules remained the
-    TOP prediction. This is a selective logit SHIFT, not an answer flip.
-    So: a force-ASSOCIATED causal panel, not a complete circuit.
-
-
-------------------------------------------------------------------------
-SLIDE 15 — What the units panel is (and isn't)
-------------------------------------------------------------------------
-TITLE:
-  Reading the units result honestly
-
-SLIDE TEXT:
-  - 10 features: 8 at layer 28, 1 each at layers 4 & 8
-  - Effect = 97.5% of full 73-feature effect; 40.6% of complete-latent
-  - Claim: compact force-ASSOCIATED panel. NOT: monosemantic / unique /
-    complete circuit
-
-FIGURE/DIAGRAM:
-  report/figures/fig_units_compact_causal_circuit.pdf  (the compact causal
-  summary — panel membership + retained graph edges + swap outcome).
-  Alternatively fig_units_attribution_panel.pdf if you prefer graph
-  provenance. Pick ONE; don't show both here.
-
-SPEAK:
-  - Interpret carefully: a small, late-layer (layer-28-dominated),
-    attribution-guided group carries force-associated info and shifts
-    unit preference across new systems.
-  - State the scope precisely — this is where depth-of-understanding is
-    judged: I showed causal SUFFICIENCY for the logit shift. I did NOT
-    show unique necessity, coordinate-level monosemanticity, or the full
-    factual-recall computation.
-  - The 97.5% / 40.6% numbers are ratios of intervention EFFECTS, not
-    "fraction of mechanism explained" — a distinction I'm careful about.
-
-
-------------------------------------------------------------------------
-SLIDE 16 — Arithmetic: an honest, winding road (part 1)
-------------------------------------------------------------------------
-TITLE:
-  Arithmetic: bigger effects, but not carry-specific
-
-SLIDE TEXT:
-  - TopK made inhibition ~2x larger (-0.875 logits)...
-  - ...but the matched NO-CARRY control moved almost identically (-0.885)
-  - Paired specificity ~ 0 -> a generic ARITHMETIC effect, not carry
-  - Frozen top-10 screen also crossed zero: null
-
-FIGURE/DIAGRAM:
-  report/figures/fig_math_topk_tradeoff_specificity.pdf  (panel b: lines
-  connecting matched carry / no-carry pairs, showing they move together).
-  Optionally mention fig_math_carry_feature_screen.pdf as the frozen null.
-
-SPEAK:
-  - Contrast with units: here the sparse effect got BIGGER but not more
-    specific. The matched control is what exposes this — without it, I'd
-    have wrongly claimed a carry mechanism.
-  - This is the payoff of the discipline from slide 9. The controlled
-    null is a genuine scientific result, not a failure.
-  - Bridge: "so is carry information simply not in the SAE basis? Not
-    necessarily — I hadn't controlled for the output digit."
-
-
-------------------------------------------------------------------------
-SLIDE 17 — Arithmetic: localisation & replication (part 2)
-------------------------------------------------------------------------
-TITLE:
-  Arithmetic: output-digit-balanced localisation
-
-SLIDE TEXT:
-  - Condition on output digit; rank ALL 57,344 latents by carry signal
-  - Raw-MLP carry direction: AUC = 1.0 at layers 24 & 28 (info IS there)
-  - Frozen top-10: decodable but NOT causal (paired +0.016) — the gap!
-  - Frozen top-20, tested ONCE on 32 untouched cases: -0.086 [-0.137,-0.039]
-    -> replicated; PASSED
-
-FIGURE/DIAGRAM:
-  report/figures/fig_math_balanced_carry_replication.pdf  (4-panel: AUC by
-  layer, the frozen top-20 panel, null-top-10 vs replicated-top-20,
-  target/control decomposition). Main object.
-
-SPEAK:
-  - The killer teaching moment: the top-10 features perfectly CLASSIFY
-    carry status (AUC 1.0) yet inhibiting them does NOTHING causally.
-    Decodability != causal control. (Spine sentence again.)
-  - Only a distributed 20-feature panel gave a small carry-selective
-    effect — and I treated the top-20 as hypothesis-generating, froze the
-    exact IDs, and tested once on untouched cases. It replicated.
-  - Honest framing: small effect, no token flip -> a DISTRIBUTED
-    carry-associated panel under one SAE basis, not a monosemantic
-    "carry bit."
-
-
-------------------------------------------------------------------------
-SLIDE 18 — Capitals: a clean null
-------------------------------------------------------------------------
-TITLE:
-  Capitals: a controlled non-reproduction
-
-SLIDE TEXT:
-  - Low-confidence (Dallas/Oakland): no answer transfer
-  - High-confidence (Zarqa->Amman, Basra->Baghdad, p>0.96): still no flip
-  - Logits move, answers don't -> boundary of the tested intervention
-
-FIGURE/DIAGRAM:
-  report/figures/fig_capitals_interventions.pdf  (both pairs; raising
-  clean confidence did not produce transfer).
-
-SPEAK:
-  - I ruled out the obvious confound: maybe transfer failed just because
-    baselines were uncertain. So I retried with very high-confidence pairs
-    — still no answer transfer.
-  - Careful claim: this bounds WHERE my intervention reaches (final-token
-    MLP), it does NOT prove capitals recall is absent — it likely lives in
-    attention / multi-token retrieval, outside my tested scope.
-  - A null result, rigorously established, is a legitimate contribution
-    (per the project brief).
+SPOKEN SCRIPT:
+  "The target publication used a cross-layer transcoder to construct local
+  replacement models of Claude. My implementation preserves the scientific
+  workflow but not every architectural detail. It trains an independent sparse
+  autoencoder on each selected MLP output in Qwen3-4B-Instruct, builds a
+  contrastive attribution graph, and tests candidate features by inhibition or
+  swap. This distinction matters. A cross-layer transcoder can model
+  dependencies and reconstruction errors across layers directly; independent
+  per-layer SAEs cannot. My results therefore test whether the workflow travels
+  under the lightweight architecture required by the project, not whether I
+  recreated Anthropic's internal model exactly."
 
 
 ========================================================================
-SECTION 3 — SYNTHESIS, LIMITS, FUTURE
+SLIDE 4 - THREE BEHAVIOURAL HYPOTHESES                               1:05
 ========================================================================
 
-------------------------------------------------------------------------
-SLIDE 19 — Why reconstruction was insufficient (the lesson)
-------------------------------------------------------------------------
 TITLE:
-  Three things that are NOT the same
+  Three domains, three pre-specified contrasts
 
-SLIDE TEXT:
-  - Reconstruction fidelity  (FVE)
-  - Held-out decodability    (AUC)
-  - Sparse causal control    (intervention)
-  Only the third supports a mechanistic claim.
+ON-SCREEN TEXT:
+  Multi-step arithmetic
+  58 + 83 = 1_1:  logit(4) - logit(3)
+  Hypothesis: a carry-associated feature panel supports the tens digit.
 
-FIGURE/DIAGRAM:
-  Custom 3-ring / three-column diagram (create): three overlapping
-  circles labelled Reconstruction / Decodability / Causal control, with
-  the project's evidence pinned to each (ReLU had #1; top-10 carry had
-  #1+#2 but not #3; units + top-20 carry reached #3). A compact visual
-  thesis of the whole talk.
+  Multi-step capital retrieval
+  city -> containing country or state -> capital
+  Hypothesis: a relation panel favours the capital over the location name.
 
-SPEAK:
-  - This is the generalisable takeaway — deliver it as the intellectual
-    core. Give the concrete example: the balanced top-10 carry panel had
-    perfect decodability (AUC 1.0) and zero causal effect.
-  - One sentence of theory: low reconstruction error bounds average clean
-    error, but says nothing about how an EDIT propagates, and correlated
-    latents can reconstruct well while causal effects smear across many
-    directions.
-  - Also name the architectural gap: my independent per-layer SAEs
-    represent cross-layer effects differently from Anthropic's joint
-    cross-layer transcoder — a caveat on direct comparison.
+  Physics-based reasoning
+  physical quantity -> SI unit
+  Hypothesis: a force panel favours newtons over joules, not mass controls.
+
+FIGURE:
+  None. Use three aligned columns with one short prompt example per column.
+
+SPOKEN SCRIPT:
+  "I study three behaviours. Arithmetic tests the carry-consuming step in
+  addition: after the model has produced the hundreds digit of one hundred and
+  forty-one, the decisive contrast is four against three. Capital retrieval is
+  treated as a multi-step hypothesis: identify the location containing a city,
+  then retrieve that location's capital. The experiment tests the relation,
+  without presuming that the model literally executes those steps. SI units
+  are the physics-based reasoning extension. Here the controlled contrast is
+  newtons against joules, with a mass donor used to test whether an observed
+  change is force-specific rather than a generic unit effect."
 
 
-------------------------------------------------------------------------
-SLIDE 20 — Scientific bottom line
-------------------------------------------------------------------------
+========================================================================
+SLIDE 5 - BASELINE COMPETENCE                                        1:00
+========================================================================
+
 TITLE:
-  What reproduced, what didn't
+  Interpret only behaviours the model can perform
 
-SLIDE TEXT:
-  - Full workflow reproduced independently on an open model
-  - Units: strong, specific, generalising force panel (predeclared PASS)
-  - Arithmetic: null primary, then replicated distributed carry panel
-  - Capitals: clean null
-  - No result flipped an answer or proved a complete/monosemantic circuit
+ON-SCREEN TEXT:
+  Exact next-token evaluation, fixed prompts and seed
 
-FIGURE/DIAGRAM:
-  Custom summary scorecard (create): 3 rows (Units / Arithmetic /
-  Capitals) x columns (Sparse effect? / Specific? / Generalised? /
-  Answer flip?), with check/partial/cross marks. Colour-coded. This is the
-  "one slide to remember" if someone photographs a single slide.
+  Addition:       top-1 100.0% | top-20 100.0% | n = 200
+  SI units:       top-1  67.0% | top-20  96.5% | n = 200
+  Capital cities: top-1  49.7% | top-20  83.6% | n = 189
 
-SPEAK:
-  - Synthesise: two bounded positive causal effects with DIFFERENT
-    inferential histories (one predeclared, one adaptive-then-frozen), one
-    clean null, all under matched controls.
-  - The contribution is precisely this combination: positive effects,
-    controlled failed primaries, and explicit evidence about where
-    stronger mechanistic claims are NOT warranted.
+FIGURE:
+  `presentation/figures/fig_presentation_baseline_competence.pdf`
+
+SPOKEN SCRIPT:
+  "Before interpreting internal structure, I measured whether the model knew
+  the tasks. Addition was perfect on the two-hundred-case baseline. SI-unit
+  answers were correct at top one in sixty-seven percent of cases and present
+  in the top twenty in ninety-six point five percent. Capital retrieval was
+  less reliable, at forty-nine point seven percent top one and eighty-three
+  point six percent top twenty. Intervention cases were therefore filtered for
+  clean-model competence. This prevents an apparent mechanistic failure from
+  being confounded with a prompt the model could not answer in the first place."
 
 
-------------------------------------------------------------------------
-SLIDE 21 — Limitations (own them before the audience does)
-------------------------------------------------------------------------
+========================================================================
+SLIDE 6 - END-TO-END PIPELINE                                        1:10
+========================================================================
+
 TITLE:
-  Limitations & honest scope
+  Independent, auditable reproduction pipeline
 
-SLIDE TEXT:
-  - One SAE seed — no basis-stability test yet
-  - All interventions at final-token MLP only (not attention/residual)
-  - Small confirmation pools (16-32); bootstrap = prompt variation only
-  - bfloat16 logit quantisation (~0.0625) -> rely on aggregates
-  - Compute: CSD3 failure -> Colab; ~89 GPU-h budget constrained scope
+ON-SCREEN TEXT:
+  Prompts -> activations -> per-layer SAEs -> contrast graph -> causal test
 
-FIGURE/DIAGRAM:
-  Minimal. Optionally a small timeline/callout: "CSD3 cooling failure,
-  late June 2026 -> lost checkpoints -> regenerated on Colab (~20 of ~89
-  GPU-h)." Shows the compute reality without dwelling.
+  Discovery ranks features.
+  Confirmation estimates the frozen panel's effect.
 
-SPEAK:
-  - Be frank and specific — this is where the "critical understanding"
-    criterion is scored. The single-seed limitation is the biggest one:
-    I can't yet separate "a Qwen mechanism" from "an artefact of this SAE
-    basis."
-  - Mention the compute story briefly and factually: the intended cluster
-    failed mid-project; Colab's finite budget forced targeted choices
-    (predeclared sweeps + frozen confirmations over broad multi-seed
-    exploration). This explains design constraints without excuse-making.
+FIGURE:
+  `presentation/figures/fig_presentation_reproduction_pipeline.pdf`
+  Use the full figure at the largest readable size.
+
+SPOKEN SCRIPT:
+  "This is the complete analysis path. Synthetic prompt sets are generated
+  deterministically. MLP outputs are captured at layers four, eight, twelve,
+  sixteen, twenty, twenty-four and twenty-eight. An overcomplete SAE is trained
+  separately at each layer. A contrastive attribution graph proposes candidate
+  features. Discovery prompts rank those candidates, after which the panel is
+  frozen and evaluated on disjoint confirmation prompts with a matched control
+  and a bootstrap confidence interval. The lower branch is essential: broad
+  MLP or full-latent edits are positive controls for information location, but
+  only a sparse, specific and held-out effect supports a compact mechanism."
 
 
-------------------------------------------------------------------------
-SLIDE 22 — Future work
-------------------------------------------------------------------------
+========================================================================
+SLIDE 7 - SAE AND INTERVENTION MATHEMATICS                            1:35
+========================================================================
+
 TITLE:
-  Where this goes next
+  The learned basis and the exact edit
 
-SLIDE TEXT:
-  - #1 priority: rerun the WHOLE selection across SAE seeds (units + carry)
-  - Larger confirmation pools + enough random panels for a formal null
-  - Train SAEs on the forced digit positions; factorial carry/digit design
-  - Compare per-layer SAEs vs a small cross-layer transcoder (match to
-    Anthropic); add explicit error nodes + faithfulness tests
-  - Probe attention / residual stream for capitals
+ON-SCREEN TEXT:
+  u_l = x_l / s_l
+  a_l = ReLU(W_e(u_l - b_d) + b_e)
+  z_l = TopK_k(a_l)
+  u_hat_l = W_d z_l + b_d
 
-FIGURE/DIAGRAM:
-  Minimal — a short ranked list with the seed-replication item visually
-  emphasised as #1. No heavy figure; you're near time.
+  Inhibit S:  x'_l = x_l - s_l W_{d,S} z_{l,S}
+  Swap S:     x'_l = x_l + s_l W_{d,S}(z^src_{l,S} - z^tgt_{l,S})
 
-SPEAK:
-  - Lead with the seed replication: rerun feature ranking AND panel-size
-    selection from scratch on new bases — reusing the same feature IDs
-    would NOT test basis stability, so it has to be a full re-selection.
-  - Then the CLT comparison: the most direct way to close the gap with the
-    target paper's actual architecture.
-  - Keep this crisp; it doubles as your natural closing runway.
+FIGURE:
+  `presentation/figures/fig_presentation_sae_and_intervention.pdf`
+
+SPOKEN SCRIPT:
+  "Let x sub l denote the MLP output at layer l and the edited token position,
+  and let s sub l be its training scale. The encoder maps the normalised output
+  into eight thousand one hundred and ninety-two candidate latents. Top-K keeps
+  exactly k non-zero coordinates, and the decoder reconstructs the activation
+  from unit-normalised feature directions. To inhibit a selected set S, I
+  subtract only those decoded contributions from the original MLP output. To
+  swap, I add the difference between the source and target feature
+  contributions. In both cases the unselected part of the original activation
+  remains intact. This makes the intervention a feature edit rather than a
+  replacement by the full SAE reconstruction."
 
 
-------------------------------------------------------------------------
-SLIDE 23 — Conclusion
-------------------------------------------------------------------------
+========================================================================
+SLIDE 8 - ATTRIBUTION GRAPH                                          1:20
+========================================================================
+
+TITLE:
+  A contrast graph is a local causal hypothesis
+
+ON-SCREEN TEXT:
+  J(x) = ell_target(x) - ell_contrast(x)
+
+  A_lj = z_lj * (partial J / partial z_lj)
+
+  Arithmetic example: J = ell_4 - ell_3
+
+  Straight-through splice:
+  exact model output in the forward pass; SAE path in the backward pass.
+
+FIGURE:
+  `report/figures/fig_math_attribution_graph.pdf`
+
+SPOKEN SCRIPT:
+  "A logit, written ell, is the unnormalised score assigned to a candidate next
+  token before the softmax. I analyse a contrast J: the target logit minus a
+  pre-specified alternative. The first-order attribution of feature j at layer
+  l is its activation multiplied by the gradient of J with respect to that
+  activation. Positive values locally support the target side of the contrast.
+  I use a straight-through splice so that the forward value remains the exact
+  model activation while gradients pass through the SAE representation. This
+  prevents reconstruction error from changing the baseline merely because a
+  graph was requested. The resulting pruned graph ranks candidates; it does not
+  establish that those candidates are sufficient or specific."
+
+
+========================================================================
+SLIDE 9 - EVIDENCE STANDARD                                          1:15
+========================================================================
+
+TITLE:
+  Three questions that must not be conflated
+
+ON-SCREEN TEXT:
+  Reconstruction
+  FVE = 1 - E[||x - x_hat||^2] / E[||x - mean(x)||^2]
+
+  Decodability
+  Can a held-out classifier recover the condition from the features?
+
+  Causal specificity
+  Does a frozen edit change the target contrast more than its matched control?
+
+  Mechanistic claim = causal specificity on disjoint confirmation data
+
+FIGURE:
+  `presentation/figures/fig_presentation_evidence_standard.pdf`
+
+SPOKEN SCRIPT:
+  "The central methodological distinction is shown here. Fraction of variance
+  explained asks whether the SAE reconstructs its input. Held-out decodability
+  asks whether the representation contains information about a condition. A
+  causal test asks whether editing a frozen feature set changes the model's
+  behaviour selectively. None of the first two logically implies the third. A
+  representation can retain almost all variance while distributing one
+  computation across many latents; a perfectly decodable label can also be a
+  consequence or correlate of the computation. I therefore reserve
+  mechanistic language for controlled intervention results."
+
+
+========================================================================
+SLIDE 10 - INITIAL SAE DIAGNOSTIC                                    1:15
+========================================================================
+
+TITLE:
+  Reconstruction succeeded; compact sparsity did not
+
+ON-SCREEN TEXT:
+  Initial ReLU SAEs, seven layers, 8,192 latents
+
+  FVE across domains and layers: 0.882 to 0.990
+  Mean active latents per example:
+    arithmetic 2,167 | SI units 3,545 | capitals 3,103
+
+  High FVE did not identify a compact intervention set.
+
+FIGURE:
+  `report/figures/fig_sae_diagnostics.pdf`
+
+SPOKEN SCRIPT:
+  "The first SAEs appeared successful if judged only by reconstruction. Across
+  domains and selected layers, FVE ranged from zero point eight eight two to
+  zero point nine nine zero. However, the ReLU codes were not compact: the
+  average example activated roughly two thousand one hundred and sixty-seven
+  arithmetic latents, three thousand five hundred and forty-five unit latents,
+  and three thousand one hundred and three capital latents. Inhibition of
+  graph-ranked subsets then produced very small changes. This diagnosis is not
+  that the SAEs failed to reconstruct. It is that reconstruction and the sparse
+  causal basis required for the intervention claim were different objectives."
+
+
+========================================================================
+SLIDE 11 - POSITIVE CONTROLS                                         1:15
+========================================================================
+
+TITLE:
+  Broad edits located information but did not isolate mechanisms
+
+ON-SCREEN TEXT:
+  Arithmetic, all-position MLP knockout
+  P(4): 1.0000 -> 0.6406
+  P(3): 0.0008 -> 0.1836 | P(2): 0.0003 -> 0.1426
+
+  Units, full-latent force-to-energy swap
+  P(joules): 0.7969 -> 0.1816
+  P(newtons): 0.0240 -> 0.5586
+
+  Broad control passed != sparse mechanism identified
+
+FIGURE:
+  `report/figures/fig_math_interventions.pdf`
+  Use the all-position MLP panel. Put the units numbers in a compact text box.
+
+SPOKEN SCRIPT:
+  "I next tested whether the selected MLP sites carried relevant information
+  at all. Removing the complete MLP outputs across all token positions reduced
+  the arithmetic model's probability for four from one to zero point six four,
+  while probabilities for three and two rose substantially. A full-latent
+  force-to-energy swap moved the units answer from joules to newtons. These are
+  useful positive controls: the selected sites can influence the outputs. They
+  are not compact explanations. The arithmetic edit removes many computations,
+  and the full swap can copy source-answer information. These results justified
+  improving the sparse representation rather than declaring a causal circuit."
+
+
+========================================================================
+SLIDE 12 - REDESIGN AND POST-REPORT SCALE CONTROL                    1:20
+========================================================================
+
+TITLE:
+  Enforcing sparsity and separating selection from confirmation
+
+ON-SCREEN TEXT:
+  TopK SAEs: k = 128 for units/capitals; k = 256 for arithmetic
+  Decoder columns normalised; same seven MLP layers
+
+  1,000-prompt study -> 10,000-prompt scale controls
+  Balanced conditions and disjoint discovery/confirmation prompts
+
+  Post-report extension added after CSD3 availability returned
+
+FIGURE:
+  `presentation/figures/fig_presentation_reproduction_pipeline.pdf`
+  Crop to the lower discovery-freeze-confirmation strip.
+
+SPOKEN SCRIPT:
+  "The diagnostic motivated two controlled changes. First, Top-K activation
+  made sparsity explicit: one hundred and twenty-eight active latents for units
+  and capitals, and two hundred and fifty-six for arithmetic, where the smaller
+  candidate had an excessive dead-feature fraction. Decoder columns were
+  normalised so feature scale could not absorb arbitrary rescaling. Second, the
+  experiments separated discovery from confirmation and used matched controls.
+  After the report was completed and CSD3 availability returned, I added
+  ten-thousand-prompt scale controls. These balance force against alternative
+  quantities, carry against no-carry, and capital against inverse location
+  relations while protecting the intervention prompts from exact training
+  overlap."
+
+
+========================================================================
+SLIDE 13 - PHYSICS-BASED REASONING RESULT                            1:45
+========================================================================
+
+TITLE:
+  A compact force-associated panel survives held-out control
+
+ON-SCREEN TEXT:
+  Frozen Top-10 panel | 16 untouched physical systems
+
+  Force-source change:                 +2.281 logits
+  Matched mass-source change:           +0.039 logits
+  Force-specific paired effect:         +2.242 logits
+  Bootstrap 95% CI:                    [2.000, 2.492]
+
+  Primary criterion passed | top-token flips: 0/16
+
+FIGURE:
+  `presentation/figures/fig_units_10k_force_panel.pdf`
+
+SPOKEN SCRIPT:
+  "This is the strongest result. Features were ranked on eight discovery
+  systems and frozen before evaluation on sixteen disjoint physical systems.
+  The target prompt asked for an energy unit. Swapping the frozen force-source
+  panel into that target increased the newtons-minus-joules logit gap by two
+  point two eight one. Swapping the same coordinates from a matched mass source
+  changed the gap by only zero point zero three nine. The paired force-specific
+  effect is therefore two point two four two logits, with a bootstrap
+  ninety-five percent interval from two point zero zero zero to two point four
+  nine two. Every force effect was positive. The top answer remained joules, so
+  the supported claim is selective causal influence, not complete answer
+  replacement."
+
+
+========================================================================
+SLIDE 14 - WHAT THE UNITS PANEL MEANS                                1:05
+========================================================================
+
+TITLE:
+  Compact, source-specific influence; not a complete force circuit
+
+ON-SCREEN TEXT:
+  Supported
+  - A small frozen panel transfers a force-associated preference.
+  - The effect generalises across new physical contexts.
+  - A mass donor does not reproduce the effect.
+
+  Not established
+  - Monosemantic "force neurons"
+  - Sufficiency for a newtons output
+  - A complete circuit for physical reasoning
+
+FIGURE:
+  `report/figures/fig_units_compact_causal_circuit.pdf`
+
+SPOKEN SCRIPT:
+  "The terminology on this slide is deliberately precise. I call this a
+  force-associated panel because the donor-specific edit transfers a preference
+  toward newtons across new contexts. I do not call each latent a force neuron:
+  the experiment does not establish monosemanticity. I also do not call the
+  panel sufficient, because none of the sixteen top predictions changed. The
+  result is nevertheless causally informative. A compact set selected from a
+  graph has a reproducible effect in the intended direction, and that effect is
+  absent under a semantically related mass control."
+
+
+========================================================================
+SLIDE 15 - ARITHMETIC: GRAPH-SPECIFIC TEST                           1:20
+========================================================================
+
+TITLE:
+  The compact graph panel was not carry-specific
+
+ON-SCREEN TEXT:
+  Frozen graph Top-10 | 24 confirmation pairs
+
+  Carry-target change:                 -0.141 logits
+  No-carry control change:             -0.109 logits
+  Paired carry-specific effect:        -0.031 logits
+  Bootstrap 95% CI:                   [-0.089, +0.026]
+
+  Pre-specified specificity criterion not met
+
+FIGURE:
+  `presentation/figures/fig_math_carry_specificity_test.pdf`
+
+SPOKEN SCRIPT:
+  "The same graph-first protocol did not yield an arithmetic equivalent of the
+  units result. Inhibiting the frozen Top-10 panel lowered the carry-target
+  contrast by zero point one four one logits, but it also lowered the matched
+  no-carry contrast by zero point one zero nine. Their paired difference was
+  only minus zero point zero three one, and its confidence interval crossed
+  zero. The panel therefore affected arithmetic logits without distinguishing
+  carry from the matched computation. This is exactly why the no-carry control
+  is necessary: the target-only number looks promising, while the controlled
+  estimand does not support the intended mechanism."
+
+
+========================================================================
+SLIDE 16 - ARITHMETIC: BALANCED LOCALISATION                         1:45
+========================================================================
+
+TITLE:
+  Carry is decodable; a broader frozen panel has a small causal effect
+
+ON-SCREEN TEXT FOR THE CURRENT VERIFIED RESULT:
+  Output-digit-conditioned raw MLP AUC: 1.000 at layers 24 and 28
+  Frozen SAE Top-10 confirmation AUC:   1.000
+  Top-10 paired causal effect:          +0.016
+  Top-10 95% CI:                       [-0.035, +0.063]
+
+  Secondary Top-20, independent replication (32 untouched pairs):
+  paired effect = -0.086, 95% CI [-0.137, -0.039]
+  top-token flips = 0/32
+
+FIGURE:
+  `report/figures/fig_math_balanced_carry_replication.pdf`
+
+RUN-DEPENDENT REPLACEMENT:
+  Inspect:
+  `outputs/math_large_data_test/math_large_10000_topk256_graph_feature_screen.json`
+  `outputs/math_large_data_test/math_large_10000_topk256_balanced_localisation.json`
+  `outputs/math_large_data_test/math_large_10000_topk256_top20_replication.json`
+
+  If the 10k primary panel passes its explicit success rule, replace the
+  current-result block with:
+    10,000-prompt TopK-256 SAEs
+    Frozen Top-[N] panel | [N_CASES] untouched pairs
+    Carry-target change: [VALUE]
+    No-carry control change: [VALUE]
+    Paired carry-specific effect: [VALUE]
+    Bootstrap 95% CI: [LOW, HIGH]
+    Primary criterion passed | top-token flips: [X]/[N_CASES]
+
+  If it does not pass, retain the verified result above and add one final line:
+    10,000-prompt scale control did not strengthen the primary causal claim.
+
+SPOKEN SCRIPT FOR THE CURRENT VERIFIED RESULT:
+  "I then removed output-digit confounding by matching carry and no-carry cases
+  within the predicted tens digit. Carry status was perfectly decodable from
+  raw MLP outputs at layers twenty-four and twenty-eight, and from the frozen
+  Top-10 SAE panel on confirmation data. Yet Top-10 inhibition remained
+  causally null. A secondary Top-20 panel produced a negative controlled effect;
+  because that choice was adaptive, I froze it and ran a separate replication
+  on thirty-two intervention-untouched pairs. The paired effect replicated at
+  minus zero point zero eight six logits, with an interval wholly below zero.
+  This supports a small distributed carry-associated influence, not an isolated
+  carry bit and not a sufficient circuit."
+
+
+========================================================================
+SLIDE 17 - MULTI-STEP CAPITAL RETRIEVAL                              1:30
+========================================================================
+
+TITLE:
+  Capital knowledge was present; a sparse relation panel was unresolved
+
+ON-SCREEN TEXT FOR THE CURRENT VERIFIED RESULT:
+  Clean high-confidence cases
+  Zarqa -> Amman: p = 0.984 | Basra -> Baghdad: p = 0.965
+
+  Sparse answer-feature swaps: no top-token change
+  Full Basra-to-Zarqa swap:
+  Baghdad logit 6.97 -> 12.63; Amman remained top, p = 0.981
+
+  Answer association is not yet a capital-relation mechanism.
+
+FIGURE:
+  `report/figures/fig_capitals_interventions.pdf`
+
+RUN-DEPENDENT REPLACEMENT:
+  Inspect:
+  `outputs/capitals_large_data_test/capitals_large_10000_topk128_relation_screen.json`
+
+  The 10k experiment balances 5,000 capital-relation and 5,000 inverse
+  location-relation prompts. It tests whether a source capital relation changes
+  the capital-minus-country gap more than the inverse relation control.
+
+  If `primary_success` is true, add:
+    10,000-prompt relation test, frozen Top-3, [N] confirmation countries
+    Capital-source change: [VALUE]
+    Inverse-source change: [VALUE]
+    Relation-specific paired effect: [VALUE]
+    Bootstrap 95% CI: [LOW, HIGH]
+
+  If `primary_success` is false, add:
+    The 10,000-prompt relation-balanced control also failed its pre-specified
+    causal criterion.
+
+SPOKEN SCRIPT FOR THE CURRENT VERIFIED RESULT:
+  "The capital experiment began with high-confidence prompts, so the null is not
+  explained by absent factual knowledge. Sparse graph-feature swaps did not
+  change the predicted capital. A full latent swap substantially increased the
+  donor answer's logit, but the original capital remained the top prediction.
+  These tests were answer-specific, so they could not isolate the hypothesised
+  multi-step relation from city to containing location to capital. The
+  post-report ten-thousand-prompt extension therefore balances capital and
+  inverse location relations and evaluates a frozen panel on countries absent
+  from discovery. Until that controlled test passes, the defensible conclusion
+  is that capital knowledge was represented but a sparse relation mechanism was
+  not established."
+
+
+========================================================================
+SLIDE 18 - CROSS-DOMAIN SYNTHESIS                                    1:25
+========================================================================
+
+TITLE:
+  The workflow reproduced at different strengths
+
+ON-SCREEN TEXT:
+  Physics-based SI units
+  Compact, held-out, source-specific causal effect: SUPPORTED
+
+  Multi-step arithmetic
+  Decodable carry signal; small replicated Top-20 effect: PARTIAL
+
+  Multi-step capital retrieval
+  Knowledge and broad influence present; sparse relation claim: UNRESOLVED
+
+  Same pipeline, different evidential outcomes.
+
+FIGURE:
+  `presentation/figures/fig_presentation_evidence_standard.pdf`
+
+SPOKEN SCRIPT:
+  "The three domains should not be compressed into a single success rate. In
+  physics-based reasoning, a compact panel passed the held-out matched-control
+  criterion. In arithmetic, carry information was strongly decodable and a
+  wider frozen panel produced a small independently replicated effect, while
+  the compact graph panel failed. In capital retrieval, knowledge and broad
+  source influence were present, but the sparse relation claim remained
+  unresolved in the submitted analysis. This variation is scientifically
+  useful. It shows that the attribution workflow can generate controlled causal
+  evidence, but compactness and specificity depend on the behaviour and learned
+  representation."
+
+
+========================================================================
+SLIDE 19 - LIMITS OF THE REPRODUCTION                                1:20
+========================================================================
+
+TITLE:
+  Where this reproduction differs from the target method
+
+ON-SCREEN TEXT:
+  - Independent per-layer MLP SAEs, not a cross-layer transcoder
+  - Seven selected layers; primary tests at the final token position
+  - One model and one SAE seed per final configuration
+  - No explicit cross-layer reconstruction-error nodes
+  - Logit effects were often measurable without top-token transfer
+
+  Consequence: absence of a compact panel is not absence of the computation.
+
+FIGURE:
+  None. Use a restrained two-column layout: design limit -> implication.
+
+SPOKEN SCRIPT:
+  "The main limitation is representational scope. Independent per-layer MLP
+  SAEs do not model attention, residual-stream features or cross-layer error
+  propagation in the way Anthropic's transcoder does. Seven layers and the
+  final token position were selected to keep the reproduction lightweight and
+  auditable. Final configurations used one seed, so seed stability is not
+  established. The CSD3 cooling outage also required regeneration on finite
+  Colab resources; after availability returned, I prioritised the ten-thousand-
+  prompt scale controls over an exhaustive architecture-by-seed sweep. These
+  constraints limit the strength and scope of the claims. They do not turn a
+  null sparse intervention into evidence that the model lacks the computation."
+
+
+========================================================================
+SLIDE 20 - REPRODUCIBILITY PACK AND NEXT TEST                        1:20
+========================================================================
+
+TITLE:
+  Every claim maps to code, configuration and an output artifact
+
+ON-SCREEN TEXT:
+  Public repository
+  - deterministic data generators and fixed seeds
+  - standalone capture, SAE, graph and intervention modules
+  - Colab notebooks as GPU orchestration, not hidden analysis logic
+  - JSON/CSV results, graph HTML, figures and experiment manifests
+
+  Next decisive test
+  Cross-layer transcoders + multiple seeds + frozen panel replication
+
+FIGURE:
+  `presentation/figures/fig_presentation_reproduction_pipeline.pdf`
+  Use a small version on the right, with repository categories on the left.
+
+SPOKEN SCRIPT:
+  "The repository is the reproducibility product. Data generators, activation
+  capture, SAE training, graph construction and intervention tests are
+  standalone Python modules. The Colab notebooks pull the same GitHub code and
+  orchestrate GPU execution; they do not contain a separate analysis method.
+  Configurations record layer sets, latent width, Top-K value, seed and output
+  namespace. JSON and CSV artifacts retain case-level effects and protocol
+  signatures, while extension manifests record the commit and accelerator.
+  The next decisive experiment would replace independent SAEs with a
+  cross-layer transcoder, repeat several seeds, and replicate one frozen panel
+  without any additional feature selection."
+
+
+========================================================================
+SLIDE 21 - CONCLUSION                                                0:55
+========================================================================
+
 TITLE:
   Conclusion
 
-SLIDE TEXT (3 lines max):
-  - The attribution-graph workflow reproduces on an open model — partially
-    and domain-dependently
-  - Sparse features CAN give compact causal control (units; distributed
-    carry), but reconstruction/decodability/causality are distinct
-  - Rigorous positives AND nulls are the result
+ON-SCREEN TEXT:
+  1. The attribution-graph workflow transferred, but not uniformly.
 
-FIGURE/DIAGRAM:
-  Reuse the scorecard from slide 20 (small, corner) OR the 3-rings from
-  slide 19 — one clean callback image so the ending mirrors the spine.
+  2. A compact force-associated panel passed a disjoint matched-control test.
 
-SPEAK:
-  - Close on the spine sentence one last time.
-  - "Two bounded causal effects, one clean null, all under matched
-    controls — that combination is the reproducibility result."
-  - "Thank you — happy to take questions." (You should land around
-    22-24 min, leaving buffer.)
+  3. Carry was decodable and weakly causal in a broader replicated panel;
+     a sparse capital-relation mechanism was not established.
 
+  Reconstruction -> decodability -> causal specificity
+  Only the final step supports a mechanistic claim.
 
-========================================================================
-BACKUP / APPENDIX SLIDES (for the 10-min Q&A — do not present)
-========================================================================
+FIGURE:
+  None. End on the three conclusions, not a dense summary figure.
 
-B1 — SAE training details
-  Loss (MSE + L1), 75 epochs, Adam lr 1e-3, batch 64, 80:20 split,
-  ~42M params/layer, activation normalisation s_ell. For "how exactly did
-  you train them?"
-
-B2 — TopK selection numbers
-  Arithmetic: TopK-128 dead-fraction 0.832 (FAILED threshold) -> TopK-256
-  chosen (FVE 0.941, L0 171.6). Units: TopK-128 chosen (FVE 0.936,
-  L0 99.8). For "why 256 for math but 128 for units?"
-
-B3 — Bootstrap / statistics
-  5,000 seeded resamples; intervals are 2.5/97.5 percentiles; quantify
-  PROMPT-SYSTEM variation, condition on the evaluation pool, do NOT capture
-  SAE-seed uncertainty. For "how robust are the intervals?"
-
-B4 — The straight-through splice & intervention algebra
-  x' = x + x_hat - stopgrad(x_hat); inhibition & swap equations. For
-  "how does the intervention not just break the model?"
-
-B5 — Method correspondence table (report Table 1)
-  Per-layer output SAEs vs Anthropic's cross-layer transcoder; error
-  nodes; feature support at final position only. For "how faithful is
-  this to the original method?"
-
-B6 — Full arithmetic broad-patch / knockout ladder
-  fig_math_interventions.pdf; layer-24 localisation of answer selection;
-  MLP vs attention vs block knockout. For "how do you know it's the MLP?"
-
-B7 — Capitals numbers
-  Zarqa->Amman p=0.984; Basra->Baghdad p=0.965; Baghdad logit 6.97->12.62
-  but p stayed 0.0002. For "did anything move at all in capitals?"
+SPOKEN SCRIPT:
+  "In conclusion, I independently reproduced the complete lightweight
+  workflow: activation capture, sparse feature learning, contrastive graph
+  construction and causal validation. The strongest result is a compact,
+  source-specific force panel that generalises across held-out physical
+  systems. Arithmetic contains a clear carry-associated representation and a
+  smaller replicated causal effect, but not an isolated carry feature. Capital
+  retrieval did not support an equivalent sparse mechanism in the submitted
+  analysis. The broader conclusion is methodological: reconstruction,
+  decodability and causal specificity are separate evidential stages. Treating
+  them separately produces stronger positive claims and more informative null
+  results. Thank you."
 
 
 ========================================================================
-CONSISTENCY / COVERAGE REVIEW (self-check performed)
+BACKUP SLIDES
 ========================================================================
 
-Coverage vs project steps (project.txt goals) — all present:
-  [x] Setup & baselines .................... Slides 5, 10
-  [x] Train SAEs ........................... Slides 7, 11, 13
-  [x] Attribution graph .................... Slides 8, (14/17 provenance)
-  [x] Validation by intervention ........... Slides 9, 14-18
-  [x] Reproducibility pack / rigor ......... Slides 4, 9, 13 (predecl.),
-                                             21 (compute)
-  [x] Extension: science circuits (units) .. Slides 5, 14, 15
-  [x] Results discussion ................... Slides 19, 20
-  [x] Future steps ......................... Slide 22
+BACKUP A - SYMBOLS AND INTERVENTION DEFINITIONS
 
-Assessment-criteria mapping:
-  Organisation/flow ....... single spine sentence; roadmap slide 6;
-                            callbacks at 19/20/23.
-  Slide quality ........... one real repo figure per results slide;
-                            custom diagrams only where no figure exists.
-  Right level for peers ... equations kept to one compact slide each
-                            (7,8); jargon defined on first use
-                            (superposition S2, FVE S7, AUC S17).
-  Answering questions ..... 7 backup slides B1-B7 map to likely questions.
-  Depth of understanding .. design rationales called out explicitly
-                            (splice S8, TopK/L1-degeneracy S13,
-                            decodability!=causality S17/S19).
-  Critical strengths/weak . slide 21 owns limitations; every positive
-                            result carries its "no answer flip / not a
-                            complete circuit" caveat (S14,15,17).
+TITLE:
+  Mathematical definitions
 
-Repetition check:
-  - The spine sentence recurs at S7, S11, S17, S19, S23 — this is
-    DELIBERATE reinforcement, not accidental repetition. Keep it.
-  - Attribution-graph figures: math graph shown once (S8), units graph
-    provenance chosen as ONE of compact/panel at S15 (do not show both).
-  - Broad-patch controls consolidated on S12; not repeated later (only
-    referenced). Knockout ladder moved to backup B6 to avoid mid-talk
-    detour.
-  - TopK explained once (S13) then applied twice (units S14 / math S16)
-    to enable the intended units-vs-arithmetic contrast.
+ON-SCREEN TEXT:
+  x_l       MLP output at layer l and edited token position
+  s_l       per-layer activation scale estimated on training data
+  z_lj      activation of SAE feature j at layer l
+  W_d[:,j]  decoder direction for feature j
+  ell_t     pre-softmax logit for token t
 
-Timing sanity (25 min):
-  Opening (S1-4) ~4 min; Methods (S5-9) ~6 min; Results (S10-18) ~11 min
-  (units S14 and balanced-carry S17 get extra time); Synthesis (S19-23)
-  ~4 min. ~1 min buffer. Q&A separate.
+  p(t|x) = exp(ell_t) / sum_v exp(ell_v)
+  J = ell_target - ell_contrast
+  A_lj = z_lj * partial J / partial z_lj
 
-Figures NOT used in the talk (intentional, to avoid clutter):
-  fig_math_compact_carry_test.pdf (superseded null provenance),
-  fig_units_interventions.pdf / fig_math_interventions.pdf (backup B6),
-  fig_heldout_generalisation (text-only in report). Noted so nothing is
-  forgotten — they exist as deeper backup if a question demands them.
+FIGURE:
+  `presentation/figures/fig_presentation_sae_and_intervention.pdf`
+
+SPOKEN SCRIPT:
+  "A logit is the model's unnormalised score for a token. Softmax converts the
+  vector of logits into probabilities. I intervene on the MLP output x at a
+  chosen layer and position. Each z coordinate weights one decoder direction.
+  The contrast J avoids ranking features that merely raise every candidate
+  digit or unit together. Its first-order feature attribution is activation
+  times gradient."
+
+
+BACKUP B - EXACT TRAINING CONFIGURATIONS
+
+TITLE:
+  SAE configurations
+
+ON-SCREEN TEXT:
+  Hidden width: 2,560 | latent width: 8,192
+  Layers: 4, 8, 12, 16, 20, 24, 28
+  Epochs: 75 | batch size: 64 | learning rate: 10^-3 | seed: 787
+
+  Initial: ReLU + L1 coefficient 3 x 10^-4
+  TopK units/capitals: k = 128
+  TopK arithmetic: k = 256
+  Decoder columns: unit norm
+
+FIGURE:
+  None. Use a compact configuration table.
+
+SPOKEN SCRIPT:
+  "All final configurations use the same hidden width, latent width, seven
+  layers, optimiser scale, epoch count and seed. The controlled architectural
+  change is the sparsity rule: the initial models use ReLU with an L1 penalty;
+  the later models use explicit Top-K activation and unit-normalised decoder
+  columns."
+
+
+BACKUP C - WHY THE ALL-POSITION KNOCKOUT DID NOT PRODUCE GIBBERISH
+
+TITLE:
+  Residual pathways preserve substantial computation
+
+ON-SCREEN TEXT:
+  The edit removed selected MLP branch outputs only.
+  It did not remove:
+  - embeddings
+  - attention branches
+  - unedited transformer layers
+  - residual connections
+
+  Therefore degraded confidence, not random output, is the expected control.
+
+FIGURE:
+  `report/figures/fig_math_interventions.pdf`
+
+SPOKEN SCRIPT:
+  "A full MLP knockout sounds like the entire model was deleted, but it was not.
+  The intervention zeroed the MLP branch output at seven selected layers. Token
+  embeddings, attention outputs, residual pathways and all other layers
+  remained. The survival of a sensible answer is therefore expected. The
+  confidence redistribution shows that the removed branches mattered without
+  implying that they were the sole implementation of addition."
+
+
+BACKUP D - WHY DECODED CARRY IS NOT YET A CARRY CIRCUIT
+
+TITLE:
+  Association, causation and sufficiency
+
+ON-SCREEN TEXT:
+  AUC = 1.0 establishes separability.
+  It does not establish that the decoded direction is used by the model.
+
+  Required causal comparison:
+  delta_carry - delta_no-carry < 0
+  with a confidence interval wholly below zero.
+
+FIGURE:
+  `report/figures/fig_math_balanced_carry_replication.pdf`
+
+SPOKEN SCRIPT:
+  "Carry and no-carry cases can be perfectly separated because the activation
+  contains carry-correlated information. That information could be causal, a
+  downstream record of the answer, or correlated with another property of the
+  prompt. Inhibition tests whether the model uses the selected coordinates, and
+  the matched no-carry subtraction tests specificity. The independently
+  replicated Top-20 effect supports a causal contribution, but its small size
+  and absence of output flips rule out a claim of sufficiency."
+
+
+BACKUP E - UNITS FEATURE IDENTIFIERS
+
+TITLE:
+  The leading force-associated features
+
+ON-SCREEN TEXT:
+  Discovery ranks from the 10k TopK-128 force graph
+  1. L28F21
+  2. L28F1840
+  3. L28F5191
+
+  Frozen Top-3 confirmation:
+  paired force-minus-mass effect = +2.070 logits
+  95% CI [1.867, 2.285]
+
+FIGURE:
+  `presentation/figures/fig_units_10k_force_panel.pdf`
+
+SPOKEN SCRIPT:
+  "The three leading features all occur at layer twenty-eight. Their identifiers
+  are coordinates in this trained SAE and should not be interpreted as stable
+  semantic names across retraining. As a frozen Top-3 panel they reproduced a
+  force-minus-mass effect of two point zero seven logits on confirmation data.
+  The primary pre-specified result remains the Top-10 panel; the Top-3 result
+  demonstrates compactness within the ranked prefixes."
+
+
+BACKUP F - COMPUTE AND PROVENANCE
+
+TITLE:
+  Execution and provenance
+
+ON-SCREEN TEXT:
+  Development: WSL Ubuntu 24.04
+  GPU runs: Google Colab, NVIDIA T4/A100/H100 as available
+  Intended cluster: CSD3; interrupted by cooling outage
+  Model inference: bfloat16
+  Statistics and bootstrap aggregation: NumPy precision
+
+  Every extension manifest records:
+  git commit | GPU | seed | corpus size | config | artifact paths
+
+FIGURE:
+  None.
+
+SPOKEN SCRIPT:
+  "The code was developed locally under WSL Ubuntu and pushed to GitHub. During
+  the CSD3 outage, GPU runs were orchestrated in Colab on the available T4,
+  A100 and H100 accelerators. Model inference used bfloat16, while aggregate
+  statistics and bootstrap resampling used NumPy precision. The notebooks save
+  checkpoints and outputs to Drive, but every substantive operation is also a
+  standalone module. The later experiment manifests record the exact commit,
+  device, seed, corpus size, configuration and artifact paths."
+
+
 ========================================================================
+FINAL DELIVERY NOTES
+========================================================================
+
+1. Say "panel" for a selected set of SAE coordinates. Say "feature" only for
+   one coordinate. Say "circuit" only when discussing the target publication
+   or explicitly qualifying the claim.
+2. Say "newtons" for the unit and "joules" for the unit; token-level plots may
+   display the prefixes `new` and `j` because those are the model's first-token
+   targets.
+3. Do not say that the units panel makes the model answer "newtons". It changes
+   the logit preference selectively, but the top answer remains "joules" in all
+   sixteen confirmation cases.
+4. Do not call the Top-20 arithmetic panel a pre-registered primary result. It
+   was selected after the Top-10 result, then frozen and independently
+   replicated. "Secondary, independently replicated" is the accurate phrase.
+5. Do not say that a capital relation circuit was found unless the new 10k
+   relation screen explicitly passes its stored primary success rule.
+6. When asked whether more training data solved the problem, answer by domain:
+   it materially strengthened the units panel; the new arithmetic and capital
+   runs are separate scale controls and must be judged by their matched causal
+   estimands, not their FVE alone.
+7. Keep confidence intervals visible beside every headline causal effect.
+8. Cite the target paper on Slide 3 and the project repository on Slide 20.

@@ -116,7 +116,7 @@ def continuation_token(tokenizer, answer: str) -> Tuple[int, str]:
 def read_capitals(path: Path) -> List[Dict[str, str]]:
     with path.open("r", encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
-    required = {"Location", "Answer", "DistractorAnswer", "sentence"}
+    required = {"Location", "Type", "Answer", "DistractorAnswer", "sentence"}
     if not rows or not required.issubset(rows[0]):
         raise ValueError(f"Expected columns {sorted(required)} in {path}")
     return rows
@@ -126,10 +126,13 @@ def candidate_cases(
     rows: Sequence[Dict[str, str]],
     seed: int,
     excluded_countries: Sequence[str],
+    sae_corpus_prompts: set[str] | None = None,
 ) -> List[Dict[str, Any]]:
     by_country: Dict[str, List[Dict[str, str]]] = defaultdict(list)
     excluded = {value.casefold() for value in excluded_countries}
     for row in rows:
+        if row["Type"].strip().casefold() != "country":
+            continue
         country = row["Location"].strip()
         if country.casefold() not in excluded:
             by_country[country].append(row)
@@ -154,8 +157,16 @@ def candidate_cases(
                         "template": template_name,
                         "capital_prompt": capital_prompt,
                         "country_prompt": country_prompt,
-                        "capital_prompt_absent_from_sae_corpus": capital_prompt != row["sentence"],
-                        "country_prompt_absent_from_sae_corpus": country_prompt != row["sentence"],
+                        "capital_prompt_absent_from_sae_corpus": (
+                            capital_prompt not in sae_corpus_prompts
+                            if sae_corpus_prompts is not None
+                            else capital_prompt != row["sentence"]
+                        ),
+                        "country_prompt_absent_from_sae_corpus": (
+                            country_prompt not in sae_corpus_prompts
+                            if sae_corpus_prompts is not None
+                            else country_prompt != row["sentence"]
+                        ),
                     }
                 )
     return cases
@@ -428,6 +439,7 @@ def protocol_signature(args: argparse.Namespace) -> Dict[str, Any]:
         "model_config": args.model_config,
         "sae_config": args.sae_config,
         "capitals_csv": args.capitals_csv,
+        "sae_corpus_csv": args.sae_corpus_csv,
         "graph": args.graph,
         "seed": args.seed,
         "discovery_cases": args.discovery_cases,
@@ -445,8 +457,13 @@ def main() -> None:
     parser.add_argument("--model-config", default="configs/model_config.yaml")
     parser.add_argument("--sae-config", required=True)
     parser.add_argument("--capitals-csv", default="data/capitals_data.csv")
+    parser.add_argument(
+        "--sae-corpus-csv",
+        default="data/capitals_data.csv",
+        help="Prompt CSV used to train the evaluated SAE, for exact-overlap auditing.",
+    )
     parser.add_argument("--graph", required=True)
-    parser.add_argument("--exclude-country", action="append", default=["Jordan"])
+    parser.add_argument("--exclude-country", action="append", default=[])
     parser.add_argument("--discovery-cases", type=int, default=8)
     parser.add_argument("--confirmation-cases", type=int, default=16)
     parser.add_argument("--panel-sizes", nargs="+", type=int, default=[1, 3, 5, 10, 20])
@@ -460,6 +477,8 @@ def main() -> None:
         default="outputs/capitals_relation_pilot/capitals_relation_feature_screen.json",
     )
     args = parser.parse_args()
+    if not args.exclude_country:
+        args.exclude_country = ["Jordan"]
 
     if args.primary_panel_size not in args.panel_sizes:
         raise ValueError("--primary-panel-size must also appear in --panel-sizes")
@@ -468,6 +487,7 @@ def main() -> None:
     graph_path = resolve_path(args.graph, repo_root)
     config_path = resolve_path(args.sae_config, repo_root)
     capitals_path = resolve_path(args.capitals_csv, repo_root)
+    sae_corpus_path = resolve_path(args.sae_corpus_csv, repo_root)
     output_path = resolve_path(args.output, repo_root)
     signature = protocol_signature(args)
     started = time.time()
@@ -524,7 +544,14 @@ def main() -> None:
 
     if "case_selection" not in payload:
         source_rows = read_capitals(capitals_path)
-        cases = candidate_cases(source_rows, args.seed, args.exclude_country)
+        with sae_corpus_path.open("r", encoding="utf-8", newline="") as handle:
+            sae_corpus_prompts = {row["sentence"] for row in csv.DictReader(handle)}
+        cases = candidate_cases(
+            source_rows,
+            args.seed,
+            args.exclude_country,
+            sae_corpus_prompts=sae_corpus_prompts,
+        )
         eligible, screened = select_eligible_cases(model, tokenizer, cases, required)
         if len(eligible) < required:
             raise ValueError(
@@ -549,7 +576,11 @@ def main() -> None:
                     for row in eligible
                 )
             ),
+            "sae_corpus_csv": str(sae_corpus_path),
+            "sae_corpus_prompt_count": len(sae_corpus_prompts),
         }
+        if not payload["case_selection"]["all_selected_prompts_absent_from_exact_sae_corpus"]:
+            raise ValueError("A selected capitals relation prompt overlaps the SAE training corpus")
         checkpoint_payload(payload, output_path)
     discovery = payload["case_selection"]["discovery_cases"]
     confirmation = payload["case_selection"]["confirmation_cases"]
