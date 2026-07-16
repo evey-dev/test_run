@@ -1,0 +1,52 @@
+{
+  "question": "Does a larger controlled units activation corpus improve TopK-128 SAE reconstruction or force-selective causal localization?",
+  "fixed_factors": [
+    "Qwen3-4B-Instruct-2507",
+    "layers 4,8,12,16,20,24,28",
+    "latent_dim 8192",
+    "TopK 128",
+    "seed 787",
+    "75 epochs",
+    "force-minus-joules graph objective",
+    "Top-10 confirmation panel"
+  ],
+  "changed_factor": "balanced units activation corpus: original 1,000 prompts plus 9,000 controlled prompts",
+  "runs": [
+    {
+      "run": "units_topk128_1k",
+      "activation_examples_per_layer": 1000,
+      "mean_validation_fve": 0.935793309706793,
+      "mean_validation_relative_l2": 0.13252837985754012,
+      "mean_validation_l0": 99.76857142857143,
+      "mean_dead_feature_fraction": 0.7989327566964286,
+      "positive_graph_candidates": 73,
+      "primary_force_delta": 1.234375,
+      "primary_mass_delta": -0.08984375,
+      "primary_force_minus_mass": 1.32421875,
+      "paired_ci_low": 1.22265625,
+      "paired_ci_high": 1.4296875,
+      "force_delta_positive_fraction": 1.0,
+      "force_more_positive_than_mass_fraction": 1.0,
+      "force_top_prediction_transfer_fraction": 0.0,
+      "predeclared_success": true
+    },
+    {
+      "run": "units_topk128_10k",
+      "activation_examples_per_layer": 10000,
+      "mean_validation_fve": 0.9673318728794322,
+      "mean_validation_relative_l2": 0.08591715300508908,
+      "mean_validation_l0": 118.97464285714285,
+      "mean_dead_feature_fraction": 0.9159458705357143,
+      "positive_graph_candidates": 69,
+      "primary_force_delta": 2.28125,
+      "primary_mass_delta": 0.0390625,
+      "primary_force_minus_mass": 2.2421875,
+      "paired_ci_low": 2.0,
+      "paired_ci_high": 2.4921875,
+      "force_delta_positive_fraction": 1.0,
+      "force_more_positive_than_mass_fraction": 1.0,
+      "force_top_prediction_transfer_fraction": 0.0,
+      "predeclared_success": true
+    }
+  ]
+}

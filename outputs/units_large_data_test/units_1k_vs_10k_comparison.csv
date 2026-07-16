@@ -1,0 +1,3 @@
+run,activation_examples_per_layer,mean_validation_fve,mean_validation_relative_l2,mean_validation_l0,mean_dead_feature_fraction,positive_graph_candidates,primary_force_delta,primary_mass_delta,primary_force_minus_mass,paired_ci_low,paired_ci_high,force_delta_positive_fraction,force_more_positive_than_mass_fraction,force_top_prediction_transfer_fraction,predeclared_success
+units_topk128_1k,1000,0.935793309706793,0.13252837985754012,99.76857142857143,0.7989327566964286,73,1.234375,-0.08984375,1.32421875,1.22265625,1.4296875,1.0,1.0,0.0,True
+units_topk128_10k,10000,0.9673318728794322,0.08591715300508908,118.97464285714285,0.9159458705357143,69,2.28125,0.0390625,2.2421875,2.0,2.4921875,1.0,1.0,0.0,True

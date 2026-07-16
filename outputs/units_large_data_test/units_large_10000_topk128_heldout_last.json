@@ -1,0 +1,1945 @@
+{
+  "method": {
+    "seed": 787,
+    "layers": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28
+    ],
+    "positions": "last",
+    "graph_features": "positive-attribution nodes selected on one original graph prompt",
+    "literal_edit_strength": 1.0,
+    "math_specificity_control": false,
+    "units_csv": "data/units_large_10000.csv",
+    "important_scope_note": "Graph-held-out means the evaluation prompt was not used to construct the graph. The units source prompts may occur in the SAE validation corpus; target energy variants do not."
+  },
+  "units": {
+    "gap_definition": "logit(force prefix 'new') - logit(energy prefix 'j') on energy targets",
+    "predicted_direction": "positive delta",
+    "cases": [
+      {
+        "dataset_index": 9130,
+        "context_object": "pneumatic test device",
+        "source_prompt": "Fact: The metric unit used to quantify the force of a pneumatic test device during a repeatable calibration cycle is called the \"",
+        "target_prompt": "Fact: The metric unit used to quantify the energy of a pneumatic test device during a repeatable calibration cycle is called the \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 15.125,
+            "probability": 0.1142578125
+          },
+          "second": {
+            "logit": 8.25,
+            "probability": 0.000118255615234375
+          },
+          "gap": 6.875,
+          "top_token": "p",
+          "top_token_id": 79,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 11.3125,
+              "probability": 0.004486083984375
+            },
+            "second": {
+              "logit": 16.0,
+              "probability": 0.486328125
+            },
+            "gap": -4.6875,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 12.8125,
+              "probability": 0.0262451171875
+            },
+            "second": {
+              "logit": 15.4375,
+              "probability": 0.361328125
+            },
+            "gap": -2.625,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 13.75,
+              "probability": 0.0576171875
+            },
+            "second": {
+              "logit": 15.6875,
+              "probability": 0.400390625
+            },
+            "gap": -1.9375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 13.3125,
+              "probability": 0.04541015625
+            },
+            "second": {
+              "logit": 15.4375,
+              "probability": 0.380859375
+            },
+            "gap": -2.125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 1271,
+        "context_object": "optical bench assembly",
+        "source_prompt": "Fact: The measurement standard for the force of a optical bench assembly while sensors record a stable reading is the unit named \"",
+        "target_prompt": "Fact: The measurement standard for the energy of a optical bench assembly while sensors record a stable reading is the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 13.875,
+            "probability": 0.1650390625
+          },
+          "second": {
+            "logit": 8.75,
+            "probability": 0.0009765625
+          },
+          "gap": 5.125,
+          "top_token": "Newton",
+          "top_token_id": 76377,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 6.9375,
+              "probability": 0.00021266937255859375
+            },
+            "second": {
+              "logit": 12.6875,
+              "probability": 0.06689453125
+            },
+            "gap": -5.75,
+            "top_token": "w",
+            "top_token_id": 86,
+            "top_is_first": false,
+            "top_is_second": false
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 8.4375,
+              "probability": 0.0010833740234375
+            },
+            "second": {
+              "logit": 12.0,
+              "probability": 0.038330078125
+            },
+            "gap": -3.5625,
+            "top_token": "w",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 10.1875,
+              "probability": 0.005035400390625
+            },
+            "second": {
+              "logit": 12.0625,
+              "probability": 0.03271484375
+            },
+            "gap": -1.875,
+            "top_token": "w",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 10.1875,
+              "probability": 0.005157470703125
+            },
+            "second": {
+              "logit": 12.1875,
+              "probability": 0.0380859375
+            },
+            "gap": -2.0,
+            "top_token": "w",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 1656,
+        "context_object": "laboratory rotor",
+        "source_prompt": "Fact: The measurement standard for the force of a laboratory rotor during a controlled measurement interval is the unit named \"",
+        "target_prompt": "Fact: The measurement standard for the energy of a laboratory rotor during a controlled measurement interval is the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 17.625,
+            "probability": 0.27734375
+          },
+          "second": {
+            "logit": 10.875,
+            "probability": 0.000324249267578125
+          },
+          "gap": 6.75,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 12.3125,
+              "probability": 0.00046539306640625
+            },
+            "second": {
+              "logit": 19.75,
+              "probability": 0.7890625
+            },
+            "gap": -7.4375,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 13.625,
+              "probability": 0.00274658203125
+            },
+            "second": {
+              "logit": 19.25,
+              "probability": 0.76171875
+            },
+            "gap": -5.625,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 14.5,
+              "probability": 0.0126953125
+            },
+            "second": {
+              "logit": 18.375,
+              "probability": 0.609375
+            },
+            "gap": -3.875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 14.625,
+              "probability": 0.01556396484375
+            },
+            "second": {
+              "logit": 18.25,
+              "probability": 0.58203125
+            },
+            "gap": -3.625,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 9709,
+        "context_object": "magnets pull",
+        "source_prompt": "Fact: In physics, when calculating the exact force exhibited by a magnets pull, the result is expressed in the unit named \"",
+        "target_prompt": "Fact: In physics, when calculating the exact energy exhibited by a magnets pull, the result is expressed in the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 19.75,
+            "probability": 0.54296875
+          },
+          "second": {
+            "logit": 9.125,
+            "probability": 1.3232231140136719e-05
+          },
+          "gap": 10.625,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 13.9375,
+              "probability": 0.000492095947265625
+            },
+            "second": {
+              "logit": 21.375,
+              "probability": 0.83984375
+            },
+            "gap": -7.4375,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 15.1875,
+              "probability": 0.0024871826171875
+            },
+            "second": {
+              "logit": 21.0,
+              "probability": 0.83203125
+            },
+            "gap": -5.8125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 15.5,
+              "probability": 0.004913330078125
+            },
+            "second": {
+              "logit": 20.625,
+              "probability": 0.828125
+            },
+            "gap": -5.125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 15.9375,
+              "probability": 0.00860595703125
+            },
+            "second": {
+              "logit": 20.5,
+              "probability": 0.82421875
+            },
+            "gap": -4.5625,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 5532,
+        "context_object": "hammer strike",
+        "source_prompt": "Fact: In experiments measuring the force of a given hammer strike, the standard unit of choice is \"",
+        "target_prompt": "Fact: In experiments measuring the energy of a given hammer strike, the standard unit of choice is \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 18.625,
+            "probability": 0.5
+          },
+          "second": {
+            "logit": 14.9375,
+            "probability": 0.01251220703125
+          },
+          "gap": 3.6875,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 14.4375,
+              "probability": 0.00099945068359375
+            },
+            "second": {
+              "logit": 21.25,
+              "probability": 0.91015625
+            },
+            "gap": -6.8125,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 15.1875,
+              "probability": 0.00238037109375
+            },
+            "second": {
+              "logit": 21.125,
+              "probability": 0.90234375
+            },
+            "gap": -5.9375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 15.1875,
+              "probability": 0.0026702880859375
+            },
+            "second": {
+              "logit": 21.0,
+              "probability": 0.890625
+            },
+            "gap": -5.8125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 15.25,
+              "probability": 0.002227783203125
+            },
+            "second": {
+              "logit": 21.25,
+              "probability": 0.8984375
+            },
+            "gap": -6.0,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 9917,
+        "context_object": "engine thrust",
+        "source_prompt": "Fact: When recording the typical force associated with a engine thrust, researchers write it in the unit named \"",
+        "target_prompt": "Fact: When recording the typical energy associated with a engine thrust, researchers write it in the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 18.875,
+            "probability": 0.193359375
+          },
+          "second": {
+            "logit": 9.125,
+            "probability": 1.1324882507324219e-05
+          },
+          "gap": 9.75,
+          "top_token": "p",
+          "top_token_id": 79,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 14.6875,
+              "probability": 0.00762939453125
+            },
+            "second": {
+              "logit": 11.8125,
+              "probability": 0.0004291534423828125
+            },
+            "gap": 2.875,
+            "top_token": "horse",
+            "top_token_id": 59675,
+            "top_is_first": false,
+            "top_is_second": false
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 15.625,
+              "probability": 0.015869140625
+            },
+            "second": {
+              "logit": 11.1875,
+              "probability": 0.00018787384033203125
+            },
+            "gap": 4.4375,
+            "top_token": "horse",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 16.875,
+              "probability": 0.0306396484375
+            },
+            "second": {
+              "logit": 11.625,
+              "probability": 0.00016117095947265625
+            },
+            "gap": 5.25,
+            "top_token": "horse",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 16.625,
+              "probability": 0.0172119140625
+            },
+            "second": {
+              "logit": 11.5,
+              "probability": 0.00010204315185546875
+            },
+            "gap": 5.125,
+            "top_token": "horse",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 8479,
+        "context_object": "electromechanical stage",
+        "source_prompt": "Fact: When documenting a electromechanical stage at its nominal operating point, scientists state its force in the unit named \"",
+        "target_prompt": "Fact: When documenting a electromechanical stage at its nominal operating point, scientists state its energy in the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 17.25,
+            "probability": 0.58203125
+          },
+          "second": {
+            "logit": 10.1875,
+            "probability": 0.00049591064453125
+          },
+          "gap": 7.0625,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 10.1875,
+              "probability": 0.00092315673828125
+            },
+            "second": {
+              "logit": 15.5625,
+              "probability": 0.19921875
+            },
+            "gap": -5.375,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 12.0625,
+              "probability": 0.006866455078125
+            },
+            "second": {
+              "logit": 15.125,
+              "probability": 0.146484375
+            },
+            "gap": -3.0625,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 13.625,
+              "probability": 0.0283203125
+            },
+            "second": {
+              "logit": 15.625,
+              "probability": 0.2099609375
+            },
+            "gap": -2.0,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 13.8125,
+              "probability": 0.03173828125
+            },
+            "second": {
+              "logit": 15.6875,
+              "probability": 0.20703125
+            },
+            "gap": -1.875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 6348,
+        "context_object": "bullet impact",
+        "source_prompt": "Fact: A physicist would state that the unit representing the force of a bullet impact is \"",
+        "target_prompt": "Fact: A physicist would state that the unit representing the energy of a bullet impact is \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 20.75,
+            "probability": 0.59765625
+          },
+          "second": {
+            "logit": 14.625,
+            "probability": 0.00130462646484375
+          },
+          "gap": 6.125,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 14.625,
+              "probability": 0.0003833770751953125
+            },
+            "second": {
+              "logit": 22.375,
+              "probability": 0.890625
+            },
+            "gap": -7.75,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 16.0,
+              "probability": 0.00191497802734375
+            },
+            "second": {
+              "logit": 22.125,
+              "probability": 0.875
+            },
+            "gap": -6.125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 16.5,
+              "probability": 0.0028228759765625
+            },
+            "second": {
+              "logit": 22.25,
+              "probability": 0.88671875
+            },
+            "gap": -5.75,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 16.5,
+              "probability": 0.0024261474609375
+            },
+            "second": {
+              "logit": 22.375,
+              "probability": 0.8671875
+            },
+            "gap": -5.875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 470,
+        "context_object": "spring stretch",
+        "source_prompt": "Fact: In experiments measuring the force of a given spring stretch, the standard unit of choice is \"",
+        "target_prompt": "Fact: In experiments measuring the energy of a given spring stretch, the standard unit of choice is \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 20.0,
+            "probability": 0.68359375
+          },
+          "second": {
+            "logit": 12.9375,
+            "probability": 0.000583648681640625
+          },
+          "gap": 7.0625,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 16.875,
+              "probability": 0.0086669921875
+            },
+            "second": {
+              "logit": 21.375,
+              "probability": 0.78125
+            },
+            "gap": -4.5,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 17.25,
+              "probability": 0.01416015625
+            },
+            "second": {
+              "logit": 21.25,
+              "probability": 0.7734375
+            },
+            "gap": -4.0,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 17.625,
+              "probability": 0.0235595703125
+            },
+            "second": {
+              "logit": 21.125,
+              "probability": 0.78125
+            },
+            "gap": -3.5,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 17.625,
+              "probability": 0.0208740234375
+            },
+            "second": {
+              "logit": 21.25,
+              "probability": 0.78515625
+            },
+            "gap": -3.625,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 5877,
+        "context_object": "vacuum test assembly",
+        "source_prompt": "Fact: During laboratory analysis of a vacuum test assembly at its nominal operating point, its force is expressed in the unit named \"",
+        "target_prompt": "Fact: During laboratory analysis of a vacuum test assembly at its nominal operating point, its energy is expressed in the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 15.6875,
+            "probability": 0.091796875
+          },
+          "second": {
+            "logit": 9.1875,
+            "probability": 0.00013828277587890625
+          },
+          "gap": 6.5,
+          "top_token": "p",
+          "top_token_id": 79,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 9.4375,
+              "probability": 0.0010223388671875
+            },
+            "second": {
+              "logit": 14.1875,
+              "probability": 0.1181640625
+            },
+            "gap": -4.75,
+            "top_token": "k",
+            "top_token_id": 74,
+            "top_is_first": false,
+            "top_is_second": false
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 11.6875,
+              "probability": 0.01123046875
+            },
+            "second": {
+              "logit": 13.75,
+              "probability": 0.08837890625
+            },
+            "gap": -2.0625,
+            "top_token": "k",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 12.75,
+              "probability": 0.0274658203125
+            },
+            "second": {
+              "logit": 13.5625,
+              "probability": 0.06201171875
+            },
+            "gap": -0.8125,
+            "top_token": "p",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 13.125,
+              "probability": 0.03564453125
+            },
+            "second": {
+              "logit": 13.875,
+              "probability": 0.0751953125
+            },
+            "gap": -0.75,
+            "top_token": "p",
+            "top_is_first": false,
+            "top_is_second": false,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 3753,
+        "context_object": "tug of war",
+        "source_prompt": "Fact: When recording the typical force associated with a tug of war, researchers write it in the unit named \"",
+        "target_prompt": "Fact: When recording the typical energy associated with a tug of war, researchers write it in the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 21.0,
+            "probability": 0.8046875
+          },
+          "second": {
+            "logit": 10.625,
+            "probability": 2.5153160095214844e-05
+          },
+          "gap": 10.375,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 12.8125,
+              "probability": 0.001251220703125
+            },
+            "second": {
+              "logit": 19.25,
+              "probability": 0.78125
+            },
+            "gap": -6.4375,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 15.0,
+              "probability": 0.0150146484375
+            },
+            "second": {
+              "logit": 18.875,
+              "probability": 0.72265625
+            },
+            "gap": -3.875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 16.0,
+              "probability": 0.038330078125
+            },
+            "second": {
+              "logit": 18.875,
+              "probability": 0.67578125
+            },
+            "gap": -2.875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 16.125,
+              "probability": 0.0228271484375
+            },
+            "second": {
+              "logit": 19.625,
+              "probability": 0.75390625
+            },
+            "gap": -3.5,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 4326,
+        "context_object": "bow string tension",
+        "source_prompt": "Fact: A physicist would state that the unit representing the force of a bow string tension is \"",
+        "target_prompt": "Fact: A physicist would state that the unit representing the energy of a bow string tension is \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 20.25,
+            "probability": 0.75
+          },
+          "second": {
+            "logit": 13.5,
+            "probability": 0.00087738037109375
+          },
+          "gap": 6.75,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 16.375,
+              "probability": 0.0054931640625
+            },
+            "second": {
+              "logit": 21.375,
+              "probability": 0.81640625
+            },
+            "gap": -5.0,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 17.5,
+              "probability": 0.018798828125
+            },
+            "second": {
+              "logit": 21.25,
+              "probability": 0.796875
+            },
+            "gap": -3.75,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 17.625,
+              "probability": 0.0269775390625
+            },
+            "second": {
+              "logit": 21.0,
+              "probability": 0.7890625
+            },
+            "gap": -3.375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 17.625,
+              "probability": 0.027099609375
+            },
+            "second": {
+              "logit": 21.0,
+              "probability": 0.79296875
+            },
+            "gap": -3.375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 7956,
+        "context_object": "prototype valve assembly",
+        "source_prompt": "Fact: An SI measurement of the force of a prototype valve assembly under a reproducible test condition uses the unit named \"",
+        "target_prompt": "Fact: An SI measurement of the energy of a prototype valve assembly under a reproducible test condition uses the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 19.875,
+            "probability": 0.251953125
+          },
+          "second": {
+            "logit": 10.875,
+            "probability": 3.123283386230469e-05
+          },
+          "gap": 9.0,
+          "top_token": "p",
+          "top_token_id": 79,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 13.5,
+              "probability": 0.00133514404296875
+            },
+            "second": {
+              "logit": 19.75,
+              "probability": 0.69140625
+            },
+            "gap": -6.25,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 15.625,
+              "probability": 0.01422119140625
+            },
+            "second": {
+              "logit": 19.5,
+              "probability": 0.6875
+            },
+            "gap": -3.875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 16.375,
+              "probability": 0.0322265625
+            },
+            "second": {
+              "logit": 19.375,
+              "probability": 0.6484375
+            },
+            "gap": -3.0,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 16.625,
+              "probability": 0.031005859375
+            },
+            "second": {
+              "logit": 19.75,
+              "probability": 0.703125
+            },
+            "gap": -3.125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 4055,
+        "context_object": "weightlifter push",
+        "source_prompt": "Fact: The standard scientific unit used to measure the force of a weightlifter push is named \"",
+        "target_prompt": "Fact: The standard scientific unit used to measure the energy of a weightlifter push is named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 19.625,
+            "probability": 0.423828125
+          },
+          "second": {
+            "logit": 11.5625,
+            "probability": 0.000133514404296875
+          },
+          "gap": 8.0625,
+          "top_token": "p",
+          "top_token_id": 79,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 16.25,
+              "probability": 0.047607421875
+            },
+            "second": {
+              "logit": 19.0,
+              "probability": 0.7421875
+            },
+            "gap": -2.75,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 16.75,
+              "probability": 0.091796875
+            },
+            "second": {
+              "logit": 18.75,
+              "probability": 0.6796875
+            },
+            "gap": -2.0,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 16.875,
+              "probability": 0.09423828125
+            },
+            "second": {
+              "logit": 18.875,
+              "probability": 0.6953125
+            },
+            "gap": -2.0,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 17.125,
+              "probability": 0.0859375
+            },
+            "second": {
+              "logit": 19.25,
+              "probability": 0.71875
+            },
+            "gap": -2.125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 7929,
+        "context_object": "wind gust",
+        "source_prompt": "Fact: In physics, when calculating the exact force exhibited by a wind gust, the result is expressed in the unit named \"",
+        "target_prompt": "Fact: In physics, when calculating the exact energy exhibited by a wind gust, the result is expressed in the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 20.625,
+            "probability": 0.27734375
+          },
+          "second": {
+            "logit": 10.375,
+            "probability": 9.834766387939453e-06
+          },
+          "gap": 10.25,
+          "top_token": "p",
+          "top_token_id": 79,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 12.25,
+              "probability": 2.3245811462402344e-05
+            },
+            "second": {
+              "logit": 22.875,
+              "probability": 0.95703125
+            },
+            "gap": -10.625,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 14.5,
+              "probability": 0.0002803802490234375
+            },
+            "second": {
+              "logit": 22.625,
+              "probability": 0.94921875
+            },
+            "gap": -8.125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 15.25,
+              "probability": 0.000965118408203125
+            },
+            "second": {
+              "logit": 22.125,
+              "probability": 0.93359375
+            },
+            "gap": -6.875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 15.5625,
+              "probability": 0.00116729736328125
+            },
+            "second": {
+              "logit": 22.25,
+              "probability": 0.9375
+            },
+            "gap": -6.6875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 6048,
+        "context_object": "friction drag",
+        "source_prompt": "Fact: If a student needs to write down the force of a friction drag, they should use the unit named \"",
+        "target_prompt": "Fact: If a student needs to write down the energy of a friction drag, they should use the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 21.75,
+            "probability": 0.7890625
+          },
+          "second": {
+            "logit": 10.8125,
+            "probability": 1.4066696166992188e-05
+          },
+          "gap": 10.9375,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 15.375,
+              "probability": 0.001800537109375
+            },
+            "second": {
+              "logit": 21.5,
+              "probability": 0.82421875
+            },
+            "gap": -6.125,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 16.625,
+              "probability": 0.006927490234375
+            },
+            "second": {
+              "logit": 21.375,
+              "probability": 0.80078125
+            },
+            "gap": -4.75,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 16.875,
+              "probability": 0.01104736328125
+            },
+            "second": {
+              "logit": 21.125,
+              "probability": 0.77734375
+            },
+            "gap": -4.25,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 17.125,
+              "probability": 0.01007080078125
+            },
+            "second": {
+              "logit": 21.5,
+              "probability": 0.796875
+            },
+            "gap": -4.375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 3926,
+        "context_object": "calibration fixture",
+        "source_prompt": "Fact: A researcher measuring the force of a calibration fixture under a documented reference condition records the result in the unit named \"",
+        "target_prompt": "Fact: A researcher measuring the energy of a calibration fixture under a documented reference condition records the result in the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 18.75,
+            "probability": 0.361328125
+          },
+          "second": {
+            "logit": 10.9375,
+            "probability": 0.00014591217041015625
+          },
+          "gap": 7.8125,
+          "top_token": "p",
+          "top_token_id": 79,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 10.875,
+              "probability": 0.0003204345703125
+            },
+            "second": {
+              "logit": 17.75,
+              "probability": 0.310546875
+            },
+            "gap": -6.875,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 14.0,
+              "probability": 0.011962890625
+            },
+            "second": {
+              "logit": 17.0,
+              "probability": 0.2392578125
+            },
+            "gap": -3.0,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 15.5,
+              "probability": 0.06884765625
+            },
+            "second": {
+              "logit": 16.625,
+              "probability": 0.2119140625
+            },
+            "gap": -1.125,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 15.5625,
+              "probability": 0.06494140625
+            },
+            "second": {
+              "logit": 17.0,
+              "probability": 0.2734375
+            },
+            "gap": -1.4375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 4812,
+        "context_object": "bench-scale actuator",
+        "source_prompt": "Fact: During laboratory analysis of a bench-scale actuator during a repeatable calibration cycle, its force is expressed in the unit named \"",
+        "target_prompt": "Fact: During laboratory analysis of a bench-scale actuator during a repeatable calibration cycle, its energy is expressed in the unit named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": false,
+        "source_clean": {
+          "first": {
+            "logit": 15.875,
+            "probability": 0.1123046875
+          },
+          "second": {
+            "logit": 9.0,
+            "probability": 0.00011587142944335938
+          },
+          "gap": 6.875,
+          "top_token": "p",
+          "top_token_id": 79,
+          "top_is_first": false,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 9.875,
+              "probability": 0.000690460205078125
+            },
+            "second": {
+              "logit": 16.625,
+              "probability": 0.58984375
+            },
+            "gap": -6.75,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 12.625,
+              "probability": 0.01806640625
+            },
+            "second": {
+              "logit": 15.8125,
+              "probability": 0.439453125
+            },
+            "gap": -3.1875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 13.5,
+              "probability": 0.057861328125
+            },
+            "second": {
+              "logit": 14.9375,
+              "probability": 0.2431640625
+            },
+            "gap": -1.4375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 13.6875,
+              "probability": 0.06494140625
+            },
+            "second": {
+              "logit": 15.0625,
+              "probability": 0.2578125
+            },
+            "gap": -1.375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 6070,
+        "context_object": "thermal control rig",
+        "source_prompt": "Fact: The official SI unit used to report the force of a thermal control rig during a standard verification trial is named \"",
+        "target_prompt": "Fact: The official SI unit used to report the energy of a thermal control rig during a standard verification trial is named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 17.625,
+            "probability": 0.62890625
+          },
+          "second": {
+            "logit": 10.4375,
+            "probability": 0.0004749298095703125
+          },
+          "gap": 7.1875,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 9.9375,
+              "probability": 0.0003376007080078125
+            },
+            "second": {
+              "logit": 17.0,
+              "probability": 0.39453125
+            },
+            "gap": -7.0625,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 11.75,
+              "probability": 0.003173828125
+            },
+            "second": {
+              "logit": 16.375,
+              "probability": 0.32421875
+            },
+            "gap": -4.625,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 12.9375,
+              "probability": 0.009033203125
+            },
+            "second": {
+              "logit": 16.625,
+              "probability": 0.361328125
+            },
+            "gap": -3.6875,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 13.25,
+              "probability": 0.01165771484375
+            },
+            "second": {
+              "logit": 16.75,
+              "probability": 0.38671875
+            },
+            "gap": -3.5,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      },
+      {
+        "dataset_index": 2057,
+        "context_object": "material testing fixture",
+        "source_prompt": "Fact: For a material testing fixture while the apparatus is held at steady state, the standard scientific unit for force is named \"",
+        "target_prompt": "Fact: For a material testing fixture while the apparatus is held at steady state, the standard scientific unit for energy is named \"",
+        "source_answer": "newtons",
+        "target_answer": "joules",
+        "source_not_in_sae_optimisation_split": true,
+        "source_sae_split": "validation",
+        "target_absent_from_sae_corpus": true,
+        "source_prefix_token": "new",
+        "target_prefix_token": "j",
+        "eligible": true,
+        "source_clean": {
+          "first": {
+            "logit": 21.25,
+            "probability": 0.63671875
+          },
+          "second": {
+            "logit": 9.75,
+            "probability": 6.4373016357421875e-06
+          },
+          "gap": 11.5,
+          "top_token": "new",
+          "top_token_id": 931,
+          "top_is_first": true,
+          "top_is_second": false
+        },
+        "conditions": {
+          "clean": {
+            "first": {
+              "logit": 12.5625,
+              "probability": 2.872943878173828e-05
+            },
+            "second": {
+              "logit": 22.875,
+              "probability": 0.86328125
+            },
+            "gap": -10.3125,
+            "top_token": "j",
+            "top_token_id": 73,
+            "top_is_first": false,
+            "top_is_second": true
+          },
+          "sparse_feature_swap": {
+            "first": {
+              "logit": 15.125,
+              "probability": 0.000522613525390625
+            },
+            "second": {
+              "logit": 22.5,
+              "probability": 0.83203125
+            },
+            "gap": -7.375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "full_latent_swap": {
+            "first": {
+              "logit": 16.0,
+              "probability": 0.00141143798828125
+            },
+            "second": {
+              "logit": 22.375,
+              "probability": 0.83203125
+            },
+            "gap": -6.375,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          },
+          "raw_mlp_swap": {
+            "first": {
+              "logit": 16.125,
+              "probability": 0.0015716552734375
+            },
+            "second": {
+              "logit": 22.375,
+              "probability": 0.8125
+            },
+            "gap": -6.25,
+            "top_token": "j",
+            "top_is_first": false,
+            "top_is_second": true,
+            "first_token_id": 931,
+            "second_token_id": 73
+          }
+        }
+      }
+    ],
+    "summary": {
+      "total_cases": 20,
+      "eligible_cases": 11,
+      "eligibility_definition": "clean target and source both have the expected first-token top prediction",
+      "desired_delta_sign": "positive",
+      "conditions": {
+        "full_latent_swap": {
+          "mean_gap_delta": 2.5113636363636362,
+          "median_gap_delta": 2.3125,
+          "bootstrap_95_ci_mean": [
+            1.9204545454545454,
+            3.1306818181818183
+          ],
+          "fraction_in_predicted_direction": 1.0,
+          "top_prediction_transfer_fraction": 0.0
+        },
+        "raw_mlp_swap": {
+          "mean_gap_delta": 2.5170454545454546,
+          "median_gap_delta": 2.875,
+          "bootstrap_95_ci_mean": [
+            1.8693181818181819,
+            3.1761363636363638
+          ],
+          "fraction_in_predicted_direction": 1.0,
+          "top_prediction_transfer_fraction": 0.0
+        },
+        "sparse_feature_swap": {
+          "mean_gap_delta": 1.7556818181818181,
+          "median_gap_delta": 1.625,
+          "bootstrap_95_ci_mean": [
+            1.3409090909090908,
+            2.1875
+          ],
+          "fraction_in_predicted_direction": 1.0,
+          "top_prediction_transfer_fraction": 0.0
+        }
+      }
+    }
+  },
+  "runtime_seconds": 22.59105157852173
+}

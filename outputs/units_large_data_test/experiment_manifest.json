@@ -1,0 +1,34 @@
+{
+  "experiment": "units_large_10000_topk128",
+  "git_commit": "f15f92f9c25f6391c6b7d9e9e86e05e8e49a72b7",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "seed": 787,
+  "layers": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    28
+  ],
+  "corpus_rows": 10000,
+  "train_rows": 8000,
+  "validation_rows": 2000,
+  "config": "configs/sae_units_large_10000_topk128_config.yaml",
+  "dense_latent_export": false,
+  "local_outputs": [
+    "units_1k_vs_10k_comparison.csv",
+    "units_1k_vs_10k_comparison.json",
+    "units_large_10000_topk128_diagnostics.csv",
+    "units_large_10000_topk128_diagnostics.json",
+    "units_large_10000_topk128_feature_screen.json",
+    "units_large_10000_topk128_force_graph.html",
+    "units_large_10000_topk128_force_graph.json",
+    "units_large_10000_topk128_force_graph.md",
+    "units_large_10000_topk128_heldout_last.json"
+  ],
+  "drive_output": "/content/drive/MyDrive/mphil-project/outputs/units_large_data_test",
+  "drive_checkpoints": "/content/drive/MyDrive/mphil-project/mechanistic_data/units_large_data_test/checkpoints_topk128",
+  "drive_activations": "/content/drive/MyDrive/mphil-project/mechanistic_data/units_large_data_test/activations"
+}
