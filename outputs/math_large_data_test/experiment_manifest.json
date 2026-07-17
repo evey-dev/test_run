@@ -1,0 +1,30 @@
+{
+  "experiment": "math_large_10000_topk256_position_matched",
+  "git_commit": "406afd377810d40baa50f2bb45826925f64f245d",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "seed": 787,
+  "layers": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    28
+  ],
+  "corpus_rows": 10000,
+  "carry_counts": {
+    "0": 5000,
+    "1": 5000
+  },
+  "train_rows": 8000,
+  "validation_rows": 2000,
+  "config": "configs/sae_math_large_10000_topk256_config.yaml",
+  "dense_latent_export": false,
+  "graph_screen": "/content/drive/MyDrive/mphil-project/outputs/math_large_data_test/math_large_10000_topk256_graph_feature_screen.json",
+  "balanced_localisation": "/content/drive/MyDrive/mphil-project/outputs/math_large_data_test/math_large_10000_topk256_balanced_localisation.json",
+  "top20_replication_warranted": true,
+  "drive_output": "/content/drive/MyDrive/mphil-project/outputs/math_large_data_test",
+  "drive_checkpoints": "/content/drive/MyDrive/mphil-project/mechanistic_data/math_large_data_test/checkpoints_topk256",
+  "drive_activations": "/content/drive/MyDrive/mphil-project/mechanistic_data/math_large_data_test/activations"
+}

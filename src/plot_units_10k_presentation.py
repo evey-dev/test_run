@@ -220,6 +220,8 @@ def render(
     comparison_by_name = {row["run"]: row for row in comparison["runs"]}
     old_effect = float(comparison_by_name["units_topk128_1k"]["primary_force_minus_mass"])
     new_effect = float(comparison_by_name["units_topk128_10k"]["primary_force_minus_mass"])
+    top3_effect = float(top3_summary["mean_force_minus_mass_difference"])
+    top3_share = 100.0 * top3_effect / new_effect
     clean_gap = clean_confirmation_gap(screen)
     force_gap = clean_gap + float(top3_summary["mean_force_source_delta"])
     mass_gap = clean_gap + float(top3_summary["mean_mass_source_delta"])
@@ -267,13 +269,14 @@ def render(
     canvas.text(0.1225, 0.464, "same target, separate run", fontsize=7.2, color=MUTED, ha="center")
 
     round_box(canvas, 0.242, 0.435, 0.135, 0.335, face=PANEL_LIGHT, edge=PANEL)
-    canvas.text(0.3095, 0.744, "TOP-3 PANEL", fontsize=7.4, color=PANEL, weight="bold", ha="center")
-    canvas.text(0.3095, 0.720, "Layer 28", fontsize=8.2, color=INK, weight="bold", ha="center")
+    canvas.text(0.3095, 0.744, "TOP-3 PREFIX", fontsize=7.4, color=PANEL, weight="bold", ha="center")
+    canvas.text(0.3095, 0.720, f"{top3_share:.0f}% of Top-10 effect", fontsize=7.4,
+                color=INK, weight="bold", ha="center")
     node_y = [0.637, 0.557, 0.477]
     for row, y in zip(feature_rows, node_y):
         round_box(canvas, 0.258, y, 0.103, 0.058, face="white", edge=PANEL)
         canvas.text(0.267, y + 0.040, f"#{row['rank']}", fontsize=6.4, color=MUTED, va="center")
-        canvas.text(0.3095, y + 0.032, f"F{row['feature']}", fontsize=9.0, color=INK,
+        canvas.text(0.3095, y + 0.032, f"L28F{row['feature']}", fontsize=8.2, color=INK,
                     weight="bold", ha="center", va="center")
         canvas.text(0.353, y + 0.014, row["decoder"], fontsize=6.2, color=FORCE,
                     weight="bold", ha="right", va="center")
@@ -328,13 +331,24 @@ def render(
     effect_axis.tick_params(axis="y", length=0, labelsize=8.0, colors=INK)
     effect_axis.tick_params(axis="x", labelsize=7.5, colors=MUTED)
 
-    compact_axis = figure.add_axes([0.615, 0.205, 0.335, 0.235])
+    compact_axis = figure.add_axes([0.615, 0.155, 0.335, 0.285])
     labels, values = compactness_series(screen)
     x_values = list(range(len(labels)))
     compact_axis.plot(x_values, values, color=PANEL, linewidth=2.2, marker="o", markersize=6.5)
     compact_axis.fill_between(x_values, values, [0] * len(values), color=PANEL_LIGHT, alpha=0.55)
     compact_axis.axhline(old_effect, color=GOLD, linewidth=1.2, linestyle=(0, (4, 3)),
                          label=f"1k Top-10 ({old_effect:+.3f})")
+    compact_axis.scatter([1], [top3_effect], s=90, facecolor="white", edgecolor=PANEL,
+                         linewidth=2.2, zorder=6)
+    compact_axis.annotate(
+        f"Top-3  {top3_effect:+.3f}\n{top3_share:.0f}% of Top-10",
+        xy=(1, top3_effect),
+        xytext=(0.35, top3_effect + 0.58),
+        fontsize=7.8,
+        color=PANEL,
+        weight="bold",
+        arrowprops={"arrowstyle": "-", "color": PANEL, "linewidth": 0.9},
+    )
     compact_axis.scatter([3], [new_effect], s=80, facecolor="white", edgecolor=FORCE, linewidth=2.0, zorder=5)
     compact_axis.annotate(
         f"10k Top-10  {new_effect:+.3f}",
@@ -349,22 +363,17 @@ def render(
     compact_axis.set_ylim(0, 3.35)
     compact_axis.set_ylabel("Paired specificity", fontsize=8.0, color=MUTED)
     compact_axis.set_xlabel("Number of selected graph features", fontsize=8.0, color=MUTED)
-    compact_axis.set_title("Most of the effect appears by three features", fontsize=9.5, color=INK, weight="bold", loc="left")
+    compact_axis.set_title("Top-3 captures most of the frozen Top-10 effect", fontsize=9.5,
+                           color=INK, weight="bold", loc="left")
     compact_axis.grid(axis="y", color=GRID, linewidth=0.7)
     compact_axis.spines[["top", "right"]].set_visible(False)
     compact_axis.tick_params(labelsize=7.5, colors=MUTED)
     compact_axis.legend(frameon=False, fontsize=7.2, loc="lower right")
 
-    round_box(canvas, 0.595, 0.105, 0.355, 0.060, face=SOFT, edge=GRID)
-    canvas.text(0.610, 0.135, "16/16", fontsize=12, color=FORCE, weight="bold", va="center")
-    canvas.text(0.662, 0.135, "force effects positive", fontsize=8.0, color=INK, va="center")
-    canvas.text(0.790, 0.135, "0/16", fontsize=12, color=ENERGY, weight="bold", va="center")
-    canvas.text(0.837, 0.135, "top-token flips", fontsize=8.0, color=INK, va="center")
-
     canvas.text(
         0.045,
         0.055,
-        "Interpretation: the panel transfers a selective force-associated logit signal; it does not replace the model's energy answer.",
+        f"Interpretation: the Top-3 prefix transfers {top3_share:.0f}% of the frozen Top-10 force-specific logit effect.",
         fontsize=9.0,
         color=INK,
         weight="bold",

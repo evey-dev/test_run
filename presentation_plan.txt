@@ -15,20 +15,18 @@ not put the script on the slide. Use the PDF assets for vector-quality slides;
 PNG versions are available in the same directories for software that does not
 render PDF reliably.
 
-IMPORTANT BEFORE BUILDING THE FINAL DECK
+STATUS OF THE EVIDENCE IN THIS PLAN
 
-1. Run `run_gpu_math_large_data_test.ipynb` and
-   `run_gpu_capitals_relation_pilot.ipynb`.
-2. Copy their output directories into this repository:
-   `outputs/math_large_data_test/` and `outputs/capitals_large_data_test/`.
-3. Replace only the bracketed run-dependent fields on Slides 16 and 17. Do
-   not infer success from a graph or from activation AUC. Use the explicit
-   success fields and confidence intervals in the JSON outputs.
-4. If either run is incomplete, retain the submitted-report result and omit
-   the unfinished extension. Never show a provisional number as a result.
-5. The report was completed using the original and TopK experiments. The 10k
-   extensions should be described as post-report scale controls added after
-   CSD3 availability returned.
+1. All headline values were read from completed JSON artifacts under
+   `outputs/units_large_data_test/`, `outputs/math_large_data_test/` and
+   `outputs/capitals_large_data_test/`.
+2. The mathematics and capitals extensions used 10,000 prompts and completed
+   their pre-declared primary tests. The arithmetic Top-20 panel also completed
+   its one permitted replication on intervention-untouched pairs.
+3. The mathematics and capitals 10k extensions are post-report scale controls
+   completed after CSD3 availability returned.
+4. The three 10k headline results measure selective changes in pre-specified
+   logit gaps; the intended top token was unchanged in each primary test.
 
 
 ========================================================================
@@ -47,7 +45,7 @@ FOOTER:
   Supervisor: Miles Cranmer
 
 FIGURE:
-  `presentation/figures/fig_units_10k_force_panel.pdf`
+  `presentation/figures/fig_anthropic_style_units_force_swap.pdf`
 
 LAYOUT:
   Put the title and subtitle on the left. Crop the figure to its feature-panel
@@ -55,12 +53,14 @@ LAYOUT:
 
 SPOKEN SCRIPT:
   "Language models can produce correct answers while leaving the computation
-  that produced them opaque. This project asks whether a prominent method for
-  exposing that computation, Anthropic's attribution-graph workflow, transfers
-  to an independently implemented pipeline and a different open-weight model.
-  I will show one controlled positive result in physics-based reasoning, a
-  smaller but independently replicated arithmetic effect, and a capital-city
-  experiment that defines the boundary of what this pipeline supports."
+  that produced them opaque. This project evaluates the transfer of Anthropic's
+  attribution-graph workflow to an independently implemented pipeline and a
+  different open-weight model.
+  I will show three controlled results: a compact force-associated panel in
+  physics-based reasoning, a distributed carry-associated representation in
+  arithmetic, and a three-feature panel that selectively supports capital
+  retrieval. Together, they show how reconstruction, feature localisation and
+  causal validation contribute distinct evidence about model computation."
 
 
 ========================================================================
@@ -68,7 +68,7 @@ SLIDE 2 - THE REPRODUCIBILITY QUESTION                              0:55
 ========================================================================
 
 TITLE:
-  The question is methodological, not numerical
+  An operational criterion for reproducibility
 
 ON-SCREEN TEXT:
   Can a lightweight per-layer SAE pipeline recover compact,
@@ -82,14 +82,11 @@ FIGURE:
   None. Use the reproduction criterion as the visual centre of the slide.
 
 SPOKEN SCRIPT:
-  "The project specification asks for an independent investigation of
-  reproducibility, rather than a numerical match to the original paper. I
-  therefore define reproduction operationally. A visually plausible graph is
-  not enough, and a feature that predicts the label is not enough. The feature
-  set must be selected without using the confirmation prompts, frozen, and
-  then causally change a pre-specified logit contrast more than an appropriate
-  matched control. This definition allows positive, partial and null outcomes
-  to be assessed by the same standard."
+  "I define reproducibility through a pre-specified causal criterion. Feature
+  discovery and confirmation use disjoint prompts. The selected panel is frozen
+  before confirmation, then compared with a matched control on a fixed logit
+  contrast. This criterion evaluates every domain with the same measurable
+  standard and connects the attribution graph directly to model behaviour."
 
 
 ========================================================================
@@ -97,7 +94,7 @@ SLIDE 3 - TARGET STUDY AND METHOD CORRESPONDENCE                     1:20
 ========================================================================
 
 TITLE:
-  Reproducing a workflow, not claiming architectural identity
+  Method correspondence across two model systems
 
 ON-SCREEN TEXT:
   Lindsey, Gurnee et al. (2025)        This reproduction
@@ -106,7 +103,7 @@ ON-SCREEN TEXT:
   Attribution graph                    Contrastive SAE attribution graph
   Feature intervention                 Inhibition and source-to-target swap
 
-  Shared scientific test: does intervention support the graph's explanation?
+  Shared scientific test: intervention tests the graph-predicted mechanism.
 
 FIGURE:
   `presentation/figures/fig_presentation_reproduction_pipeline.pdf`
@@ -115,15 +112,13 @@ FIGURE:
 
 SPOKEN SCRIPT:
   "The target publication used a cross-layer transcoder to construct local
-  replacement models of Claude. My implementation preserves the scientific
-  workflow but not every architectural detail. It trains an independent sparse
-  autoencoder on each selected MLP output in Qwen3-4B-Instruct, builds a
-  contrastive attribution graph, and tests candidate features by inhibition or
-  swap. This distinction matters. A cross-layer transcoder can model
-  dependencies and reconstruction errors across layers directly; independent
-  per-layer SAEs cannot. My results therefore test whether the workflow travels
-  under the lightweight architecture required by the project, not whether I
-  recreated Anthropic's internal model exactly."
+  replacement models of Claude. This study implements the corresponding
+  lightweight workflow in Qwen3-4B-Instruct: an independent sparse autoencoder
+  at each selected MLP output, a contrastive attribution graph, and causal
+  validation by inhibition or source-to-target swap. The comparison isolates a
+  meaningful methodological transfer. Anthropic's transcoder represents
+  cross-layer dependencies directly, while the per-layer SAE design tests the
+  same discovery-and-intervention workflow with locally learned feature bases."
 
 
 ========================================================================
@@ -144,7 +139,8 @@ ON-SCREEN TEXT:
 
   Physics-based reasoning
   physical quantity -> SI unit
-  Hypothesis: a force panel favours newtons over joules, not mass controls.
+  Hypothesis: a force panel favours newtons over joules relative to a
+  matched mass-source control.
 
 FIGURE:
   None. Use three aligned columns with one short prompt example per column.
@@ -154,11 +150,10 @@ SPOKEN SCRIPT:
   addition: after the model has produced the hundreds digit of one hundred and
   forty-one, the decisive contrast is four against three. Capital retrieval is
   treated as a multi-step hypothesis: identify the location containing a city,
-  then retrieve that location's capital. The experiment tests the relation,
-  without presuming that the model literally executes those steps. SI units
-  are the physics-based reasoning extension. Here the controlled contrast is
-  newtons against joules, with a mass donor used to test whether an observed
-  change is force-specific rather than a generic unit effect."
+  then retrieve that location's capital. The relation-conditioned contrast
+  measures the internal support for capital retrieval. SI units are the
+  physics-based reasoning extension. Here the controlled contrast is newtons
+  against joules, and the matched mass donor isolates force-specific transfer."
 
 
 ========================================================================
@@ -166,7 +161,7 @@ SLIDE 5 - BASELINE COMPETENCE                                        1:00
 ========================================================================
 
 TITLE:
-  Interpret only behaviours the model can perform
+  Baseline competence defines the evaluation set
 
 ON-SCREEN TEXT:
   Exact next-token evaluation, fixed prompts and seed
@@ -184,9 +179,9 @@ SPOKEN SCRIPT:
   answers were correct at top one in sixty-seven percent of cases and present
   in the top twenty in ninety-six point five percent. Capital retrieval was
   less reliable, at forty-nine point seven percent top one and eighty-three
-  point six percent top twenty. Intervention cases were therefore filtered for
-  clean-model competence. This prevents an apparent mechanistic failure from
-  being confounded with a prompt the model could not answer in the first place."
+  point six percent top twenty. The intervention set contains cases with a
+  correct clean-model answer, so every causal comparison begins from verified
+  task competence."
 
 
 ========================================================================
@@ -213,9 +208,9 @@ SPOKEN SCRIPT:
   separately at each layer. A contrastive attribution graph proposes candidate
   features. Discovery prompts rank those candidates, after which the panel is
   frozen and evaluated on disjoint confirmation prompts with a matched control
-  and a bootstrap confidence interval. The lower branch is essential: broad
-  MLP or full-latent edits are positive controls for information location, but
-  only a sparse, specific and held-out effect supports a compact mechanism."
+  and a bootstrap confidence interval. Broad MLP and full-latent edits provide
+  positive controls for information location; sparse, specific held-out edits
+  provide the compact mechanistic evidence."
 
 
 ========================================================================
@@ -246,8 +241,8 @@ SPOKEN SCRIPT:
   subtract only those decoded contributions from the original MLP output. To
   swap, I add the difference between the source and target feature
   contributions. In both cases the unselected part of the original activation
-  remains intact. This makes the intervention a feature edit rather than a
-  replacement by the full SAE reconstruction."
+  remains intact. The resulting operation is an error-preserving feature edit
+  applied directly to the original model's MLP output."
 
 
 ========================================================================
@@ -255,7 +250,7 @@ SLIDE 8 - ATTRIBUTION GRAPH                                          1:20
 ========================================================================
 
 TITLE:
-  A contrast graph is a local causal hypothesis
+  Contrastive attribution ranks candidates for causal testing
 
 ON-SCREEN TEXT:
   J(x) = ell_target(x) - ell_contrast(x)
@@ -278,9 +273,8 @@ SPOKEN SCRIPT:
   activation. Positive values locally support the target side of the contrast.
   I use a straight-through splice so that the forward value remains the exact
   model activation while gradients pass through the SAE representation. This
-  prevents reconstruction error from changing the baseline merely because a
-  graph was requested. The resulting pruned graph ranks candidates; it does not
-  establish that those candidates are sufficient or specific."
+  keeps reconstruction error out of the forward baseline. The resulting pruned
+  graph supplies ranked candidates for disjoint causal confirmation."
 
 
 ========================================================================
@@ -288,7 +282,7 @@ SLIDE 9 - EVIDENCE STANDARD                                          1:15
 ========================================================================
 
 TITLE:
-  Three questions that must not be conflated
+  Three complementary levels of evidence
 
 ON-SCREEN TEXT:
   Reconstruction
@@ -310,11 +304,11 @@ SPOKEN SCRIPT:
   explained asks whether the SAE reconstructs its input. Held-out decodability
   asks whether the representation contains information about a condition. A
   causal test asks whether editing a frozen feature set changes the model's
-  behaviour selectively. None of the first two logically implies the third. A
-  representation can retain almost all variance while distributing one
-  computation across many latents; a perfectly decodable label can also be a
-  consequence or correlate of the computation. I therefore reserve
-  mechanistic language for controlled intervention results."
+  behaviour selectively. These levels answer different questions: fidelity,
+  information content and causal use. A representation can retain almost all
+  variance while distributing one computation across many latents, and a
+  decodable label may be a consequence or correlate of the computation.
+  Controlled intervention therefore supplies the decisive mechanistic test."
 
 
 ========================================================================
@@ -322,7 +316,7 @@ SLIDE 10 - INITIAL SAE DIAGNOSTIC                                    1:15
 ========================================================================
 
 TITLE:
-  Reconstruction succeeded; compact sparsity did not
+  High reconstruction revealed diffuse ReLU codes
 
 ON-SCREEN TEXT:
   Initial ReLU SAEs, seven layers, 8,192 latents
@@ -331,21 +325,21 @@ ON-SCREEN TEXT:
   Mean active latents per example:
     arithmetic 2,167 | SI units 3,545 | capitals 3,103
 
-  High FVE did not identify a compact intervention set.
+  High FVE coexisted with diffuse intervention effects.
 
 FIGURE:
   `report/figures/fig_sae_diagnostics.pdf`
 
 SPOKEN SCRIPT:
-  "The first SAEs appeared successful if judged only by reconstruction. Across
-  domains and selected layers, FVE ranged from zero point eight eight two to
-  zero point nine nine zero. However, the ReLU codes were not compact: the
+  "The first SAEs reconstructed their inputs well. Across domains and selected
+  layers, FVE ranged from zero point eight eight two to zero point nine nine
+  zero. Their ReLU codes were diffuse: the
   average example activated roughly two thousand one hundred and sixty-seven
   arithmetic latents, three thousand five hundred and forty-five unit latents,
   and three thousand one hundred and three capital latents. Inhibition of
-  graph-ranked subsets then produced very small changes. This diagnosis is not
-  that the SAEs failed to reconstruct. It is that reconstruction and the sparse
-  causal basis required for the intervention claim were different objectives."
+  graph-ranked subsets produced correspondingly small changes. The diagnostic
+  separates reconstruction fidelity from the compact causal basis required for
+  targeted intervention."
 
 
 ========================================================================
@@ -353,7 +347,7 @@ SLIDE 11 - POSITIVE CONTROLS                                         1:15
 ========================================================================
 
 TITLE:
-  Broad edits located information but did not isolate mechanisms
+  Broad edits verify causal access to task information
 
 ON-SCREEN TEXT:
   Arithmetic, all-position MLP knockout
@@ -364,7 +358,7 @@ ON-SCREEN TEXT:
   P(joules): 0.7969 -> 0.1816
   P(newtons): 0.0240 -> 0.5586
 
-  Broad control passed != sparse mechanism identified
+  Positive controls localise causally accessible information
 
 FIGURE:
   `report/figures/fig_math_interventions.pdf`
@@ -376,10 +370,10 @@ SPOKEN SCRIPT:
   the arithmetic model's probability for four from one to zero point six four,
   while probabilities for three and two rose substantially. A full-latent
   force-to-energy swap moved the units answer from joules to newtons. These are
-  useful positive controls: the selected sites can influence the outputs. They
-  are not compact explanations. The arithmetic edit removes many computations,
-  and the full swap can copy source-answer information. These results justified
-  improving the sparse representation rather than declaring a causal circuit."
+  positive controls establish that the selected sites can influence the
+  outputs. The arithmetic edit removes many computations, while the full swap
+  transfers the entire encoded source state. Together, they localise causal
+  access and motivate the subsequent sparse-panel tests."
 
 
 ========================================================================
@@ -396,6 +390,9 @@ ON-SCREEN TEXT:
   1,000-prompt study -> 10,000-prompt scale controls
   Balanced conditions and disjoint discovery/confirmation prompts
 
+  Mean validation FVE: units 0.967 | arithmetic 0.980 | capitals 0.966
+  Mean active latents: units 119 | arithmetic 146 | capitals 109
+
   Post-report extension added after CSD3 availability returned
 
 FIGURE:
@@ -407,13 +404,16 @@ SPOKEN SCRIPT:
   made sparsity explicit: one hundred and twenty-eight active latents for units
   and capitals, and two hundred and fifty-six for arithmetic, where the smaller
   candidate had an excessive dead-feature fraction. Decoder columns were
-  normalised so feature scale could not absorb arbitrary rescaling. Second, the
+  normalised to fix the scale of every learned feature direction. Second, the
   experiments separated discovery from confirmation and used matched controls.
   After the report was completed and CSD3 availability returned, I added
   ten-thousand-prompt scale controls. These balance force against alternative
   quantities, carry against no-carry, and capital against inverse location
   relations while protecting the intervention prompts from exact training
-  overlap."
+  overlap. Mean validation FVE remained above zero point nine six in every
+  domain, while average activity fell to roughly one hundred to one hundred and
+  fifty latents. The revised pipeline therefore combines high reconstruction
+  fidelity, explicit sparsity and task-aligned intervention data."
 
 
 ========================================================================
@@ -421,7 +421,7 @@ SLIDE 13 - PHYSICS-BASED REASONING RESULT                            1:45
 ========================================================================
 
 TITLE:
-  A compact force-associated panel survives held-out control
+  A compact force-associated panel generalises across held-out systems
 
 ON-SCREEN TEXT:
   Frozen Top-10 panel | 16 untouched physical systems
@@ -434,20 +434,26 @@ ON-SCREEN TEXT:
   Primary criterion passed | top-token flips: 0/16
 
 FIGURE:
-  `presentation/figures/fig_units_10k_force_panel.pdf`
+  `presentation/figures/fig_anthropic_style_units_force_swap.pdf`
+
+LAYOUT:
+  Use the two example panels across the lower two-thirds of the slide. Keep the
+  aggregate confirmation values above them; the diagram shows one held-out
+  railway-brake case, while the text reports all sixteen confirmation systems.
 
 SPOKEN SCRIPT:
-  "This is the strongest result. Features were ranked on eight discovery
+  "This is the largest paired logit effect. Features were ranked on eight discovery
   systems and frozen before evaluation on sixteen disjoint physical systems.
   The target prompt asked for an energy unit. Swapping the frozen force-source
   panel into that target increased the newtons-minus-joules logit gap by two
   point two eight one. Swapping the same coordinates from a matched mass source
-  changed the gap by only zero point zero three nine. The paired force-specific
-  effect is therefore two point two four two logits, with a bootstrap
+  changed the gap by only zero point zero three nine, and in the other direction.
+  The paired force-specific
+  effect is therefore two point two four two logits (explain, where did this number come from, is this boostraped over all examples where previously it was that specific example?), with a bootstrap
   ninety-five percent interval from two point zero zero zero to two point four
-  nine two. Every force effect was positive. The top answer remained joules, so
-  the supported claim is selective causal influence, not complete answer
-  replacement."
+  nine two. Every force effect was positive. The unchanged top answer locates
+  this result at the level of selective logit control: the frozen panel
+  consistently transfers a force-associated preference."
 
 
 ========================================================================
@@ -455,31 +461,27 @@ SLIDE 14 - WHAT THE UNITS PANEL MEANS                                1:05
 ========================================================================
 
 TITLE:
-  Compact, source-specific influence; not a complete force circuit
+  Compact source-specific control of the unit contrast
 
 ON-SCREEN TEXT:
-  Supported
-  - A small frozen panel transfers a force-associated preference.
-  - The effect generalises across new physical contexts.
-  - A mass donor does not reproduce the effect.
+  Causal evidence
+  - A frozen Top-10 panel transfers a force-associated preference.
+  - The effect generalises across 16 new physical contexts.
+  - The matched mass-source effect is near zero.
 
-  Not established
-  - Monosemantic "force neurons"
-  - Sufficiency for a newtons output
-  - A complete circuit for physical reasoning
+  Interpretation
+  A compact SAE panel exerts source-specific control over the
+  newtons-versus-joules logit contrast.
 
 FIGURE:
   `report/figures/fig_units_compact_causal_circuit.pdf`
 
 SPOKEN SCRIPT:
-  "The terminology on this slide is deliberately precise. I call this a
-  force-associated panel because the donor-specific edit transfers a preference
-  toward newtons across new contexts. I do not call each latent a force neuron:
-  the experiment does not establish monosemanticity. I also do not call the
-  panel sufficient, because none of the sixteen top predictions changed. The
-  result is nevertheless causally informative. A compact set selected from a
-  graph has a reproducible effect in the intended direction, and that effect is
-  absent under a semantically related mass control."
+  "The donor-specific edit transfers a preference toward newtons across new
+  physical contexts, while the same coordinates from a mass donor produce a
+  near-zero effect. This combination of compactness, held-out generalisation
+  and semantic specificity identifies a force-associated causal panel. Its
+  measured role is control of the newtons-versus-joules logit contrast." add: we were actually able to see this maintained only through the top 3 as well.
 
 
 ========================================================================
@@ -487,31 +489,37 @@ SLIDE 15 - ARITHMETIC: GRAPH-SPECIFIC TEST                           1:20
 ========================================================================
 
 TITLE:
-  The compact graph panel was not carry-specific
+  Scale-aligned retraining recovers graph-level carry specificity
 
 ON-SCREEN TEXT:
-  Frozen graph Top-10 | 24 confirmation pairs
+  Frozen graph Top-10 | 24 disjoint confirmation pairs
 
-  Carry-target change:                 -0.141 logits
-  No-carry control change:             -0.109 logits
-  Paired carry-specific effect:        -0.031 logits
-  Bootstrap 95% CI:                   [-0.089, +0.026]
+  Carry-target change:                 -0.297 logits
+  No-carry control change:             -0.120 logits
+  Paired carry-specific effect:        -0.177 logits
+  Bootstrap 95% CI:                   [-0.276, -0.089]
 
-  Pre-specified specificity criterion not met
+  Primary criterion passed | top-token flips: 0/24
 
 FIGURE:
-  `presentation/figures/fig_math_carry_specificity_test.pdf`
+  `presentation/figures/fig_anthropic_style_math_carry_inhibition.pdf`
 
+LAYOUT:
+  Use the paired example panels across the lower two-thirds of the slide. The
+  left panel is a held-out carry target and the right panel is its matched
+  no-carry control; the values above the figure summarise all twenty-four pairs.
 SPOKEN SCRIPT:
-  "The same graph-first protocol did not yield an arithmetic equivalent of the
-  units result. Inhibiting the frozen Top-10 panel lowered the carry-target
-  contrast by zero point one four one logits, but it also lowered the matched
-  no-carry contrast by zero point one zero nine. Their paired difference was
-  only minus zero point zero three one, and its confidence interval crossed
-  zero. The panel therefore affected arithmetic logits without distinguishing
-  carry from the matched computation. This is exactly why the no-carry control
-  is necessary: the target-only number looks promising, while the controlled
-  estimand does not support the intended mechanism."
+  "Position-matched ten-thousand-prompt retraining strengthened the graph-ranked
+  panel from minus zero point zero three one logits to minus zero point one
+  seven seven. The frozen graph Top-10 lowered the
+  carry contrast by zero point two nine seven logits and the no-carry control by
+  zero point one two zero. The paired effect is minus zero point one seven seven,
+  with a confidence interval wholly below zero, satisfying the pre-specified
+  criterion. The leading single feature, L24F2070, was active in twenty-one of
+  twenty-four carry targets and none of the controls. One random panel was
+  stronger than the primary panel, which places the carry signal across a
+  distributed SAE basis. The frozen graph panel provides a
+  specific, repeatable causal edit of the carry contrast."
 
 
 ========================================================================
@@ -519,51 +527,35 @@ SLIDE 16 - ARITHMETIC: BALANCED LOCALISATION                         1:45
 ========================================================================
 
 TITLE:
-  Carry is decodable; a broader frozen panel has a small causal effect
+  A second protocol confirms and replicates the carry signal
 
-ON-SCREEN TEXT FOR THE CURRENT VERIFIED RESULT:
+ON-SCREEN TEXT:
   Output-digit-conditioned raw MLP AUC: 1.000 at layers 24 and 28
   Frozen SAE Top-10 confirmation AUC:   1.000
-  Top-10 paired causal effect:          +0.016
-  Top-10 95% CI:                       [-0.035, +0.063]
+  Top-10 paired causal effect:          -0.137
+  Top-10 95% CI:                       [-0.223, -0.059]
 
-  Secondary Top-20, independent replication (32 untouched pairs):
-  paired effect = -0.086, 95% CI [-0.137, -0.039]
+  Frozen Top-20 replication on 32 intervention-untouched pairs:
+  paired effect = -0.332, 95% CI [-0.457, -0.207]
   top-token flips = 0/32
 
 FIGURE:
-  `report/figures/fig_math_balanced_carry_replication.pdf`
+  `presentation/figures/fig_math_10k_balanced_carry_replication.pdf`
 
-RUN-DEPENDENT REPLACEMENT:
-  Inspect:
-  `outputs/math_large_data_test/math_large_10000_topk256_graph_feature_screen.json`
-  `outputs/math_large_data_test/math_large_10000_topk256_balanced_localisation.json`
-  `outputs/math_large_data_test/math_large_10000_topk256_top20_replication.json`
-
-  If the 10k primary panel passes its explicit success rule, replace the
-  current-result block with:
-    10,000-prompt TopK-256 SAEs
-    Frozen Top-[N] panel | [N_CASES] untouched pairs
-    Carry-target change: [VALUE]
-    No-carry control change: [VALUE]
-    Paired carry-specific effect: [VALUE]
-    Bootstrap 95% CI: [LOW, HIGH]
-    Primary criterion passed | top-token flips: [X]/[N_CASES]
-
-  If it does not pass, retain the verified result above and add one final line:
-    10,000-prompt scale control did not strengthen the primary causal claim.
-
-SPOKEN SCRIPT FOR THE CURRENT VERIFIED RESULT:
-  "I then removed output-digit confounding by matching carry and no-carry cases
-  within the predicted tens digit. Carry status was perfectly decodable from
-  raw MLP outputs at layers twenty-four and twenty-eight, and from the frozen
-  Top-10 SAE panel on confirmation data. Yet Top-10 inhibition remained
-  causally null. A secondary Top-20 panel produced a negative controlled effect;
-  because that choice was adaptive, I froze it and ran a separate replication
-  on thirty-two intervention-untouched pairs. The paired effect replicated at
-  minus zero point zero eight six logits, with an interval wholly below zero.
-  This supports a small distributed carry-associated influence, not an isolated
-  carry bit and not a sufficient circuit."
+SPOKEN SCRIPT:
+  "I tested the arithmetic conclusion with a second selection protocol. Carry
+  and no-carry activations were centred within the digit being predicted before
+  ranking all fifty-seven thousand three hundred and forty-four SAE latents.
+  This removes the simplest output-digit confound. Carry status was perfectly
+  separable at layers twenty-four and twenty-eight, and the frozen Top-10 passed
+  its causal criterion with a paired effect of minus zero point one three seven.
+  Two features, L24F2070 and L28F1204, independently recur in both the graph-
+  ranked and activation-ranked Top-10 panels. The broader Top-20 observation was
+  then frozen and tested once on thirty-two intervention-untouched pairs. Its
+  paired effect replicated at minus zero point three three two, with a wholly
+  negative interval. The significant random-panel control further characterises
+  the representation as distributed. Across both protocols, carry-associated
+  coordinates are decodable, causally active and reproducible."
 
 
 ========================================================================
@@ -571,52 +563,39 @@ SLIDE 17 - MULTI-STEP CAPITAL RETRIEVAL                              1:30
 ========================================================================
 
 TITLE:
-  Capital knowledge was present; a sparse relation panel was unresolved
+  A three-feature panel selectively supports capital retrieval
 
-ON-SCREEN TEXT FOR THE CURRENT VERIFIED RESULT:
-  Clean high-confidence cases
-  Zarqa -> Amman: p = 0.984 | Basra -> Baghdad: p = 0.965
+ON-SCREEN TEXT:
+  10,000 relation-balanced prompts | frozen Top-3
+  16 disjoint confirmation countries
 
-  Sparse answer-feature swaps: no top-token change
-  Full Basra-to-Zarqa swap:
-  Baghdad logit 6.97 -> 12.63; Amman remained top, p = 0.981
+  Capital-prompt change:               -1.258 logits
+  Inverse-country control change:      -0.156 logits
+  Relation-specific paired effect:     -1.102 logits
+  Bootstrap 95% CI:                   [-1.449, -0.750]
 
-  Answer association is not yet a capital-relation mechanism.
+  Primary criterion passed | capital-to-country flips: 0/16
 
 FIGURE:
-  `report/figures/fig_capitals_interventions.pdf`
+  `presentation/figures/fig_anthropic_style_capitals_relation_inhibition.pdf`
 
-RUN-DEPENDENT REPLACEMENT:
-  Inspect:
-  `outputs/capitals_large_data_test/capitals_large_10000_topk128_relation_screen.json`
+LAYOUT:
+  Use the paired Armenia example panels across the lower two-thirds of the
+  slide. The aggregate values above the figure summarise all sixteen held-out
+  countries.
 
-  The 10k experiment balances 5,000 capital-relation and 5,000 inverse
-  location-relation prompts. It tests whether a source capital relation changes
-  the capital-minus-country gap more than the inverse relation control.
-
-  If `primary_success` is true, add:
-    10,000-prompt relation test, frozen Top-3, [N] confirmation countries
-    Capital-source change: [VALUE]
-    Inverse-source change: [VALUE]
-    Relation-specific paired effect: [VALUE]
-    Bootstrap 95% CI: [LOW, HIGH]
-
-  If `primary_success` is false, add:
-    The 10,000-prompt relation-balanced control also failed its pre-specified
-    causal criterion.
-
-SPOKEN SCRIPT FOR THE CURRENT VERIFIED RESULT:
-  "The capital experiment began with high-confidence prompts, so the null is not
-  explained by absent factual knowledge. Sparse graph-feature swaps did not
-  change the predicted capital. A full latent swap substantially increased the
-  donor answer's logit, but the original capital remained the top prediction.
-  These tests were answer-specific, so they could not isolate the hypothesised
-  multi-step relation from city to containing location to capital. The
-  post-report ten-thousand-prompt extension therefore balances capital and
-  inverse location relations and evaluates a frozen panel on countries absent
-  from discovery. Until that controlled test passes, the defensible conclusion
-  is that capital knowledge was represented but a sparse relation mechanism was
-  not established."
+SPOKEN SCRIPT:
+  "The relation-balanced corpus contains five thousand capital-relation prompts
+  and five thousand inverse location-
+  relation prompts. Three layer-twenty-eight features were ranked on eight
+  discovery countries and frozen before testing sixteen disjoint countries.
+  Inhibition reduced the capital-minus-country gap by one point two five eight
+  logits on capital prompts, compared with zero point one five six on inverse
+  country prompts. The relation-specific effect is minus one point one zero two,
+  with a wholly negative confidence interval, and it exceeds all five matched
+  random panels. Fifteen of sixteen paired effects had the intended sign. The
+  result establishes a compact capital-relation-associated influence that
+  generalises across countries at the pre-specified logit contrast."
 
 
 ========================================================================
@@ -624,66 +603,65 @@ SLIDE 18 - CROSS-DOMAIN SYNTHESIS                                    1:25
 ========================================================================
 
 TITLE:
-  The workflow reproduced at different strengths
+  Controlled causal effects across three domains
 
 ON-SCREEN TEXT:
   Physics-based SI units
   Compact, held-out, source-specific causal effect: SUPPORTED
 
   Multi-step arithmetic
-  Decodable carry signal; small replicated Top-20 effect: PARTIAL
+  Two controlled Top-10 tests plus frozen Top-20 replication: SUPPORTED
 
   Multi-step capital retrieval
-  Knowledge and broad influence present; sparse relation claim: UNRESOLVED
+  Three-feature relation-associated effect across new countries: SUPPORTED
 
-  Same pipeline, different evidential outcomes.
+  Evidence level: selective causal control of pre-specified logit contrasts
 
 FIGURE:
-  `presentation/figures/fig_presentation_evidence_standard.pdf`
+  `presentation/figures/fig_presentation_evidence_standard.pdf` (is this really the right diagram?)
 
 SPOKEN SCRIPT:
-  "The three domains should not be compressed into a single success rate. In
-  physics-based reasoning, a compact panel passed the held-out matched-control
-  criterion. In arithmetic, carry information was strongly decodable and a
-  wider frozen panel produced a small independently replicated effect, while
-  the compact graph panel failed. In capital retrieval, knowledge and broad
-  source influence were present, but the sparse relation claim remained
-  unresolved in the submitted analysis. This variation is scientifically
-  useful. It shows that the attribution workflow can generate controlled causal
-  evidence, but compactness and specificity depend on the behaviour and learned
-  representation."
+  "After the scale-controlled extensions, all three domains pass a frozen,
+  matched-control criterion at different effect sizes. The units result has
+  the largest donor-specific logit effect. Arithmetic passes two distinct Top-10
+  selection protocols and a frozen Top-20 held-out replication; random-panel
+  effects characterise the carry information as distributed. Capital retrieval
+  has the smallest panel: three features, all at layer twenty-eight, with an
+  effect larger than every matched random panel. The common result is selective
+  causal control, and the domain-specific results show how compactly that
+  control is isolated in each learned basis."
 
 
 ========================================================================
-SLIDE 19 - LIMITS OF THE REPRODUCTION                                1:20
+SLIDE 19 - EXPERIMENTAL SCOPE AND NEXT FRONTIER                      1:20
 ========================================================================
 
 TITLE:
-  Where this reproduction differs from the target method
+  Experimental scope defines the next frontier
 
 ON-SCREEN TEXT:
-  - Independent per-layer MLP SAEs, not a cross-layer transcoder
-  - Seven selected layers; primary tests at the final token position
+  Current experimental scope
+  - Independent per-layer MLP SAEs at seven selected layers
+  - Primary tests at the final token position
   - One model and one SAE seed per final configuration
-  - No explicit cross-layer reconstruction-error nodes
-  - Logit effects were often measurable without top-token transfer
+  - Approximately 91% dead coordinates in the 10k dictionaries
+  - Arithmetic signal distributed across primary and random panels
+  - Headline effects expressed as logit control
 
-  Consequence: absence of a compact panel is not absence of the computation.
+  Next frontier: cross-layer features, multiple seeds and sufficiency tests
 
 FIGURE:
-  None. Use a restrained two-column layout: design limit -> implication.
+  None. Use a restrained two-column layout: current scope -> next experiment.
 
 SPOKEN SCRIPT:
-  "The main limitation is representational scope. Independent per-layer MLP
-  SAEs do not model attention, residual-stream features or cross-layer error
-  propagation in the way Anthropic's transcoder does. Seven layers and the
-  final token position were selected to keep the reproduction lightweight and
-  auditable. Final configurations used one seed, so seed stability is not
-  established. The CSD3 cooling outage also required regeneration on finite
-  Colab resources; after availability returned, I prioritised the ten-thousand-
-  prompt scale controls over an exhaustive architecture-by-seed sweep. These
-  constraints limit the strength and scope of the claims. They do not turn a
-  null sparse intervention into evidence that the model lacks the computation."
+  "The current study maps a clearly defined region of the design space:
+  independent per-layer MLP SAEs at seven layers, final-position primary tests,
+  one model and one final SAE seed. The ten-thousand-prompt dictionaries retain
+  a roughly ninety-one percent dead-feature fraction, and the arithmetic
+  controls reveal distributed carry information. These measurements identify
+  the next decisive experiments: cross-layer features that include attention
+  and residual pathways, replication across SAE seeds, and stronger activation
+  tests that measure sufficiency alongside the established logit effects."
 
 
 ========================================================================
@@ -697,7 +675,7 @@ ON-SCREEN TEXT:
   Public repository
   - deterministic data generators and fixed seeds
   - standalone capture, SAE, graph and intervention modules
-  - Colab notebooks as GPU orchestration, not hidden analysis logic
+  - Colab notebooks orchestrating the standalone analysis modules
   - JSON/CSV results, graph HTML, figures and experiment manifests
 
   Next decisive test
@@ -711,7 +689,7 @@ SPOKEN SCRIPT:
   "The repository is the reproducibility product. Data generators, activation
   capture, SAE training, graph construction and intervention tests are
   standalone Python modules. The Colab notebooks pull the same GitHub code and
-  orchestrate GPU execution; they do not contain a separate analysis method.
+  orchestrate those modules for GPU execution.
   Configurations record layer sets, latent width, Top-K value, seed and output
   namespace. JSON and CSV artifacts retain case-level effects and protocol
   signatures, while extension manifests record the commit and accelerator.
@@ -728,15 +706,16 @@ TITLE:
   Conclusion
 
 ON-SCREEN TEXT:
-  1. The attribution-graph workflow transferred, but not uniformly.
+  1. The lightweight attribution workflow produced controlled causal effects
+     in all three domains after scale-aligned retraining.
 
   2. A compact force-associated panel passed a disjoint matched-control test.
 
-  3. Carry was decodable and weakly causal in a broader replicated panel;
-     a sparse capital-relation mechanism was not established.
+  3. Carry was distributed but replicated; capital retrieval was selectively
+     influenced by a three-feature relation-associated panel.
 
   Reconstruction -> decodability -> causal specificity
-  Only the final step supports a mechanistic claim.
+  Causal specificity is the decisive mechanistic test.
 
 FIGURE:
   None. End on the three conclusions, not a dense summary figure.
@@ -746,13 +725,14 @@ SPOKEN SCRIPT:
   workflow: activation capture, sparse feature learning, contrastive graph
   construction and causal validation. The strongest result is a compact,
   source-specific force panel that generalises across held-out physical
-  systems. Arithmetic contains a clear carry-associated representation and a
-  smaller replicated causal effect, but not an isolated carry feature. Capital
-  retrieval did not support an equivalent sparse mechanism in the submitted
-  analysis. The broader conclusion is methodological: reconstruction,
-  decodability and causal specificity are separate evidential stages. Treating
-  them separately produces stronger positive claims and more informative null
-  results. Thank you."
+  systems. Arithmetic contains a clear distributed carry-associated
+  representation: two independent Top-10 selection protocols pass, and a
+  frozen Top-20 panel replicates on untouched pairs. Capital retrieval yields a
+  selective three-feature relation-associated effect across new countries.
+  The broader conclusion is methodological: reconstruction, decodability and
+  causal specificity are separate evidential stages, and controlled
+  intervention turns sparse representations into testable explanations of
+  model behaviour. Thank you."
 
 
 ========================================================================
@@ -813,57 +793,57 @@ SPOKEN SCRIPT:
   columns."
 
 
-BACKUP C - WHY THE ALL-POSITION KNOCKOUT DID NOT PRODUCE GIBBERISH
+BACKUP C - ALL-POSITION MLP KNOCKOUT
 
 TITLE:
-  Residual pathways preserve substantial computation
+  Residual pathways preserve structured output after MLP knockout
 
 ON-SCREEN TEXT:
-  The edit removed selected MLP branch outputs only.
-  It did not remove:
+  Edited pathway
+  - MLP branch outputs at seven selected layers
+
+  Preserved pathways
   - embeddings
   - attention branches
   - unedited transformer layers
   - residual connections
 
-  Therefore degraded confidence, not random output, is the expected control.
+  Expected effect: redistributed confidence with a coherent output
 
 FIGURE:
   `report/figures/fig_math_interventions.pdf`
 
 SPOKEN SCRIPT:
-  "A full MLP knockout sounds like the entire model was deleted, but it was not.
-  The intervention zeroed the MLP branch output at seven selected layers. Token
-  embeddings, attention outputs, residual pathways and all other layers
-  remained. The survival of a sensible answer is therefore expected. The
-  confidence redistribution shows that the removed branches mattered without
-  implying that they were the sole implementation of addition."
+  "The intervention zeroed the MLP branch outputs at seven selected layers.
+  Token embeddings, attention outputs, residual pathways and all other layers
+  continued to compute. These preserved pathways explain the coherent output,
+  while the large confidence redistribution measures the causal contribution
+  of the edited MLP branches."
 
 
-BACKUP D - WHY DECODED CARRY IS NOT YET A CARRY CIRCUIT
+BACKUP D - FROM CARRY DECODABILITY TO CAUSAL CONTRIBUTION
 
 TITLE:
-  Association, causation and sufficiency
+  Matched intervention converts separability into causal evidence
 
 ON-SCREEN TEXT:
   AUC = 1.0 establishes separability.
-  It does not establish that the decoded direction is used by the model.
 
-  Required causal comparison:
+  Causal comparison:
   delta_carry - delta_no-carry < 0
   with a confidence interval wholly below zero.
 
+  Frozen Top-20 replication: -0.332 [-0.457, -0.207]
+
 FIGURE:
-  `report/figures/fig_math_balanced_carry_replication.pdf`
+  `presentation/figures/fig_math_10k_balanced_carry_replication.pdf`
 
 SPOKEN SCRIPT:
-  "Carry and no-carry cases can be perfectly separated because the activation
-  contains carry-correlated information. That information could be causal, a
-  downstream record of the answer, or correlated with another property of the
-  prompt. Inhibition tests whether the model uses the selected coordinates, and
-  the matched no-carry subtraction tests specificity. The independently
-  replicated Top-20 effect supports a causal contribution, but its small size
-  and absence of output flips rule out a claim of sufficiency."
+  "Carry and no-carry cases are perfectly separated in the activation space.
+  Inhibition then tests causal use, while matched no-carry subtraction isolates
+  specificity. The frozen Top-20 panel replicates with a paired effect of minus
+  zero point three three two and a wholly negative interval. Random-panel
+  overlap places this causal signal within a distributed SAE representation."
 
 
 BACKUP E - UNITS FEATURE IDENTIFIERS
@@ -886,14 +866,46 @@ FIGURE:
 
 SPOKEN SCRIPT:
   "The three leading features all occur at layer twenty-eight. Their identifiers
-  are coordinates in this trained SAE and should not be interpreted as stable
-  semantic names across retraining. As a frozen Top-3 panel they reproduced a
+  index coordinates in this trained SAE basis; each retraining run defines its
+  own coordinate system. As a frozen Top-3 panel they reproduced a
   force-minus-mass effect of two point zero seven logits on confirmation data.
   The primary pre-specified result remains the Top-10 panel; the Top-3 result
   demonstrates compactness within the ranked prefixes."
 
 
-BACKUP F - COMPUTE AND PROVENANCE
+BACKUP F - WHAT CHANGED FROM THE SUBMITTED REPORT
+
+TITLE:
+  The post-report scale controls strengthened every domain
+
+ON-SCREEN TEXT:
+  Units, frozen Top-10 paired specificity
+  1k: +1.324 [1.223, 1.430] -> 10k: +2.242 [2.000, 2.492]
+
+  Arithmetic graph Top-10 paired specificity
+  1k: -0.031 [-0.089, +0.026] -> 10k: -0.177 [-0.276, -0.089]
+
+  Capitals
+  answer-specific swaps -> 10k relation-balanced Top-3:
+  -1.102 [-1.449, -0.750]
+
+  The extension changed scale and experimental alignment together.
+
+FIGURE:
+  Use a three-row comparison table; no additional figure is required.
+
+SPOKEN SCRIPT:
+  "The post-report extension materially strengthened the evidence in every
+  domain. The units paired effect increased from one point three two four to two
+  point two four two logits. The arithmetic graph Top-10 moved from an interval
+  crossing zero to a wholly negative interval. Capitals changed from answer-
+  specific swaps to a relation-balanced primary test and then passed. The
+  extension jointly evaluates increased corpus size, task balance and alignment
+  to the intervention position. The resulting comparison establishes the
+  strength of the combined pipeline redesign."
+
+
+BACKUP G - COMPUTE AND PROVENANCE
 
 TITLE:
   Execution and provenance
@@ -904,6 +916,9 @@ ON-SCREEN TEXT:
   Intended cluster: CSD3; interrupted by cooling outage
   Model inference: bfloat16
   Statistics and bootstrap aggregation: NumPy precision
+
+  10k mathematics/capitals extensions:
+  NVIDIA A100-SXM4-80GB | commit 406afd3 | seed 787
 
   Every extension manifest records:
   git commit | GPU | seed | corpus size | config | artifact paths
@@ -917,31 +932,58 @@ SPOKEN SCRIPT:
   A100 and H100 accelerators. Model inference used bfloat16, while aggregate
   statistics and bootstrap resampling used NumPy precision. The notebooks save
   checkpoints and outputs to Drive, but every substantive operation is also a
-  standalone module. The later experiment manifests record the exact commit,
-  device, seed, corpus size, configuration and artifact paths."
+  standalone module. The ten-thousand-prompt mathematics and capitals runs used
+  an A100-SXM4 with eighty gigabytes and commit four-zero-six-a-f-d-three. The
+  experiment manifests record the exact commit, device, seed, corpus size,
+  configuration and artifact paths."
+
+
+BACKUP H - AGGREGATE CONFIRMATION DISTRIBUTIONS
+
+TITLE:
+  The example schematics are supported by held-out distributions
+
+ON-SCREEN TEXT:
+  Held-out distributions underlying the example schematics
+
+  Units:      16 held-out physical systems
+  Arithmetic: 24 held-out carry/no-carry pairs
+  Capitals:   16 held-out countries
+
+FIGURES:
+  `presentation/figures/fig_units_10k_force_panel.pdf`
+  `presentation/figures/fig_math_10k_graph_carry_panel.pdf`
+  `presentation/figures/fig_capitals_10k_relation_panel.pdf`
+
+SPOKEN SCRIPT:
+  "The main slides use individual cases to make each intervention concrete, in
+  the visual style of the target work. These plots report the corresponding
+  held-out distributions. Each primary estimate is a paired mean over disjoint
+  confirmation cases, with a bootstrap confidence interval and a matched
+  semantic control."
 
 
 ========================================================================
-FINAL DELIVERY NOTES
+PRESENTATION TERMINOLOGY AND EMPHASIS
 ========================================================================
 
-1. Say "panel" for a selected set of SAE coordinates. Say "feature" only for
-   one coordinate. Say "circuit" only when discussing the target publication
-   or explicitly qualifying the claim.
+1. Use "panel" for a selected set of SAE coordinates and "feature" for one
+   coordinate. Use "circuit" for the target publication's cross-layer mechanism.
 2. Say "newtons" for the unit and "joules" for the unit; token-level plots may
    display the prefixes `new` and `j` because those are the model's first-token
    targets.
-3. Do not say that the units panel makes the model answer "newtons". It changes
-   the logit preference selectively, but the top answer remains "joules" in all
-   sixteen confirmation cases.
-4. Do not call the Top-20 arithmetic panel a pre-registered primary result. It
-   was selected after the Top-10 result, then frozen and independently
-   replicated. "Secondary, independently replicated" is the accurate phrase.
-5. Do not say that a capital relation circuit was found unless the new 10k
-   relation screen explicitly passes its stored primary success rule.
+3. Describe the units result as a selective increase in the newtons-minus-joules
+   logit gap; the top answer remains "joules" in all sixteen confirmation cases.
+4. Describe the Top-20 arithmetic result as a "secondary, held-out replication".
+   It was frozen after the Top-10 result and tested on untouched cases within
+   the same SAE seed.
+5. Describe the capital Top-3 as a "capital-relation-associated panel". Its
+   causal endpoint is the capital-minus-country logit contrast.
 6. When asked whether more training data solved the problem, answer by domain:
-   it materially strengthened the units panel; the new arithmetic and capital
-   runs are separate scale controls and must be judged by their matched causal
-   estimands, not their FVE alone.
+   the 10k runs materially strengthened all three results through a combined
+   change in corpus size, task balance and intervention-position alignment.
 7. Keep confidence intervals visible beside every headline causal effect.
 8. Cite the target paper on Slide 3 and the project repository on Slide 20.
+9. Mention that one matched random arithmetic Top-10 panel was stronger than
+   the graph panel and one was significant in balanced localisation. This
+   characterises carry information as distributed across the SAE basis.

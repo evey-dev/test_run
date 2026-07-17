@@ -1,0 +1,27 @@
+{
+  "experiment": "capitals_large_10000_topk128_relation",
+  "git_commit": "406afd377810d40baa50f2bb45826925f64f245d",
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "seed": 787,
+  "layers": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    28
+  ],
+  "corpus_rows": 10000,
+  "relation_counts": {
+    "capital": 5000,
+    "location": 5000
+  },
+  "train_rows": 8000,
+  "validation_rows": 2000,
+  "config": "configs/sae_capitals_large_10000_topk128_config.yaml",
+  "dense_latent_export": false,
+  "drive_output": "/content/drive/MyDrive/mphil-project/outputs/capitals_large_data_test",
+  "drive_checkpoints": "/content/drive/MyDrive/mphil-project/mechanistic_data/capitals_large_data_test/checkpoints_topk128",
+  "drive_activations": "/content/drive/MyDrive/mphil-project/mechanistic_data/capitals_large_data_test/activations"
+}
